@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Businessline{% endblock %}
+
+{% block body %}
+    <h1>Edit Businessline</h1>
+
+    {{ include('businessline/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('businessline_index') }}">back to list</a>
+
+    {{ include('businessline/_delete_form.html.twig') }}
+{% endblock %}

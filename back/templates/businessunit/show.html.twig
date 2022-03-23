@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Businessunit{% endblock %}
+
+{% block body %}
+    <h1>Businessunit</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ businessunit.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ businessunit.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('businessunit_index') }}">back to list</a>
+
+    <a href="{{ path('businessunit_edit', {'id': businessunit.id}) }}">edit</a>
+
+    {{ include('businessunit/_delete_form.html.twig') }}
+{% endblock %}
