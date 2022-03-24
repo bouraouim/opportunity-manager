@@ -47,9 +47,9 @@ import Modalinput from './modalInputs';
                         <table className="table align-items-center">
                             <thead className="table-dark">
                                 <tr>
-                                    <th className="text-center text-xs font-weight-bold" data-sort="name" onClick={()=>sortHandler("email")}>Email address</th>
-                                    <th className="text-center text-xs font-weight-bold" data-sort="name" onClick={()=>sortHandler("lastname")}>Lastname</th>
-                                    <th className="text-center text-xs font-weight-bold" data-sort="name" onClick={()=>sortHandler("firstname")}>Firstname</th>
+                                    <th className="text-center text-xs font-weight-bold" data-sort="name" >Email address <span onClick={()=>sortHandler("email")}>&#8645;</span> <i onClick={()=>{searchclick("email")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i> </th>
+                                    <th className="text-center text-xs font-weight-bold" data-sort="name" >Lastname <span onClick={()=>sortHandler("lastname")}>&#8645;</span> <i onClick={()=>{searchclick("lastname")}} data-toggle="modal" data-target="#exampleModal" type="button" class="fas fa-filter" > </i></th>
+                                    <th className="text-center text-xs font-weight-bold" data-sort="name">Firstname <span  onClick={()=>sortHandler("firstname")} >&#8645;</span> <i onClick={()=>{searchclick("firstname")}} data-toggle="modal" data-target="#exampleModal" type="button" class="fas fa-filter" > </i></th>
                                     <th className="text-center text-xs font-weight-bold" >Role</th>
                                     <th className="text-center text-xs font-weight-bold" >Business Unit</th>
                                     <th className="text-center text-xs font-weight-bold" >Business Line</th>

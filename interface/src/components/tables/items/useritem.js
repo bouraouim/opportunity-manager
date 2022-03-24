@@ -62,7 +62,7 @@ function Useritem(props) {
                 <span className={statusclass}>{status}</span>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center d-flex align-items-center justify-content-center">
-          <i  className='ni ni-single-02 mr-2 fa-lg pe-auto ' data-toggle="modal" data-target="#exampleModal" type="button" />
+          <i  className='ni ni-single-02 mr-2 fa-lg pe-auto '  />
             <button type="button" onClick={deleteHandler} className="btn btn-danger btn-circle btn-sm opacity-5">-</button>
             </td>
         </tr>

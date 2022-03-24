@@ -79,12 +79,13 @@ class UserrController extends AbstractController
         return $this->redirectToRoute('userr_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/incanonymizenumber', name: 'inc', methods: ['POST'])]
-    public function inc(Request $request, Userr $userr, EntityManagerInterface $entityManager): void
+    #[Route('/incanonymizenumber', name: 'inc', methods: ['patch'])]
+    public function inc(Userr $userr): void
     {
-        $userr->setAnonymizednumber();
+        $userr::setAnonymizednumber();
     }
-    #[Route('/setanonymizenumber', name: 'getanonymize', methods: ['Post'])]
+    
+    #[Route('/setanonymizenumber', name: 'getanonymize', methods: ['get'])]
     public function getanonymizenumber(UserrRepository $userrRepository): Response
     {
       

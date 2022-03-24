@@ -4,6 +4,7 @@ import Useritem from './items/useritem';
 import Paginations from './pagination';
 import Anonymizeitem from './items/anonymizeitem';
 import { CSVLink, CSVDownload } from "react-csv";
+import Modalinput from './modalInputs';
 const AnonymizedTable=(props)=> { 
 
     const [data , setData]=useState([])
@@ -23,8 +24,20 @@ const AnonymizedTable=(props)=> {
     const [download,setdownload]=useState(false)
     const [csvData,setcsvData]=useState([
         ["lastname", "firstname", "login","email","business line","last connection date","creation date"]])
+        const [searchby,setsearchby]=useState('')
+        const [searchterm,setsearchterm]=useState('')
+        
 
-        const searchlink=(props.search=='')?"":"&email="
+        const  searchchange=(e)=>{
+            setsearchterm(e.target.value)
+        }
+
+        const searchclick=(n)=>{
+            setsearchby(n)
+        }
+
+        const searchlink="&"+searchby+"="
+
         const sortlink=(sortby=='')?"":"&order%5B"+sortby+"%5D="+order
         const leaf = (obj, path) => (path.split('.').reduce((value,el) => value[el], obj))
 
@@ -42,7 +55,7 @@ const AnonymizedTable=(props)=> {
         const parameters=["id","firstname","lastname","email",'businessunit.name','businessline.name','login','creationdate',"lastconnectiondate"]
         useEffect(()=>{
             
-            axios.get('http://localhost:8000/api/userrs?page='+pagenumber+'&itemsPerPage='+itemperpage+anonymizedlink+searchlink+props.search+sortlink) 
+            axios.get('http://localhost:8000/api/userrs?page='+pagenumber+'&itemsPerPage='+itemperpage+anonymizedlink+searchlink+searchterm+props.search+'&status=true'+sortlink) 
             .then(response=>{
                 setIsCheckAll(false)
                 setIsCheck([])
@@ -96,7 +109,7 @@ const AnonymizedTable=(props)=> {
             }).catch(error=>{
               console.error(error);
             }) 
-        },[loading,pagenumber,props.search,order,itemperpage,anodata])
+        },[loading,pagenumber,props.search,order,itemperpage,anodata,searchterm])
         
         const loadingchange=()=>{
             setLoading(true)
@@ -179,22 +192,38 @@ const AnonymizedTable=(props)=> {
             setcsvData(r)
             setdownload(true)
                 setdownload(false)   
-                })
-                var body={status:false}
-                        isCheck.map((d)=>{
-                            
-
-                    axios.patch('http://localhost:8000/api/userrs/'+d,body,{headers: {
+                }).then(r=>{
+                    
+                    isCheck.map((d)=>{
+                        
+                        
+                            axios.get('http://localhost:8000/api/numbers/2').then(r=>{
+                                var numberanonymized= r.data.num
+                         return numberanonymized
+                             }).then(r=>{
+                                var body={status:false,firstname:"firstname"+r,lastname:"lastname"+r,email:"email"+r}
+                                console.log(r)
+                            return[r,body]}).then((r)=>{
+                                axios.patch('http://localhost:8000/api/userrs/'+d,r[1],{headers: {
                         'Content-Type': 'application/merge-patch+json' 
-                    }})
-                    .then(response=> {
-                    console.log(body);
-                    })
+                    }}) 
+                    return r[0]
+                             }).then(r=>{
+                                console.log(r)
+                                var t=r+1
+                                console.log(t)
+                        axios.patch('http://localhost:8000/api/numbers/2',{num:t},{headers: {
+                            'Content-Type': 'application/merge-patch+json' 
+                        }})              }).then(()=>{})
                     .catch(function (error) {
                     console.log(error);
                     });
+                     
+                        
+            
+
                 })
-          }
+          })}
 
 
           const downloadhandler=()=>{
@@ -234,7 +263,7 @@ const AnonymizedTable=(props)=> {
 
           const showAnonymized=()=>{
             if(anonymizedlink.trim()==""){
-                setanonymizedlink("&anonymized=true")
+                setanonymizedlink("&status=true")
             }
             else{
                 setanonymizedlink("")
@@ -266,11 +295,11 @@ const AnonymizedTable=(props)=> {
                         <table className="table align-items-center ">
                             <thead className="table-dark">
                                 <tr>
-                                    <th className="text-center text-xs font-weight-bold">Lastname</th>
-                                    <th className="text-center text-xs font-weight-bold">Firstname</th>
-                                    <th className="text-center text-xs font-weight-bold">Login</th>
-                                    <th className="text-center text-xs font-weight-bold">Email address</th>
-                                    <th className="text-center text-xs font-weight-bold">Business Line</th>
+                                    <th className="text-center text-xs font-weight-bold">Lastname <span onClick={()=>sortHandler("lastname")}>&#8645;</span> <i onClick={()=>{searchclick("lastname")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
+                                    <th className="text-center text-xs font-weight-bold">Firstname <span onClick={()=>sortHandler("firstname")}>&#8645;</span> <i onClick={()=>{searchclick("firstname")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
+                                    <th className="text-center text-xs font-weight-bold">Login <span onClick={()=>sortHandler("login")}>&#8645;</span> <i onClick={()=>{searchclick("email")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
+                                    <th className="text-center text-xs font-weight-bold">Email address <span onClick={()=>sortHandler("email")}>&#8645;</span> <i onClick={()=>{searchclick("email")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
+                                    <th className="text-center text-xs font-weight-bold">Business  <span onClick={()=>sortHandler("businessline.name")}>&#8645;</span> <i onClick={()=>{searchclick("businessline.name")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
                                     <th className="text-center text-xs font-weight-bold">Last connection date</th>
                                     <th className="text-center text-xs font-weight-bold">Creation date</th>
                                     <th className="text-center text-xs font-weight-bold d-flex justify-content-center align-items-center">Check all 
@@ -306,6 +335,7 @@ const AnonymizedTable=(props)=> {
                     </div>
                     {!loading && show && <Paginations itemperpage={itemperpage} onChange={handleChange} page={pagenumber} search={props.search}  pagination={paginations}/>}
         {!show && <h5 className="h3 my-2 text-center">no corresponding data</h5>}
+        <Modalinput onchange={searchchange} />
                 </div>        
  );
 }

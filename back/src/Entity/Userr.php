@@ -19,11 +19,24 @@ use App\ApiPlatform\usercustomsearch;
 #[ORM\Entity(repositoryClass: UserrRepository::class)]
 #[ApiResource(
     normalizationContext:['groups'=>[ 'read:user_collection']],
-    denormalizationContext:['groups'=>[ 'write:user_collection']]
+    denormalizationContext:['groups'=>[ 'write:user_collection']],
+    // itemOperations:[
+    //     "get",
+    //     "delete",
+    //     "patch",
+    //     "incvar"=>[
+    //         "method"=>"patch",
+    //         'path'=>'/userrs/{id}/inc',
+    //         'controller'=>inc::class
+    //     ]
+
+    // ]
     
 ),
-ApiFilter(usercustomsearch::class,SearchFilter::class, properties:['email'=>'partial','firstname'=>'partial','lastname'=>'partial','anonymized'=>'exact', 'status'=>'exact'] ),
-ApiFilter(OrderFilter::class, properties: ['email','firstname','lastname'], arguments: ['orderParameterName' => 'order'])]
+ApiFilter(SearchFilter::class, properties:['email'=>'partial','firstname'=>'partial','lastname'=>'partial','anonymized'=>'exact', 'status'=>'exact'] ),
+ApiFilter(OrderFilter::class, properties: ['email','firstname','lastname'], arguments: ['orderParameterName' => 'order']),
+ApiFilter(usercustomsearch::class)
+]
 class Userr implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -37,8 +50,8 @@ class Userr implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     
-    #[ORM\Column(type: 'string', length: 255 , nullable:true)]
-    #[Groups(['write:user_collection','read:user_collection'])]
+    #[ORM\Column(type: 'string', length: 255 ,nullable:true)]
+    #[Groups(['read:user_collection'])]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255,nullable: true)]
@@ -89,8 +102,9 @@ class Userr implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['write:user_collection','read:user_collection'])]
     private $anonymized;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private static $anonymizednumber=0;
+    #[ORM\Column(type: 'integer', nullable: true )]
+    #[Groups(['write:user_collection'])]
+    static $anonymizednumber=0;
 
     public function __construct()
     {
@@ -123,22 +137,23 @@ class Userr implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getpassword():?string
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function setpassword(string $p): self
+    public function setPassword(string $password): self
     {
-        $this->password = $p;
+        $this->password = $password;
+
         return $this;
     }
-    public function getplainpassword():string
+    public function getPlainPassword():string
     {
-        return $this->firstname;
+        return $this->plainpassword;
     }
 
-    public function setplainpassword(string $a):void{
+    public function setPlainPassword(string $a):void{
          $this->plainpassword= $a;
     }
 
@@ -168,9 +183,9 @@ class Userr implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     
-    public function getAnonymizednumber(): ?int
+    static public function getAnonymizednumber(): ?int
     {
-        return $this->anonymizednumber;
+        return self::$anonymizednumber;
     }
 
     // public function getLogin(): ?string
@@ -371,15 +386,15 @@ class Userr implements UserInterface, PasswordAuthenticatedUserInterface
     
         return $this;
     }
-    public function setAnonymizednumber(): void
+    static public function setAnonymizednumber(): void
     {
-        $this->anonymizednumber++;
+        self::$anonymizednumber+1;
     }
 
     public function getSalt(): ?string
     {
         return null;
-    }
+    }   
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
