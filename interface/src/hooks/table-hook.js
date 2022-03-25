@@ -31,7 +31,7 @@ const Tablehook=(tablename,searchterm,parameters,searchby,globalsearch)=>{
 
         
         useEffect(()=>{
-            const link='http://localhost:8000/api/'+tablename+'?page='+pagenumber+'&itemsPerPage='+itemperpage+searchlink+searchterm+sortlink
+            const link='http://localhost:8000/api/'+tablename+'?page='+pagenumber+'&itemsPerPage='+itemperpage+'&status=true'+searchlink+searchterm+sortlink
             axios.get(link) 
             .then(response=>{
                 

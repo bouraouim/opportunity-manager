@@ -4,57 +4,65 @@ import Login from "./components/login"
 import Default from "./components/defaultpage"
 import { useContext } from "react";
 import AuthContext from "./store/auth-context";
-// import CustomerForm from "./components/forms/customerForm";
-// import AddForm from './components/forms/addForm';
-// import BusinessLineForm from './components/forms/businessLineForm';
-// import BusinessUnitForm from './components/forms/businessUnitForm';
-// import GeographyForm from './components/forms/geographyForm';
-// import UserForm from './components/forms/userForm';
-// import TableLayout from './components/tables/tableLayout';
-// import Modify from './components/modify';
-// import NavBar from './components/navbar';
-// import Signup from './components/signup';
-// import axios from 'axios'
-// import BusinessLineTable from './components/tables/businessLineTable';
-// import { useState } from 'react';
-// import GeographyTable from './components/tables/geographyTable';
-// import UserTable from './components/tables/userTable';
-// import Modifybusinessline from './components/modifyforms/modifybusinessline';
-// import AnonymizedTable from "./components/tables/anonymizedTable";
-// import OrderBook from "./components/orderBook";
-// import Reporting from "./components/reporting";
-// import OpportunitiesTable from "./components/tables/opportunitiesTable";
-// import AreaTable from "./components/tables/areaTable";
-// import BusinessUnitTable from "./components/tables/businessUnitTable";
-// import CurrencyTable from "./components/tables/currencyTable";
-// import CustomerTable from "./components/tables/customerTable";
-// import DepartmentTable from "./components/tables/departmentTable";
-// import Permissions from "./components/permissions";
-// import PresalesEngineersTable from "./components/tables/presalesTable";
-// import ProductLineTable from "./components/tables/productLineTable";
-// import AreaForm from "./components/forms/areaForm";
-// import CurrencyForm from "./components/forms/currencyForm"
-// import DepartmentForm from "./components/forms/departmentForm";
-// import PresalesForm from "./components/forms/presalesForm";
-// import ProductLineForm from "./components/forms/productLineForm";
+import CustomerForm from "./components/forms/customerForm";
+import AddForm from './components/forms/addForm';
+import BusinessLineForm from './components/forms/businessLineForm';
+import BusinessUnitForm from './components/forms/businessUnitForm';
+import GeographyForm from './components/forms/geographyForm';
+import UserForm from './components/forms/userForm';
+import TableLayout from './components/tables/tableLayout';
+import Modify from './components/modify';
+import NavBar from './components/navbar';
+import Signup from './components/signup';
+import axios from 'axios'
+import BusinessLineTable from './components/tables/businessLineTable';
+import { useState } from 'react';
+import GeographyTable from './components/tables/geographyTable';
+import UserTable from './components/tables/userTable';
+import Modifybusinessline from './components/modifyforms/modifybusinessline';
+import AnonymizedTable from "./components/tables/anonymizedTable";
+import OrderBook from "./components/orderBook";
+import Reporting from "./components/reporting";
+import OpportunitiesTable from "./components/tables/opportunitiesTable";
+import AreaTable from "./components/tables/areaTable";
+import BusinessUnitTable from "./components/tables/businessUnitTable";
+import CurrencyTable from "./components/tables/currencyTable";
+import CustomerTable from "./components/tables/customerTable";
+import DepartmentTable from "./components/tables/departmentTable";
+import Permissions from "./components/permissions";
+import PresalesEngineersTable from "./components/tables/presalesTable";
+import ProductLineTable from "./components/tables/productLineTable";
+import AreaForm from "./components/forms/areaForm";
+import CurrencyForm from "./components/forms/currencyForm"
+import DepartmentForm from "./components/forms/departmentForm";
+import PresalesForm from "./components/forms/presalesForm";
+import ProductLineForm from "./components/forms/productLineForm";
 
 function App() {
   
   const authctx=useContext(AuthContext)
+  const [search,setSearch]=useState("")
+  const searchHandler=(event)=>{
+    setSearch(event.target.value)
+  }
+
+  const resetsearch=()=>{
+    setSearch("")
+  }
   return (
     <>
-<Routes>
+{/* <Routes>
   <Route path="/*"  element={<Default/>}/>
 <Route path="/login" element={<Login/> }/>
-</Routes>
- 
-{/*     
+</Routes> */}
+
+      
  <NavBar/>        
-      <Routes> */}
+      <Routes> 
         
       
         {/* Modifications */}
-        {/* <Route path="/orderbook" element={<OrderBook/>}/>
+        <Route path="/orderbook" element={<OrderBook/>}/>
         <Route path="/reporting" element={<Reporting/>}/>
         <Route path="/opportunities" element={<OpportunitiesTable/>}/>
         <Route path="/administration/areas" element={<TableLayout link="/administration/areas/new" table={<AreaTable/>} name="Area"/>}/>
@@ -83,7 +91,7 @@ function App() {
 
         <Route path='*' element={<Navigate to="/administration/users/new"/>}/>
         <Route path="/modify/*" element={<Modify/>}/>
-      </Routes> */}
+      </Routes>
   {/* <Signup/> */}
 
      </>
