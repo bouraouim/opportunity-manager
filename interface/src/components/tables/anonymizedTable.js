@@ -192,42 +192,28 @@ const AnonymizedTable=(props)=> {
             setcsvData(r)
             setdownload(true)
                 setdownload(false)   
-                }).then(r=>{
+                }).then( async r=>{
+                     const   res= await   axios.get('http://localhost:8000/api/numbers/2')
+                                var numberanonymized= res.data.num
                     
-                    isCheck.map((d)=>{
-                        
-                        
-                            axios.get('http://localhost:8000/api/numbers/2').then(r=>{
-                                var numberanonymized= r.data.num
-                         return numberanonymized
-                             }).then(r=>{
-                                var body={status:false,firstname:"firstname"+r,lastname:"lastname"+r,email:"email"+r}
-                                console.log(r)
-                            return[r,body]}).then((r)=>{
-                                axios.patch('http://localhost:8000/api/userrs/'+d,r[1],{headers: {
+                   isCheck.map(async d=>{   
+                    numberanonymized++
+                            
+                                var body={status:false,firstname:"firstname"+numberanonymized,lastname:"lastname"+numberanonymized,email:"email"+numberanonymized}
+                                console.log(numberanonymized)
+                                await axios.patch('http://localhost:8000/api/userrs/'+d,body,{headers: {
                         'Content-Type': 'application/merge-patch+json' 
                     }}) 
-                    return r[0]
-                             }).then(r=>{
-                                console.log(r)
-                                var t=r+1
-                                console.log(t)
-                        axios.patch('http://localhost:8000/api/numbers/2',{num:t},{headers: {
-                            'Content-Type': 'application/merge-patch+json' 
-                        }})              }).then(()=>{})
-                    .catch(function (error) {
-                    console.log(error);
-                    });
-                     
-                        
-            
-
+                                 
                 })
+                await  axios.patch('http://localhost:8000/api/numbers/2',{num:numberanonymized},{headers: {
+                            'Content-Type': 'application/merge-patch+json' 
+                        }}) 
           })}
 
 
           const downloadhandler=()=>{
-            axios.get('http://localhost:8000/api/userrs?pagination=false') 
+            axios.get('http://localhost:8000/api/userrs?pagination=false&status=false') 
             .then(response=>{
                 var table=(response.data["hydra:member"].map(d=>{
                         var a=parameters.map(p=>{
@@ -275,7 +261,7 @@ const AnonymizedTable=(props)=> {
             <div className="card mt-5 mb-5 ml-5 mr-5 pl-4 pr-4">
             <div className="card-header d-flex justify-content-between">
                 <div className="">
-                    <button onClick={()=>{   }} className=" rounded-pill btn  btn-success" type="button">
+                    <button onClick={downloadhandler } className=" rounded-pill btn  btn-success" type="button">
                         <span className="btn-inner--icon mr-2"><i className="ni ni-curved-next"></i></span>
                         <span className="btn-inner--text">Export Anonymized users</span>
                     </button>

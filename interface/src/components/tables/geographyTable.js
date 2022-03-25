@@ -43,9 +43,9 @@ const   statusHandler=()=>{
                 <table className="table align-items-center mb-2">
                     <thead className="table-dark">
                         <tr>
-                            <th className="text-center  text-xs font-weight-bold" scope="col" data-sort="name" onClick={()=>sortHandler("country")} >Country <span> <i className="bi bi-arrow-down-up"></i></span> </th>
-                            <th className="text-center text-xs  font-weight-bold" data-sort="name" onClick={()=>sortHandler("area.name")}>Area</th>
-                            <th className="text-center text-xs  font-weight-bold" data-sort="name" onClick={()=>sortHandler("continent")}>Continent</th>
+                            <th className="text-center  text-xs font-weight-bold" scope="col" data-sort="name">Country <span onClick={()=>sortHandler("country")}>&#8645;</span> <i onClick={()=>{searchclick("country")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i>  </th>
+                            <th className="text-center text-xs  font-weight-bold" data-sort="name" >Area <span onClick={()=>sortHandler("area.name")}>&#8645;</span> <i onClick={()=>{searchclick("area.name")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i> </th>
+                            <th className="text-center text-xs  font-weight-bold" data-sort="name" >Continent <span onClick={()=>sortHandler("continent")}>&#8645;</span> <i onClick={()=>{searchclick("continent")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i> </th>
                             <th className="text-center text-xs font-weight-bold">Status</th>
                             <th className="text-center text-xs font-weight-bold">Actions</th>
                         </tr>
@@ -67,6 +67,7 @@ const   statusHandler=()=>{
             </div>
             {!loading && show && <Paginations itemperpage={itemperpage} onchange={handleChange} page={pagenumber} search={props.search}  pagination={paginations}/>}
             {!show && <h5 className="h3 my-2 text-center">no corresponding data</h5>}
+            <Modalinput onchange={searchchange}/>
           </>
         );
 }

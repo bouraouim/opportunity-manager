@@ -45,8 +45,8 @@ const BusinessLineTable=(props)=>{
                 <table className="table align-items-center mb-2">
                     <thead className="table-dark">
                         <tr>
-                            <th className="text-center  text-xs font-weight-bold" scope="col" data-sort="name" onClick={()=>sortHandler("name")} >Business Line <span> <i className="bi bi-arrow-down-up"></i></span> </th>
-                            <th className="text-center text-xs  font-weight-bold" data-sort="name" onClick={()=>sortHandler("businessunit.name")}>Business Unit</th>
+                            <th className="text-center  text-xs font-weight-bold" scope="col" data-sort="name" >Business Line <span onClick={()=>sortHandler("name")}>&#8645;</span> <i onClick={()=>{searchclick("name")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i> <span> <i className="bi bi-arrow-down-up"></i></span> </th>
+                            <th className="text-center text-xs  font-weight-bold" data-sort="name" >Business Unit <span onClick={()=>sortHandler("businessunit.name")}>&#8645;</span> <i onClick={()=>{searchclick("businessunit.name")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
                             <th className="text-center text-xs font-weight-bold">Status</th>
                             <th className="text-center text-xs font-weight-bold">Actions</th>
                         </tr>
@@ -68,6 +68,7 @@ const BusinessLineTable=(props)=>{
             </div>
             {!loading && show && <Paginations itemperpage={itemperpage} itemperpageHandler={itemperpageHandler} onchange={handleChange} page={pagenumber} search={props.search}  pagination={paginations}/>}
             {!show && <h5 className="h3 my-2 text-center">No corresponding data</h5>}
+            <Modalinput onchange={searchchange} />
           </>
         );
     
