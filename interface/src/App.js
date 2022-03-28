@@ -2,7 +2,6 @@ import { Routes, Route, Navigate, } from "react-router-dom";
 
 import Login from "./components/login"
 import Default from "./components/defaultpage"
-import { useContext } from "react";
 import AuthContext from "./store/auth-context";
 import CustomerForm from "./components/forms/customerForm";
 import AddForm from './components/forms/addForm';
@@ -16,7 +15,7 @@ import NavBar from './components/navbar';
 import Signup from './components/signup';
 import axios from 'axios'
 import BusinessLineTable from './components/tables/businessLineTable';
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 import GeographyTable from './components/tables/geographyTable';
 import UserTable from './components/tables/userTable';
 import Modifybusinessline from './components/modifyforms/modifybusinessline';
@@ -39,6 +38,10 @@ import PresalesForm from "./components/forms/presalesForm";
 import ProductLineForm from "./components/forms/productLineForm";
 
 function App() {
+
+  
+
+  const [loginpage,setloginpage]=useState(true)
   
   const authctx=useContext(AuthContext)
   const [search,setSearch]=useState("")
@@ -57,11 +60,12 @@ function App() {
 </Routes> */}
 
       
- <NavBar/>        
+ {authctx.isloggedin && <NavBar/>    }   
       <Routes> 
         
       
         {/* Modifications */}
+        <Route path="/login" element={<Login/>}/>
         <Route path="/orderbook" element={<OrderBook/>}/>
         <Route path="/reporting" element={<Reporting/>}/>
         <Route path="/opportunities" element={<OpportunitiesTable/>}/>

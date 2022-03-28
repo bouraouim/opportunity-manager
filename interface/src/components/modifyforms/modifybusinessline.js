@@ -1,8 +1,9 @@
 import FormButtons from "../forms/formbuttons";
 import Selec from "../forms/select";
 import axios from 'axios'
-import  { useState,useEffect,useRef} from 'react'
+import  { useState,useEffect,useRef, useContext} from 'react'
 import { useNavigate,useParams } from "react-router-dom";
+import AuthContext from "../../store/auth-context";
 
 
 const Modifybusinessline = () => {
@@ -15,10 +16,12 @@ const Modifybusinessline = () => {
     const multiple=false
   
     var { id } = useParams();
+  const authctx=useContext(AuthContext)
+
 
   console.log(id)
     useEffect(()=>{
-      axios.get('http://localhost:8000/businessunit/read') 
+      axios.get('http://localhost:8000/businessunit/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
       .then(response=>{
         console.log(response)
           const table=(response.data.map(d=>{
@@ -51,7 +54,8 @@ const Modifybusinessline = () => {
     }
     console.log(body)
     axios.patch('http://localhost:8000/api/businesslines/'+id,body,{headers: {
-      'Content-Type': 'application/merge-patch+json' 
+      'Content-Type': 'application/merge-patch+json' ,
+      Authorization: "Bearer "+authctx.token
     }})
     .then(function (response) {
       console.log(response);

@@ -13,8 +13,8 @@ import {useContext, useEffect, useRef, useState} from 'react'
 
 
       useEffect(()=>{
-        if(!authcontext.isloggedin){
-          navigate('/',{ replace: true })  
+        if(authcontext.isloggedin){
+          navigate('/')  
         }
       })
 
@@ -25,7 +25,7 @@ import {useContext, useEffect, useRef, useState} from 'react'
         setisloggedin((prevstate)=>!prevstate)
       }
 
-      const submitHandler=(event)=>{
+      async function submitHandler(event){
         event.preventDefault();
 
         const email=emailRef.current.value
@@ -33,21 +33,27 @@ import {useContext, useEffect, useRef, useState} from 'react'
 
         setisloading(true)
 
-        if(isloggedin){
-          var url=''
+        if(!isloggedin){
+          let url='http://localhost:8000/api/login_check'
         }
-        else{var url=''}
+        else{let url=''}
 
        const body={
           "email":email,
           "password":password,
         }
 
-        axios.post(url,body).then((r)=>{
-          setisloading(false)
-          authcontext.login(r.token)
-        })
+        try {
+     const  r= await axios.post('http://localhost:8000/api/login_check',body)
+          authcontext.login(r.data.token,email)
+          // await authcontext.fetchuser()
+          navigate('/')
+        }catch (error) {
+          console.error(error);}
+      
+            
 
+        // ,{ replace: true }
       }
 
         return(
@@ -74,13 +80,13 @@ import {useContext, useEffect, useRef, useState} from 'react'
           <div className="card bg-secondary border-0 mb-0">
             <div className="card-body px-lg-5 py-lg-5">
               
-              <form role="form">
+              <form role="form" onSubmit={submitHandler}>
                 <div className="form-group mb-3">
                   <div className="input-group input-group-merge input-group-alternative">
                     <div className="input-group-prepend">
                       <span className="input-group-text"><i className="ni ni-email-83"></i></span>
                     </div>
-                    <input className="form-control" placeholder="Email" type="email"/>
+                    <input className="form-control" ref={emailRef} placeholder="Email" />
                   </div>
                 </div>
                 <div className="form-group">
@@ -88,7 +94,7 @@ import {useContext, useEffect, useRef, useState} from 'react'
                     <div className="input-group-prepend">
                       <span className="input-group-text"><i className="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input className="form-control" placeholder="Password" type="password"/>
+                    <input className="form-control" ref={passwordRef} placeholder="Password" type="password"/>
                   </div>
                 </div>
                 <div className="custom-control custom-control-alternative custom-checkbox">
@@ -98,7 +104,7 @@ import {useContext, useEffect, useRef, useState} from 'react'
                   </label>
                 </div>
                 <div className="text-center">
-                  <button type="submit" onClick={submitHandler} className="btn btn-primary my-4">Sign in</button>
+                  <button type="submit" className="btn btn-primary my-4">Sign in</button>
                 </div>
               </form>
             </div>

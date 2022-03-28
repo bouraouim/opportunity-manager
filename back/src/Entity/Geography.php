@@ -17,9 +17,8 @@ use App\ApiPlatform\geocustomsearch;
     normalizationContext:['groups'=>[ 'read:geography_collection']],
     denormalizationContext:['groups'=>[ 'write:geography_collection']]
 ),
-ApiFilter(SearchFilter::class, properties:['country'=>'partial','area.name'=>'partial','continent'=>'partial','status'=>'exact'] ),
-ApiFilter(OrderFilter::class, properties: ['country','area.name','continent'], arguments: ['orderParameterName' => 'order']),
-ApiFilter(geocustomsearch::class)]
+ApiFilter(geocustomsearch::class,SearchFilter::class, properties:['country'=>'partial','area.name'=>'partial','continent'=>'partial','status'=>'exact'] ),
+ApiFilter(OrderFilter::class, properties: ['country','area.name','continent'], arguments: ['orderParameterName' => 'order'])]
 class Geography
 {
     #[ORM\Id]

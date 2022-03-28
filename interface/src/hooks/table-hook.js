@@ -1,5 +1,6 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect, useContext } from "react";
 import axios from 'axios'
+import AuthContext from "../store/auth-context";
 
 const Tablehook=(tablename,searchterm,parameters,searchby,globalsearch)=>{
         const [data , setData]=useState([])
@@ -29,11 +30,12 @@ const Tablehook=(tablename,searchterm,parameters,searchby,globalsearch)=>{
         }
 
 
-        
+        const authctx=useContext(AuthContext)
         useEffect(()=>{
-            const link='http://localhost:8000/api/'+tablename+'?page='+pagenumber+'&itemsPerPage='+itemperpage+'&status=true'+searchlink+searchterm+sortlink
-            axios.get(link) 
+            const link='http://localhost:8000/api/'+tablename+'?page='+pagenumber+'&itemsPerPage='+itemperpage+'&status=true'+global+searchlink+searchterm+sortlink
+            axios.get(link,{headers: {Authorization: "Bearer "+authctx.token}}) 
             .then(response=>{
+                console.log(response)
                 
                 const table=(response.data["hydra:member"].map(d=>{
                         var a=parameters.map(p=>{
@@ -48,6 +50,7 @@ const Tablehook=(tablename,searchterm,parameters,searchby,globalsearch)=>{
                                   return l[p.split('.')[1]]+","})}
                             }
                             else{
+                                console.log(p)
                                 console.log(leaf(d,p))
                            return {[p]:leaf(d,p) }
                             }
@@ -89,7 +92,7 @@ const Tablehook=(tablename,searchterm,parameters,searchby,globalsearch)=>{
             }).catch(error=>{
               console.error(error);
             }) 
-        },[loading,pagenumber,searchterm,order,itemperpage,global])
+        },[loading,pagenumber,searchterm,order,itemperpage,global,authctx.token])
         
         const loadingchange=()=>{
             setLoading(true)

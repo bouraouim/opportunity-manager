@@ -1,6 +1,7 @@
 import FormButtons from '../forms/formbuttons';
 import Selec from '../forms/select';
-import { useState,useRef,useEffect } from "react";
+import { useState,useRef,useEffect, useContext } from "react";
+import AuthContext from '../../store/auth-context';
 import { useNavigate,useParams } from "react-router-dom";
 import axios from 'axios'
 const Modifyuser = () => {
@@ -21,11 +22,12 @@ const Modifyuser = () => {
   const [areadata , setareadata]=useState([])
   const [departmentdata , setdepartmentdata]=useState([])
   var { id } = useParams();
+  const authctx=useContext(AuthContext)
   
   useEffect(()=>{
 
       //businessunit
-      axios.get('http://localhost:8000/businessunit/read') 
+      axios.get('http://localhost:8000/businessunit/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
       .then(response=>{
           const table=(response.data.map(d=>{
               return{
@@ -39,7 +41,7 @@ const Modifyuser = () => {
       }) 
 
       //businessline
-      axios.get('http://localhost:8000/businessline/read') 
+      axios.get('http://localhost:8000/businessline/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
       .then(response=>{
           const table=(response.data.map(d=>{
               return{
@@ -53,7 +55,7 @@ const Modifyuser = () => {
       }) 
 
       //Role
-      axios.get('http://localhost:8000/role/read') 
+      axios.get('http://localhost:8000/role/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
       .then(response=>{
           const table=(response.data.map(d=>{
               return{
@@ -67,7 +69,7 @@ const Modifyuser = () => {
       }) 
 
       //department
-      axios.get('http://localhost:8000/department/read') 
+      axios.get('http://localhost:8000/department/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
       .then(response=>{
           const table=(response.data.map(d=>{
               return{
@@ -81,7 +83,7 @@ const Modifyuser = () => {
       }) 
 
       //area
-      axios.get('http://localhost:8000/area/read') 
+      axios.get('http://localhost:8000/area/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
       .then(response=>{
           const table=(response.data.map(d=>{
               return{
@@ -158,8 +160,9 @@ const Modifyuser = () => {
       body["area"]=bu
     }
     console.log(body)
-    axios.patch('http://localhost:8000/api/userrs/'+id,body,{headers: {
-        'Content-Type': 'application/merge-patch+json' 
+    axios.patch('http://localhost:8000/api/users/'+id,body,{headers: {
+        'Content-Type': 'application/merge-patch+json' ,
+        Authorization: "Bearer "+authctx.token
       }})
     .then(response=> {
       console.log(body);

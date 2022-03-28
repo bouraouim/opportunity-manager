@@ -1,6 +1,7 @@
     import FormButtons from '../forms/formbuttons';
-import  { useState,useEffect,useRef} from 'react'
+import  { useState,useEffect,useRef, useContext} from 'react'
 import Selec from "../forms/select";
+import AuthContext from '../../store/auth-context';
 import axios from 'axios'
 import { useNavigate ,useParams} from "react-router-dom";
 
@@ -13,10 +14,11 @@ const Modifygeography  = () => {
   const continentRef=useRef();
   const multiple=true
   var { id } = useParams();
+  const authctx=useContext(AuthContext)
 
 
   useEffect(()=>{
-    axios.get('http://localhost:8000/area/read') 
+    axios.get('http://localhost:8000/area/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
     .then(response=>{
         const table=(response.data.map(d=>{
             return{
@@ -50,7 +52,10 @@ if(Number.isInteger(areainput)){
         body["continent"]=continentinput
       }
 
-  axios.patch('http://localhost:8000/api/geographies/'+id,body)
+  axios.patch('http://localhost:8000/api/geographies/'+id,body,{headers: {
+    'Content-Type': 'application/merge-patch+json' ,
+    Authorization: "Bearer "+authctx.token
+  }})
   .then(function (response) {
   })
   .catch(function (error) {

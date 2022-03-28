@@ -1,44 +1,68 @@
-# config/packages/security.yaml
 security:
+
+    role_hierarchy:
+        ROLE_ADMIN: [ ROLE_USER, ROLE_ALLOWED_TO_SWITCH ]
+        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
+        ROLE_SALES_MANAGER : [ ROLE_USER ]
+        ROLE_SALES_DIRECTOR : [ ROLE_USER ]
+        ROLE_SALES_ADMINISTRATOR : [ ROLE_USER ]
+
+    # https://symfony.com/doc/current/security/experimental_authenticators.html
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#c-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-        
+        App\Entity\User:
+            algorithm: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
+        # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
-                class: App\Entity\Userr
+                class: App\Entity\User
                 property: email
-        # used to reload user from session & other features (e.g. switch_user)
     firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        # put it before all your other firewall API entries
+        refresh:
+            pattern:  ^/api/token/refresh
+            stateless: true
         login:
             pattern: ^/api/login
             stateless: true
+            user_checker: App\Security\UserChecker
             json_login:
-                check_path: /api/login
+                check_path: /api/login_check
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            jwt: ~
+        api:
+            pattern: ^/api
+            stateless: true
+            switch_user: true
+            provider: app_user_provider
+            jwt: ~
+        main:
+            json_login:
+                check_path: /authentication_token
+                username_path: email
+                password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-        api:
-            pattern:   ^/api
-            stateless: true
-            jwt: ~
-        # main:
-        #     lazy: true
-        #     provider: app_user_provider
-        #     json_login:
-        #         check_path: api_login
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
+
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+    #     Easy way to control access for large sections of your site
+    #     Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: PUBLIC_ACCESS  }
+        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+        - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/docs, roles: PUBLIC_ACCESS }

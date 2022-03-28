@@ -1,9 +1,10 @@
-import React, { useState,useEffect,useRef } from 'react';
+import React, { useState,useEffect,useRef, useContext } from 'react';
 import axios from 'axios'
 import Useritem from './items/useritem';
 import Paginations from './pagination';
 import Anonymizeitem from './items/anonymizeitem';
 import { CSVLink, CSVDownload } from "react-csv";
+import AuthContext from '../../store/auth-context';
 import Modalinput from './modalInputs';
 const AnonymizedTable=(props)=> { 
 
@@ -26,7 +27,7 @@ const AnonymizedTable=(props)=> {
         ["lastname", "firstname", "login","email","business line","last connection date","creation date"]])
         const [searchby,setsearchby]=useState('')
         const [searchterm,setsearchterm]=useState('')
-        
+        const authctx=useContext(AuthContext)
 
         const  searchchange=(e)=>{
             setsearchterm(e.target.value)
@@ -52,10 +53,10 @@ const AnonymizedTable=(props)=> {
             if(order==="desc"){setOrder('asc')}
         }
             
-        const parameters=["id","firstname","lastname","email",'businessunit.name','businessline.name','login','creationdate',"lastconnectiondate"]
+        const parameters=["id","firstname","lastname","email",'businessunit.name','businessline.name','password','creationdate',"lastconnectiondate"]
         useEffect(()=>{
             
-            axios.get('http://localhost:8000/api/userrs?page='+pagenumber+'&itemsPerPage='+itemperpage+anonymizedlink+searchlink+searchterm+props.search+'&status=true'+sortlink) 
+            axios.get('http://localhost:8000/api/users?page='+pagenumber+'&itemsPerPage='+itemperpage+anonymizedlink+searchlink+searchterm+props.search+'&status=true'+sortlink,{headers: {Authorization: "Bearer "+authctx.token}}) 
             .then(response=>{
                 setIsCheckAll(false)
                 setIsCheck([])
@@ -162,7 +163,7 @@ const AnonymizedTable=(props)=> {
 
           const anonymizeHandler=()=>{
            
-            axios.get('http://localhost:8000/api/userrs?pagination=false') 
+            axios.get('http://localhost:8000/api/users?pagination=false',{headers: {Authorization: "Bearer "+authctx.token}}) 
             .then(response=>{
                 var table=(response.data["hydra:member"].map(d=>{
                         var a=parameters.map(p=>{
@@ -193,7 +194,7 @@ const AnonymizedTable=(props)=> {
             setdownload(true)
                 setdownload(false)   
                 }).then( async r=>{
-                     const   res= await   axios.get('http://localhost:8000/api/numbers/2')
+                     const   res= await   axios.get('http://localhost:8000/api/numbers/2',{headers: {Authorization: "Bearer "+authctx.token}})
                                 var numberanonymized= res.data.num
                     
                    isCheck.map(async d=>{   
@@ -202,18 +203,20 @@ const AnonymizedTable=(props)=> {
                                 var body={status:false,firstname:"firstname"+numberanonymized,lastname:"lastname"+numberanonymized,email:"email"+numberanonymized}
                                 console.log(numberanonymized)
                                 await axios.patch('http://localhost:8000/api/userrs/'+d,body,{headers: {
-                        'Content-Type': 'application/merge-patch+json' 
+                        'Content-Type': 'application/merge-patch+json' ,
+                        Authorization: "Bearer "+authctx.token
                     }}) 
                                  
                 })
                 await  axios.patch('http://localhost:8000/api/numbers/2',{num:numberanonymized},{headers: {
-                            'Content-Type': 'application/merge-patch+json' 
+                            'Content-Type': 'application/merge-patch+json' ,
+                            Authorization: "Bearer "+authctx.token
                         }}) 
           })}
 
 
           const downloadhandler=()=>{
-            axios.get('http://localhost:8000/api/userrs?pagination=false&status=false') 
+            axios.get('http://localhost:8000/api/users?pagination=false&status=false',{headers: {Authorization: "Bearer "+authctx.token}}) 
             .then(response=>{
                 var table=(response.data["hydra:member"].map(d=>{
                         var a=parameters.map(p=>{

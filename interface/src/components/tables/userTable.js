@@ -24,7 +24,7 @@ import Modalinput from './modalInputs';
                 itemperpage,
                 loadingchange,
                 sortHandler,
-                handleChange}=Tablehook("userrs",searchh,["id","firstname","lastname","email",'businessunit.name','businessline.name','role.name','area.name','department.name',"status","lastconnectiondate"],searchterm,props.search)
+                handleChange}=Tablehook("users",searchh,["id","firstname","lastname","email",'businessunit.name','businessline.name','role.name','area.name','department.name',"status","lastconnectiondate"],searchterm,props.search)
 
                const searchclick=(n)=>{
                     setSearchterm(n)}

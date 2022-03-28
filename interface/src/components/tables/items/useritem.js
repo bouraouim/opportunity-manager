@@ -1,15 +1,18 @@
 
 import axios from 'axios'
+import { useContext } from 'react';
 import { Link } from "react-router-dom";
+import AuthContext from '../../../store/auth-context';
 
 function Useritem(props) {
 
-    const link='http://localhost:8000/api/userrs/'+props.id
+    const link='http://localhost:8000/api/users/'+props.id
     const  deleteHandler=()=>{
        axios.delete(link) 
        .then(props.loading) 
    }
 
+   const authctx=useContext(AuthContext)
    const anonymizeHandler=()=>{
       const body= {
         "anonymized":true
@@ -29,6 +32,10 @@ function Useritem(props) {
    }
 
 
+   const switchuser=()=>{
+    authctx.setemail(props.email)
+
+   }
   return (<>
   <tr >
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm"> 
@@ -62,7 +69,7 @@ function Useritem(props) {
                 <span className={statusclass}>{status}</span>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center d-flex align-items-center justify-content-center">
-          <i  className='ni ni-single-02 mr-2 fa-lg pe-auto '  />
+          <i  className='ni ni-single-02 mr-2 fa-lg pe-auto ' onClick={switchuser} />
             <button type="button" onClick={deleteHandler} className="btn btn-danger btn-circle btn-sm opacity-5">-</button>
             </td>
         </tr>

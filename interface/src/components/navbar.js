@@ -1,9 +1,16 @@
-
-
+import AuthContext from "../store/auth-context";
+import { useContext } from 'react';
 import { BrowserRouter as Router, Route, Link , NavLink} from "react-router-dom";
-
+import axios from "axios";
 
 const NavBar=()=>{
+
+
+  const authctx=useContext(AuthContext)
+  
+  const user=authctx.user
+
+  console.log(user)
 
     return(
       <nav className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-default sticky-top ">
@@ -68,13 +75,13 @@ const NavBar=()=>{
                     <img alt="" src="../../assets-old/img/theme/team-4.jpg"/>
                   </span>
                   <div className="media-body ml-2 d-none d-lg-block">
-                    <span className="mb-0 text-sm  font-weight-bold">John Snow</span>
+                    <span className="mb-0 text-sm  font-weight-bold">{user.lastname}</span>
                   </div>
                 </div>
               </a>
               <div className="dropdown-menu dropdown-menu-right">
                 <div className="dropdown-header noti-title">
-                  <h6 className="text-overflow m-0">Signed as </h6>
+                  <h6 className="text-overflow m-0">Signed as {user.lastname}</h6>
                 </div>
                 <div className="dropdown-divider"></div>
                 <NavLink activeclassname="active" to="user/:id" className="dropdown-item">
@@ -85,11 +92,10 @@ const NavBar=()=>{
                   <i className="ni ni-settings-gear-65"></i>
                   <span>Settings</span>
                 </NavLink>
-                <div className="dropdown-divider"></div>
-                <NavLink activeclassname="active" to="#!" className="dropdown-item">
+                <div type='button' onClick={ authctx.logout } className="dropdown-item">
                   <i className="ni ni-user-run"></i>
                   <span>Signout</span>
-                </NavLink>
+                </div>
               </div>
             </li>
           </ul>
