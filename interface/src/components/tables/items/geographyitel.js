@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios'
 import { Link } from "react-router-dom";
+import AuthContext from '../../../store/auth-context';
 
 const Geographyitem = (props) => {
     const statusclass=props.status?"badge badge-sm badge-success":"badge badge-sm badge-danger"
    const status=props.status?"ACTIVE":"iNACTIVE"
 
+   const authctx=useContext(AuthContext)
+
     const link='http://localhost:8000/api/geographies/'+props.id
     const  deleteHandler=()=>{
-       axios.delete(link) 
+       axios.delete(link,{headers: {
+        Authorization: "Bearer "+authctx.token
+    }}) 
        .then(props.loading) 
    }
    const delvergule=(v)=>{

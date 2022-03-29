@@ -1,9 +1,10 @@
 import useInput from "../../hooks/user-input"
 import FormButtons from "./formbuttons"; 
 import Selec from './select'
-import { useState,useRef,useEffect } from "react";
+import { useState,useRef,useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
+import AuthContext from "../../store/auth-context";
 
 
 
@@ -38,7 +39,7 @@ const UserForm=()=>{
   const [departmentvalue,setdepartmentvalue]=useState([])
   const [areavalue,setareavalue]=useState([])
   
-
+const authctx=useContext(AuthContext)
 
   const choiceHandler=(event,s)=>{
     if((event.target.value).length>0){
@@ -51,7 +52,7 @@ const UserForm=()=>{
       })
       console.log(link)
         //businessline
-        axios.get('http://localhost:8000/api/businesslines?page=1&pagination=false'+link) 
+        axios.get('http://localhost:8000/api/businesslines?page=1&pagination=false'+link,{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
             const table=(response.data["hydra:member"].map(d=>{
                 return{
@@ -63,33 +64,33 @@ const UserForm=()=>{
         }).catch(error=>{
           console.error(error);
         }) 
-        // //department
-        // axios.get('http://localhost:8000/api/department?page=1&pagination=false'+link) 
-        // .then(response=>{
-        //     const table=(response.data.map(d=>{
-        //         return{
-        //             id: d.id,
-        //             name:d.name,
-        //         } 
-        //     }))
-        //     setdepartmentdata(table)
-        // }).catch(error=>{
-        //   console.error(error);
-        // }) 
+        //department
+        axios.get('http://localhost:8000/api/department?page=1&pagination=false'+link,{headers: {Authorization: "Bearer "+authctx.token}}) 
+        .then(response=>{
+            const table=(response.data.map(d=>{
+                return{
+                    id: d.id,
+                    name:d.name,
+                } 
+            }))
+            setdepartmentdata(table)
+        }).catch(error=>{
+          console.error(error);
+        }) 
   
-        // //area
-        // axios.get('http://localhost:8000/api/area?page=1&pagination=false'+link) 
-        // .then(response=>{
-        //     const table=(response.data.map(d=>{
-        //         return{
-        //             id: d.id,
-        //             name:d.name,
-        //         } 
-        //     }))
-        //     setareadata(table)
-        // }).catch(error=>{
-        //   console.error(error);
-        // })
+        //area
+        axios.get('http://localhost:8000/api/area?page=1&pagination=false'+link,{headers: {Authorization: "Bearer "+authctx.token}}) 
+        .then(response=>{
+            const table=(response.data.map(d=>{
+                return{
+                    id: d.id,
+                    name:d.name,
+                } 
+            }))
+            setareadata(table)
+        }).catch(error=>{
+          console.error(error);
+        })
         
     }
     else {setchoice(true)
@@ -156,7 +157,7 @@ const UserForm=()=>{
       console.log(blvalue)
      var body={
       "email": inputemail,
-      "login":inputlogin,
+      "password":inputlogin,
       "firstname":inputfname,
       "lastname":inputlname,
     }
@@ -192,7 +193,7 @@ const UserForm=()=>{
       body["area"]=bu
     }
     console.log(body)
-    axios.post('http://localhost:8000/api/userrs',body)
+    axios.post('http://localhost:8000/api/users',body,{headers: {Authorization: "Bearer "+authctx.token}})
     .then(response=> {
       console.log(body);
     })

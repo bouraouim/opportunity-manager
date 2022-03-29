@@ -10,6 +10,8 @@ import {useContext, useEffect, useRef, useState} from 'react'
       const authcontext=useContext(AuthContext)
     const navigate=useNavigate();
 
+    const [falsecredential,setfalsecredential]=useState(false)
+
 
 
       useEffect(()=>{
@@ -49,7 +51,7 @@ import {useContext, useEffect, useRef, useState} from 'react'
           // await authcontext.fetchuser()
           navigate('/')
         }catch (error) {
-          console.error(error);}
+         setfalsecredential(true)}
       
             
 
@@ -97,6 +99,7 @@ import {useContext, useEffect, useRef, useState} from 'react'
                     <input className="form-control" ref={passwordRef} placeholder="Password" type="password"/>
                   </div>
                 </div>
+                {falsecredential && <h5>False credential</h5>}
                 <div className="custom-control custom-control-alternative custom-checkbox">
                   <input className="custom-control-input" id=" customCheckLogin" type="checkbox"/>
                   <label className="custom-control-label" htmlFor=" customCheckLogin">

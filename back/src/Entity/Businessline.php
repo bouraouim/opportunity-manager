@@ -23,8 +23,10 @@ use App\ApiPlatform\blcustomfilter;
         'get','patch'
     ]
 ),
-ApiFilter(blcustomfilter::class, SearchFilter::class, properties:['name'=>'partial','businessunit.name'=>'partial','businessunit.id'=>'exact','status'=>'exact'] ),
-ApiFilter(OrderFilter::class, properties: ['name','businessunit.name'], arguments: ['orderParameterName' => 'order'])]
+ApiFilter( SearchFilter::class, properties:['name'=>'partial','businessunit.name'=>'partial','businessunit.id'=>'exact','status'=>'exact'] ),
+ApiFilter(OrderFilter::class, properties: ['name','businessunit.name'], arguments: ['orderParameterName' => 'order']),
+ApiFilter(blcustomfilter::class)
+]
 class Businessline
 {
     #[ORM\Id]

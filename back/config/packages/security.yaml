@@ -63,6 +63,6 @@ security:
     #     Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
-        - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST] }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        # - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST,DELETE] }
+        - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/docs, roles: PUBLIC_ACCESS }

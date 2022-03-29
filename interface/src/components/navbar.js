@@ -74,14 +74,11 @@ const NavBar=()=>{
                   <span className="avatar avatar-sm rounded-circle">
                     <img alt="" src="../../assets-old/img/theme/team-4.jpg"/>
                   </span>
-                  <div className="media-body ml-2 d-none d-lg-block">
-                    <span className="mb-0 text-sm  font-weight-bold">{user.lastname}</span>
-                  </div>
                 </div>
               </a>
               <div className="dropdown-menu dropdown-menu-right">
                 <div className="dropdown-header noti-title">
-                  <h6 className="text-overflow m-0">Signed as {user.lastname}</h6>
+                  <h6 className="text-overflow m-0">Signed as {user.email}</h6>
                 </div>
                 <div className="dropdown-divider"></div>
                 <NavLink activeclassname="active" to="user/:id" className="dropdown-item">

@@ -1,13 +1,15 @@
 
 import axios from 'axios'
+import { useContext } from 'react';
 import { Link } from "react-router-dom";
+import AuthContext from '../../../store/auth-context';
 const BusinessLineItem=(props)=>{
    
-
+const authctx=useContext(AuthContext)
     
     const link='http://localhost:8000/api/businesslines/'+props.id
     const  deleteHandler=()=>{
-       axios.delete(link) 
+       axios.delete(link,{headers: {Authorization: "Bearer "+authctx.token}}) 
        .then(props.loading) 
    }
 

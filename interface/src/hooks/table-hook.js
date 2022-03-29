@@ -50,8 +50,6 @@ const Tablehook=(tablename,searchterm,parameters,searchby,globalsearch)=>{
                                   return l[p.split('.')[1]]+","})}
                             }
                             else{
-                                console.log(p)
-                                console.log(leaf(d,p))
                            return {[p]:leaf(d,p) }
                             }
                         })

@@ -24,7 +24,7 @@ class Area
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:area_collection','read:geography_collection','read:user_collection'])]
+    #[Groups(['read:area_collection','read:geography_collection','read:user_collection','write:area_collection'])]
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'area', targetEntity: Geography::class, orphanRemoval: true)]

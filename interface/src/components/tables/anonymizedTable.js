@@ -61,6 +61,7 @@ const AnonymizedTable=(props)=> {
                 setIsCheckAll(false)
                 setIsCheck([])
                 var table=(response.data["hydra:member"].map(d=>{
+                    console.log(d)
                         var a=parameters.map(p=>{
                             if(Object.prototype.toString.call(leaf(d,p.split('.')[0])) === '[object Array]'){
 
@@ -185,16 +186,16 @@ const AnonymizedTable=(props)=> {
                 }))
                return table
                 }).then(table=>{
-                   const csvDat=[["lastname", "firstname", "login","email","business line","last connection date","creation date"]]
+                   const csvDat=[["lastname", "firstname", "password","email","business line","last connection date","creation date"]]
                 table.map((t)=>{
-                    csvDat.push([t.lastname,t.firstname,t.login,t.email,t["businessline.name"],t["lastconnectiondate"],t["creationdate"]])})
+                    csvDat.push([t.lastname,t.firstname,t.password,t.email,t["businessline.name"],t["lastconnectiondate"],t["creationdate"]])})
                 return(csvDat)
                 }).then(r=>{
             setcsvData(r)
             setdownload(true)
                 setdownload(false)   
                 }).then( async r=>{
-                     const   res= await   axios.get('http://localhost:8000/api/numbers/2',{headers: {Authorization: "Bearer "+authctx.token}})
+                     const   res= await   axios.get('http://localhost:8000/api/numbers/1',{headers: {Authorization: "Bearer "+authctx.token}})
                                 var numberanonymized= res.data.num
                     
                    isCheck.map(async d=>{   
@@ -202,13 +203,13 @@ const AnonymizedTable=(props)=> {
                             
                                 var body={status:false,firstname:"firstname"+numberanonymized,lastname:"lastname"+numberanonymized,email:"email"+numberanonymized}
                                 console.log(numberanonymized)
-                                await axios.patch('http://localhost:8000/api/userrs/'+d,body,{headers: {
+                                await axios.patch('http://localhost:8000/api/users/'+d,body,{headers: {
                         'Content-Type': 'application/merge-patch+json' ,
                         Authorization: "Bearer "+authctx.token
                     }}) 
                                  
                 })
-                await  axios.patch('http://localhost:8000/api/numbers/2',{num:numberanonymized},{headers: {
+                await  axios.patch('http://localhost:8000/api/numbers/1',{num:numberanonymized},{headers: {
                             'Content-Type': 'application/merge-patch+json' ,
                             Authorization: "Bearer "+authctx.token
                         }}) 
@@ -238,9 +239,9 @@ const AnonymizedTable=(props)=> {
                 }))
                return table
                 }).then(table=>{
-                   const csvDat=[["lastname", "firstname", "login","email","business line","last connection date","creation date"]]
+                   const csvDat=[["lastname", "firstname", "password","email","business line","last connection date","creation date"]]
                 table.map((t)=>{
-                    csvDat.push([t.lastname,t.firstname,t.login,t.email,t["businessline.name"],t["lastconnectiondate"],t["creationdate"]])})
+                    csvDat.push([t.lastname,t.firstname,t.password,t.email,t["businessline.name"],t["lastconnectiondate"],t["creationdate"]])})
                 return(csvDat)
                 }).then(r=>{
             setcsvData(r)
@@ -288,7 +289,7 @@ const AnonymizedTable=(props)=> {
                                     <th className="text-center text-xs font-weight-bold">Firstname <span onClick={()=>sortHandler("firstname")}>&#8645;</span> <i onClick={()=>{searchclick("firstname")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
                                     <th className="text-center text-xs font-weight-bold">Login <span onClick={()=>sortHandler("login")}>&#8645;</span> <i onClick={()=>{searchclick("email")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
                                     <th className="text-center text-xs font-weight-bold">Email address <span onClick={()=>sortHandler("email")}>&#8645;</span> <i onClick={()=>{searchclick("email")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
-                                    <th className="text-center text-xs font-weight-bold">Business  <span onClick={()=>sortHandler("businessline.name")}>&#8645;</span> <i onClick={()=>{searchclick("businessline.name")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
+                                    <th className="text-center text-xs font-weight-bold">Business Line <span onClick={()=>sortHandler("businessline.name")}>&#8645;</span> <i onClick={()=>{searchclick("businessline.name")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i></th>
                                     <th className="text-center text-xs font-weight-bold">Last connection date</th>
                                     <th className="text-center text-xs font-weight-bold">Creation date</th>
                                     <th className="text-center text-xs font-weight-bold d-flex justify-content-center align-items-center">Check all 
@@ -305,7 +306,7 @@ const AnonymizedTable=(props)=> {
                     <Anonymizeitem key={d.name}
                     email={d.email}
                     loading={loadingchange}
-                    login={d["login"]}
+                    login={d["password"]}
                     bline={d["businessline.name"]}
                     lastconnectiondate={d["lastconnectiondate"]}
                     lname={d.lastname}

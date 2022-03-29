@@ -1,9 +1,10 @@
 import useInput from "../../hooks/user-input"
 import FormButtons from "./formbuttons"; 
-import  { useState,useEffect,useRef} from 'react'
+import  { useState,useEffect,useRef, useContext} from 'react'
 import Selec from "./select";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../../store/auth-context";
 
 
 const GeographyForm=()=>{
@@ -11,6 +12,8 @@ const GeographyForm=()=>{
   const countryvalid=countryHasError?"form-control is-invalid":"form-control  "
   const [areadata , setareadata]=useState([])
   const[areavalid,setareavalid]=useState(false)
+
+const authctx=useContext(AuthContext)
 
    const areahandler=(v)=>{
         setareavalid(v)
@@ -56,7 +59,7 @@ const submithandler=(event)=>{
     "continent": continentinput 
       
   }
-  axios.post('http://localhost:8000/api/geographies',body)
+  axios.post('http://localhost:8000/api/geographies',body,{headers: {Authorization: "Bearer "+authctx.token}})
   .then(function (response) {
   })
   .catch(function (error) {

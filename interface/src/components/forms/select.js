@@ -9,7 +9,7 @@ const Selec=React.forwardRef((props,ref)=>{
 
 
   
-  const {value:selecValue,isValid:selecIsValid ,hasError:selecHasError, valueChangeHandler:selecChangeHandler , inputBlurHandler:selecBlurHandler}=useInput(value=>value.length !==0);
+  const {value:selecValue,isValid:selecIsValid ,hasError:selecHasError, valueChangeHandler:selecChangeHandler , inputBlurHandler:selecBlurHandler}=useInput(value=>value !==[]);
   var selecvalid="form-control"
   if(props.full){
     var selecvalid=selecHasError?"form-control is-invalid":"form-control"}
@@ -26,17 +26,22 @@ const Selec=React.forwardRef((props,ref)=>{
 
 
    const onChangeHandler=(event)=>{
-    setSelected(event.target.value); selecChangeHandler(event)
+    setSelected(event.target.value); 
+    selecChangeHandler(event)
     try{
     props.choiceHandler(event)
   }catch(error){}
   try{
     props.valueHandler(event.target.value)
   }catch(error){}
-  try{props.validHandler(selecvalid)}catch(error){}
-   
+
+  try{
+    props.onchange(selecIsValid)
+    console.log(selecIsValid)
+  }catch(error){}
 
   }
+  
 
   useImperativeHandle(ref,()=>{
     return{
