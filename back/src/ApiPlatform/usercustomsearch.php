@@ -17,8 +17,9 @@ class usercustomsearch extends AbstractFilter
         if ($property !== 'search') {
             return;
         }
+        // OR %s.businessunit LIKE :search
         $alias = $queryBuilder->getRootAliases()[0];
-        $queryBuilder->andWhere(sprintf('%s.name LIKE :search OR %s.businessunit LIKE :search', $alias, $alias))->setParameter('search', '%'.$value.'%');
+        $queryBuilder->andWhere(sprintf('%s.email LIKE :search OR %s.lastname LIKE :search OR %s.firstname LIKE :search ', $alias, $alias,$alias))->setParameter('search', '%'.$value.'%');
 
     }
     public function getDescription(string $resourceClass): array

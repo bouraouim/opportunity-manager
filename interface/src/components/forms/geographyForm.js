@@ -65,7 +65,7 @@ const submithandler=(event)=>{
   .catch(function (error) {
     console.log(error);
   });
-  navigate('/geography')  
+  navigate('/administration/geography')  
 }
 const continentdata=[{id:"africa",name:"africa"},{id:"europe",name:"europe"}]
 
@@ -95,7 +95,7 @@ const continentdata=[{id:"africa",name:"africa"},{id:"europe",name:"europe"}]
               </div>
             </div>
           </div>
-          <FormButtons valid={countryIsValid &&continentvalid&&areavalid}/>
+          <FormButtons valid={countryIsValid &&continentvalid&&areavalid} cancel={"/administration/geography"}/>
           </form>
         </div>
     )

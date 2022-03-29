@@ -1,5 +1,7 @@
 import axios from "axios";
 import React,{ useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom";
+
 
 const AuthContext=React.createContext({
     login:(token)=>{},
@@ -8,10 +10,11 @@ const AuthContext=React.createContext({
 });
 
 export const AuthContextProvider=(props)=>{
-    // const isloggedin=!!token
     const [user,setuser]=useState({})
     const [token,settoken]=useState(null)
     const [email,setemail]=useState('')
+    // const navigate=useNavigate();
+
 
     const login=(token,emailinput)=>{
         setisloggedin(true)
@@ -23,6 +26,8 @@ export const AuthContextProvider=(props)=>{
        settoken('')
        setuser({})
        setisloggedin(false)
+    //    navigate('/login')  
+
    }
 
    useEffect(async ( )=>{

@@ -1,6 +1,6 @@
 import AuthContext from "../store/auth-context";
 import { useContext } from 'react';
-import { BrowserRouter as Router, Route, Link , NavLink} from "react-router-dom";
+import { BrowserRouter as Router, useNavigate , NavLink} from "react-router-dom";
 import axios from "axios";
 
 const NavBar=()=>{
@@ -8,7 +8,12 @@ const NavBar=()=>{
 
   const authctx=useContext(AuthContext)
   
+  const navigate=useNavigate();
   const user=authctx.user
+  const logout=()=>{
+    authctx.logout() 
+    navigate('/login') 
+  }
 
   console.log(user)
 
@@ -89,7 +94,7 @@ const NavBar=()=>{
                   <i className="ni ni-settings-gear-65"></i>
                   <span>Settings</span>
                 </NavLink>
-                <div type='button' onClick={ authctx.logout } className="dropdown-item">
+                <div type='button' onClick={ logout} className="dropdown-item">
                   <i className="ni ni-user-run"></i>
                   <span>Signout</span>
                 </div>

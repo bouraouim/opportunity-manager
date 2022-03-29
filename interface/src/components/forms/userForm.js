@@ -200,7 +200,7 @@ const authctx=useContext(AuthContext)
     .catch(function (error) {
       console.log(error);
     });
-    navigate('/user')  
+    navigate('/administration/users')  
   }
 
   
@@ -271,7 +271,7 @@ const authctx=useContext(AuthContext)
               </div>
             </div>
           </div>
-          <FormButtons valid={emailIsValid&&loginIsValid&&lnameIsValid&&fnameIsValid}/>
+          <FormButtons valid={emailIsValid&&loginIsValid&&lnameIsValid&&fnameIsValid} cancel={"/administration/users"}/>
           </form>
         </div>
     )

@@ -27,6 +27,8 @@ const AnonymizedTable=(props)=> {
         ["lastname", "firstname", "login","email","business line","last connection date","creation date"]])
         const [searchby,setsearchby]=useState('')
         const [searchterm,setsearchterm]=useState('')
+        const [search,setSearch]=useState("")
+
         const authctx=useContext(AuthContext)
 
         const  searchchange=(e)=>{
@@ -54,9 +56,11 @@ const AnonymizedTable=(props)=> {
         }
             
         const parameters=["id","firstname","lastname","email",'businessunit.name','businessline.name','password','creationdate',"lastconnectiondate"]
+
+        const global=(search=='')?"":"&search="+search
         useEffect(()=>{
             
-            axios.get('http://localhost:8000/api/users?page='+pagenumber+'&itemsPerPage='+itemperpage+anonymizedlink+searchlink+searchterm+props.search+'&status=true'+sortlink,{headers: {Authorization: "Bearer "+authctx.token}}) 
+            axios.get('http://localhost:8000/api/users?page='+pagenumber+'&itemsPerPage='+itemperpage+anonymizedlink+searchlink+searchterm+global+'&status=true'+sortlink,{headers: {Authorization: "Bearer "+authctx.token}}) 
             .then(response=>{
                 setIsCheckAll(false)
                 setIsCheck([])
@@ -111,7 +115,7 @@ const AnonymizedTable=(props)=> {
             }).catch(error=>{
               console.error(error);
             }) 
-        },[loading,pagenumber,props.search,order,itemperpage,anodata,searchterm])
+        },[loading,pagenumber,props.search,order,itemperpage,anodata,searchterm,search])
         
         const loadingchange=()=>{
             setLoading(true)
@@ -261,6 +265,10 @@ const AnonymizedTable=(props)=> {
             console.log("qdqsdqsd")
           }
 
+
+          const searchHandler=(event)=>{
+            setSearch(event.target.value)
+          }
         return(
             <div className="card mt-5 mb-5 ml-5 mr-5 pl-4 pr-4">
             <div className="card-header d-flex justify-content-between">
@@ -276,7 +284,7 @@ const AnonymizedTable=(props)=> {
                         <span className="btn-inner--text">anonymize</span>
                         {download&&<CSVDownload data={csvData} target="_blank" />}
                 </button>
-                    <input onChange={props.searchhandler} type="search" className="form-control form-control-sm" placeholder="Search keywords" aria-controls="datatable-basic"/>
+                    <input onChange={searchHandler} type="search" className="form-control form-control-sm" placeholder="Search keywords" aria-controls="datatable-basic"/>
                 </div>
             </div>
             <div className="row">
