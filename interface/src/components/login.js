@@ -15,10 +15,10 @@ import {useContext, useEffect, useRef, useState} from 'react'
 
 
       useEffect(()=>{
-        if(authcontext.isloggedin){
+        if(authcontext.loggedin){
           navigate('/')  
         }
-      })
+      },[])
 
       const [isloggedin,setisloggedin]=useState(true)
       const [isloading,setisloading]=useState(false)
@@ -33,12 +33,12 @@ import {useContext, useEffect, useRef, useState} from 'react'
         const email=emailRef.current.value
         const password=passwordRef.current.value
 
-        setisloading(true)
+        // setisloading(true)
 
-        if(!isloggedin){
-          let url='http://localhost:8000/api/login_check'
-        }
-        else{let url=''}
+        // if(!isloggedin){
+        //   let url='http://localhost:8000/api/login_check'
+        // }
+        // else{let url=''}
 
        const body={
           "email":email,
@@ -49,7 +49,7 @@ import {useContext, useEffect, useRef, useState} from 'react'
      const  r= await axios.post('http://localhost:8000/api/login_check',body)
           authcontext.login(r.data.token,email)
           // await authcontext.fetchuser()
-          navigate('/')
+          navigate('/administration/users')
         }catch (error) {
          setfalsecredential(true)}
       

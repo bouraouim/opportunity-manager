@@ -13,37 +13,48 @@ export const AuthContextProvider=(props)=>{
     const [user,setuser]=useState({})
     const [token,settoken]=useState(null)
     const [email,setemail]=useState('')
+    const [isloggedin,setisloggedin]=useState(false)
     // const navigate=useNavigate();
 
-
+    const loggedin=!!token
     const login=(token,emailinput)=>{
-        setisloggedin(true)
+       
         settoken(token)
         setemail(emailinput)
-        console.log(isloggedin)
+        console.log(loggedin)
     }
    const logout=()=>{
        settoken('')
        setuser({})
-       setisloggedin(false)
     //    navigate('/login')  
 
    }
 
    useEffect(async ( )=>{
-    console.log(token)
     const r= await axios.get('http://localhost:8000/api/users?pagination=false&email='+email,{headers: {Authorization: "Bearer "+token}})
     await setuser(r.data["hydra:member"][0])
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    console.log(r.data["hydra:member"][0])
+    await axios.patch('http://localhost:8000/api/users/'+r.data["hydra:member"][0].id,{lastconnectiondate:today},{headers: {
+        'Content-Type': 'application/merge-patch+json' ,
+        Authorization: "Bearer "+token
+      }})
    },[token,email])
    
-   const [isloggedin,setisloggedin]=useState(false)
-
+   let role
+   try{
+ role=user.role
+}catch(error){console.log(error)}
 
 
     const contextValue={
         token:token, 
         email,
-        isloggedin,
+        loggedin,
         user,
         login,
         logout,

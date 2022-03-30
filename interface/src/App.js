@@ -52,6 +52,8 @@ function App() {
   const resetsearch=()=>{
     setSearch("")
   }
+
+
   return (
     <>
 {/* <Routes>
@@ -60,41 +62,42 @@ function App() {
 </Routes> */}
 
       
- {authctx.isloggedin && <NavBar/>    }   
+ {authctx.loggedin && <NavBar/>    }   
       <Routes> 
         
       
         {/* Modifications */}
-       { <Route path="/login" element={<Login/>}/>}
-       {authctx.isloggedin && <Route path="/orderbook" element={<OrderBook/>}/>}
-       {authctx.isloggedin && <Route path="/reporting" element={<Reporting/>}/>}
-       {authctx.isloggedin && <Route path="/opportunities" element={<OpportunitiesTable/>}/>}
-       {authctx.isloggedin && <Route path="/administration/areas" element={<TableLayout link="/administration/areas/new" table={<AreaTable/>} name="Area"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/areas/new" element={<AddForm formname={<AreaForm/>} name="Add New Area"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/businessUnits" element={<TableLayout link="/administration/businessUnits/new" table={<BusinessUnitTable/>} name="Business Unit"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/businessUnits/new" element={<AddForm formname={<BusinessUnitForm/>} name="Add New Business Unit"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/currencies" element={<TableLayout link="/administration/currencies/new" table={<CurrencyTable/>} name="Currency"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/currencies/new" element={<AddForm formname={<CurrencyForm/>} name="Add New Currency"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/customers" element={<TableLayout link="/administration/customers/new" table={<CustomerTable/>} name="Customer"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/customers/new" element={<AddForm formname={<CustomerForm/>} name="Add New Customer"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/departments" element={<TableLayout link="/administration/departments/new" table={<DepartmentTable/>} name="Department"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/departments/new" element={<AddForm formname={<DepartmentForm/>} name="Add New Department - Pole"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/permissions" element={<Permissions/>}/>}
+        <Route path="/login" element={<Login/>}/>
+       {authctx.loggedin && <Route path="/orderbook" element={<OrderBook/>}/>}
+       {authctx.loggedin && <Route path="/reporting" element={<Reporting/>}/>}
+       {authctx.loggedin && <Route path="/opportunities" element={<OpportunitiesTable/>}/>}
+       {authctx.loggedin && <Route path="/administration/areas" element={<TableLayout link="/administration/areas/new" table={<AreaTable/>} name="Area"/>}/>}
+       {authctx.loggedin && <Route path="/administration/areas/new" element={<AddForm formname={<AreaForm/>} name="Add New Area"/>}/>}
+       {authctx.loggedin && <Route path="/administration/businessUnits" element={<TableLayout link="/administration/businessUnits/new" table={<BusinessUnitTable/>} name="Business Unit"/>}/>}
+       {authctx.loggedin && <Route path="/administration/businessUnits/new" element={<AddForm formname={<BusinessUnitForm/>} name="Add New Business Unit"/>}/>}
+       {authctx.loggedin && <Route path="/administration/currencies" element={<TableLayout link="/administration/currencies/new" table={<CurrencyTable/>} name="Currency"/>}/>}
+       {authctx.loggedin && <Route path="/administration/currencies/new" element={<AddForm formname={<CurrencyForm/>} name="Add New Currency"/>}/>}
+       {authctx.loggedin && <Route path="/administration/customers" element={<TableLayout link="/administration/customers/new" table={<CustomerTable/>} name="Customer"/>}/>}
+       {authctx.loggedin && <Route path="/administration/customers/new" element={<AddForm formname={<CustomerForm/>} name="Add New Customer"/>}/>}
+       {authctx.loggedin && <Route path="/administration/departments" element={<TableLayout link="/administration/departments/new" table={<DepartmentTable/>} name="Department"/>}/>}
+       {authctx.loggedin && <Route path="/administration/departments/new" element={<AddForm formname={<DepartmentForm/>} name="Add New Department - Pole"/>}/>}
+       {authctx.loggedin && <Route path="/administration/permissions" element={<Permissions/>}/>}
 
-       {authctx.isloggedin && <Route path="/administration/presales" element={<TableLayout link="/administration/presales/new" table={<PresalesEngineersTable/>} name="Presales Engineer"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/presales/new" element={<AddForm formname={<PresalesForm/>} name="Add New Presales Engineer"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/productLines" element={<TableLayout link="/administration/productLines/new" table={<ProductLineTable/>} name="Product Line"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/productLines/new" element={<AddForm formname={<ProductLineForm/>} name="Add New Product Line"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/businessLines" element={<TableLayout link={"/administration/businessLines/new"} table={<BusinessLineTable search={search}/>} name="Business Line" search={searchHandler}/>}/>}
-       {authctx.isloggedin && <Route path="/administration/businessLines/new" element={<AddForm formname={<BusinessLineForm/>} name="Add new business line " />}/>}
-       {authctx.isloggedin && <Route path="/administration/geography" element={<TableLayout link={"/administration/geography/new"} table={<GeographyTable search={search}/>} name={"Geography"} search={searchHandler} /> }/>}
-       {authctx.isloggedin && <Route path="/administration/geography/new" element={<AddForm formname={<GeographyForm/>} name="Add new geography"/>}/>}
-       {authctx.isloggedin && <Route path="/administration/users" element={<TableLayout link={"/administration/users/new"} table={<UserTable search={search}/>} name={"User"} search={searchHandler} /> }/>}
-       {authctx.isloggedin && <Route path="/administration/users/new" element={<AddForm formname={<UserForm/>} name="Add New User " />}/>}
-       {authctx.isloggedin && <Route path="/anonymization" element={<AnonymizedTable searchhandler={searchHandler} search={search}  /> }/>    }  
+       {authctx.loggedin && <Route path="/administration/presales" element={<TableLayout link="/administration/presales/new" table={<PresalesEngineersTable/>} name="Presales Engineer"/>}/>}
+       {authctx.loggedin && <Route path="/administration/presales/new" element={<AddForm formname={<PresalesForm/>} name="Add New Presales Engineer"/>}/>}
+       {authctx.loggedin && <Route path="/administration/productLines" element={<TableLayout link="/administration/productLines/new" table={<ProductLineTable/>} name="Product Line"/>}/>}
+       {authctx.loggedin && <Route path="/administration/productLines/new" element={<AddForm formname={<ProductLineForm/>} name="Add New Product Line"/>}/>}
+       {authctx.loggedin && <Route path="/administration/businessLines" element={<TableLayout link={"/administration/businessLines/new"} table={<BusinessLineTable search={search}/>} name="Business Line" search={searchHandler}/>}/>}
+       {authctx.loggedin && <Route path="/administration/businessLines/new" element={<AddForm formname={<BusinessLineForm/>} name="Add new business line " />}/>}
+       {authctx.loggedin && <Route path="/administration/geography" element={<TableLayout link={"/administration/geography/new"} table={<GeographyTable search={search}/>} name={"Geography"} search={searchHandler} /> }/>}
+       {authctx.loggedin && <Route path="/administration/geography/new" element={<AddForm formname={<GeographyForm/>} name="Add new geography"/>}/>}
+       {authctx.loggedin && <Route path="/administration/users" element={<TableLayout link={"/administration/users/new"} table={<UserTable search={search}/>} name={"User"} search={searchHandler} /> }/>}
+       {authctx.loggedin && <Route path="/administration/users/new" element={<AddForm formname={<UserForm/>} name="Add New User " />}/>}
+       {authctx.loggedin && <Route path="/anonymization" element={<AnonymizedTable searchhandler={searchHandler} search={search}  /> }/>    }  
 
-       { <Route path='*' element={<Navigate to="login"/>}/>}
-       {authctx.isloggedin && <Route path="/modify/*" element={<Modify/>}/>}
+       {!authctx.loggedin&& <Route path='*' element={<Navigate to="login"/>}/>}
+       {authctx.loggedin && <Route path='*' element={<Navigate to="/administration/users"/>}/>}
+       {authctx.loggedin && <Route path="/modify/*" element={<Modify/>}/>}
       </Routes>
   {/* <Signup/> */}
 

@@ -1,5 +1,5 @@
 import AuthContext from "../store/auth-context";
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, useNavigate , NavLink} from "react-router-dom";
 import axios from "axios";
 
@@ -9,14 +9,17 @@ const NavBar=()=>{
   const authctx=useContext(AuthContext)
   
   const navigate=useNavigate();
-  const user=authctx.user
+  const email=authctx.email
   const logout=()=>{
     authctx.logout() 
     navigate('/login') 
   }
 
-  console.log(user)
+  useEffect(()=>{
+    console.log(authctx.user)
+  },[authctx.user])
 
+  
     return(
       <nav className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-default sticky-top ">
       <div className="container">
@@ -83,7 +86,7 @@ const NavBar=()=>{
               </a>
               <div className="dropdown-menu dropdown-menu-right">
                 <div className="dropdown-header noti-title">
-                  <h6 className="text-overflow m-0">Signed as {user.email}</h6>
+                  <h6 className="text-overflow m-0">Signed as {email}</h6>
                 </div>
                 <div className="dropdown-divider"></div>
                 <NavLink activeclassname="active" to="user/:id" className="dropdown-item">

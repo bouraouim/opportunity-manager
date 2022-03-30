@@ -35,7 +35,6 @@ const Tablehook=(tablename,searchterm,parameters,searchby,globalsearch)=>{
             const link='http://localhost:8000/api/'+tablename+'?page='+pagenumber+'&itemsPerPage='+itemperpage+'&status=true'+global+searchlink+searchterm+sortlink
             axios.get(link,{headers: {Authorization: "Bearer "+authctx.token}}) 
             .then(response=>{
-                console.log(response)
                 
                 const table=(response.data["hydra:member"].map(d=>{
                         var a=parameters.map(p=>{
@@ -55,7 +54,6 @@ const Tablehook=(tablename,searchterm,parameters,searchby,globalsearch)=>{
                         })
                         return Object.assign({}, ...a)   
                 }))
-                console.log(response.data["hydra:member"])
                 if (response.data["hydra:totalItems"]>2){
                     setPagination({
                         number:response.data["hydra:totalItems"],
@@ -76,7 +74,6 @@ const Tablehook=(tablename,searchterm,parameters,searchby,globalsearch)=>{
                 setShow(true)
             }
             if((searchterm.trim() !== '' || itemperpage>paginations.number) && !reset){
-                console.log(searchterm)
                 f()
                 setreset(true)
             }
