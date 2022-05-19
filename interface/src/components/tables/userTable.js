@@ -1,17 +1,28 @@
 import React, { PureComponent } from 'react';
 import '../../index';
-import Useritem from './items/useritem';
+import Useritem from '../items/useritem';
 import Paginations from './pagination';
 import Tablehook from '../../hooks/table-hook';
-import Modal from './items/modal';
+import Modal from '../items/modal';
 import { useState } from 'react';
 import Modalinput from './modalInputs';
-
+import { ArrowDownUp, Funnel } from 'react-bootstrap-icons';
 
  const UserTable=(props)=> {
     const [user,setuser]=useState('')
     const [searchh,setsearchh]=useState('')
     const [searchterm,setSearchterm]=useState('')
+    const [showSearchInput, setShowSearchInput] = useState(false);
+
+    const handleSearchInputs = () => {
+        if(showSearchInput === true){
+            setShowSearchInput(false);
+            setsearchh('');
+        }
+        else{
+            setShowSearchInput(true);
+        }
+    }
 
     const userHandler=(string)=>{
         setuser(string)
@@ -47,11 +58,11 @@ import Modalinput from './modalInputs';
                         <table className="table align-items-center">
                             <thead className="table-dark">
                                 <tr>
-                                    <th className="text-center text-xs font-weight-bold" data-sort="name" >Email address <span onClick={()=>sortHandler("email")}>&#8645;</span> <i onClick={()=>{searchclick("email")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i> </th>
-                                    <th className="text-center text-xs font-weight-bold" data-sort="name" >Lastname <span onClick={()=>sortHandler("lastname")}>&#8645;</span> <i onClick={()=>{searchclick("lastname")}} data-toggle="modal" data-target="#exampleModal" type="button" class="fas fa-filter" > </i></th>
-                                    <th className="text-center text-xs font-weight-bold" data-sort="name">Firstname <span  onClick={()=>sortHandler("firstname")} >&#8645;</span> <i onClick={()=>{searchclick("firstname")}} data-toggle="modal" data-target="#exampleModal" type="button" class="fas fa-filter" > </i></th>
+                                    <th className="text-center text-xs font-weight-bold" data-sort="name">Email address&nbsp;<span onClick={()=>sortHandler("email")}><ArrowDownUp size={15}/></span>&nbsp;<i onClick={()=>{searchclick("email");handleSearchInputs();}} type="button"><Funnel size={15}/></i> </th>
+                                    <th className="text-center text-xs font-weight-bold" data-sort="name">Lastname&nbsp;<span onClick={()=>sortHandler("lastname")}><ArrowDownUp size={15}/></span>&nbsp;<i onClick={()=>{searchclick("lastname");handleSearchInputs();}} type="button"><Funnel size={15}/></i></th>
+                                    <th className="text-center text-xs font-weight-bold" data-sort="name">Firstname&nbsp;<span onClick={()=>sortHandler("firstname")} ><ArrowDownUp size={15}/></span>&nbsp;<i onClick={()=>{searchclick("firstname");handleSearchInputs();}} type="button"><Funnel size={15}/></i></th>
                                     <th className="text-center text-xs font-weight-bold" >Role</th>
-                                    <th className="text-center text-xs font-weight-bold" >Business Unit</th>
+                                    <th className="text-center text-xs font-weight-bold" >Business Unit</th>    
                                     <th className="text-center text-xs font-weight-bold" >Business Line</th>
                                     <th className="text-center text-xs font-weight-bold" >Pole / Departement</th>
                                     <th className="text-center text-xs font-weight-bold" >Area</th>
@@ -59,10 +70,31 @@ import Modalinput from './modalInputs';
                                     <th className="text-center text-xs font-weight-bold" >Status</th>
                                     <th className="text-center text-xs font-weight-bold" >Actions</th>
                                 </tr>
+                                {showSearchInput && <tr>
+                            {searchterm === "email" && <>
+                                <th className="text-center text-xs font-weight-bold"><input onChange={searchchange} placeholder="Search keywords"/></th>
+                                <th colspan="9" className="text-center text-xs font-weight-bold"></th>
+                                
+                            </>}
+                            {searchterm === "lastname" && <>
+                                <th className="text-center text-xs font-weight-bold"></th>
+                                <th className="text-center text-xs font-weight-bold"><input onChange={searchchange} placeholder="Search keywords" type="text"/></th>
+                                <th colspan="8" className="text-center text-xs font-weight-bold"></th>
+                                
+                            </>}
+                            {searchterm === "firstname" && <>
+                                <th className="text-center text-xs font-weight-bold"></th>
+                                <th className="text-center text-xs font-weight-bold"></th>
+                                <th className="text-center text-xs font-weight-bold">
+                                    <input onChange={searchchange} placeholder="Search keywords"/></th>
+                                <th colspan="7" className="text-center text-xs font-weight-bold"></th>
+                            </>}
+                            <th className="text-center text-xs font-weight-bold"></th>
+                        </tr>}
                             </thead>
                             <tbody>
                             {!loading && data.map((d) => (
-                                <Useritem key={d.name}
+                                <Useritem key={d.id}
                                 userHandler={userHandler}
                                 status={d.status}
                                 email={d.email}

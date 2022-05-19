@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Geography;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Customer;
+use App\Entity\Opportunity;
 
 /**
  * @method Geography|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +21,58 @@ class GeographyRepository extends ServiceEntityRepository
         parent::__construct($registry, Geography::class);
     }
 
-    // /**
-    //  * @return Geography[] Returns an array of Geography objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Boolean Returns if a specific geographie is used 
+     */
+    public function geographyIsUsed($value)
     {
-        return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
+        $qcust = $this->createQueryBuilder('l')
+            ->select('count(distinct c.id)')
+            ->from(Customer::class, 'c')
+            ->leftJoin ('c.count','g')
+            ->where(':val MEMBER OF c.count')
             ->setParameter('val', $value)
-            ->orderBy('g.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
+            ->getSingleScalarResult()
         ;
+        $qopp = $this->createQueryBuilder("l")
+            ->select('count(o.id)')
+            ->from(Opportunity::class,'o')
+            ->where('o.country = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        if($qcust == 0 and $qopp == 0)
+            return false;
+        return true;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Geography
+    /**
+     * @return Geography[] Returns an array of Geography objects
+     */
+    public function getActiveGeographies()
     {
         return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+           ->where('g.status = true')
+           ->getQuery()
+           ->getArrayResult()
         ;
     }
+
+    /**
+     * @return Customer[] Returns an array of Customer objects
     */
+    public function findCustomersByCountry($id)
+    {
+        return $this->createQueryBuilder('g')
+            ->select('distinct c')
+            ->from(Customer::class, 'c')
+            ->leftJoin ('c.count','geo')
+            ->where(':id MEMBER OF c.count')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
 }

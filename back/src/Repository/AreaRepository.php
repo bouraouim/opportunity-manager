@@ -5,6 +5,10 @@ namespace App\Repository;
 use App\Entity\Area;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Customer;
+use App\Entity\Geography;
+use App\Entity\Presales;
+use App\Entity\User;
 
 /**
  * @method Area|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +23,60 @@ class AreaRepository extends ServiceEntityRepository
         parent::__construct($registry, Area::class);
     }
 
-    // /**
-    //  * @return Area[] Returns an array of Area objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Boolean Returns if a specific area is used 
+     */
+    public function areaIsUsed($value)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
+        $qcust = $this->createQueryBuilder('l')
+            ->select('count(distinct c.id)')
+            ->from(Customer::class, 'c')
+            ->leftJoin ('c.areas','a')
+            ->where(':val MEMBER OF c.areas')
             ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
+            ->getSingleScalarResult()
         ;
+        $qgeo = $this->createQueryBuilder("l")
+            ->select('count(g.id)')
+            ->from(Geography::class,'g')
+            ->where('g.area = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        $qpresales = $this->createQueryBuilder('l')
+            ->select('count(distinct p.id)')
+            ->from(Presales::class, 'p')
+            ->leftJoin ('p.areas','a')
+            ->where(':val MEMBER OF p.areas')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        $quser = $this->createQueryBuilder('l')
+            ->select('count(distinct u.id)')
+            ->from(User::class, 'u')
+            ->leftJoin ('u.area','a')
+            ->where(':val MEMBER OF u.area')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        if($qcust == 0 and $qgeo == 0 and $qpresales == 0 and $quser == 0)
+            return false;
+        return true;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Area
+    /**
+     * @return Area[] Returns an array of Area objects
+     */
+    public function getActiveAreas()
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+           ->where('a.status = true')
+           ->getQuery()
+           ->getArrayResult()
         ;
     }
-    */
 }

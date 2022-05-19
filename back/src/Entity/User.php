@@ -15,34 +15,42 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use App\ApiPlatform\usercustomsearch;
+use Doctrine\ORM\QueryBuilder;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
+    attributes: ["pagination_client_enabled" => true],
     denormalizationContext: ['groups'=>[ 'write:user_collection']],
     normalizationContext: ['groups'=>[ 'read:user_collection']]
     
 ),
-ApiFilter(SearchFilter::class, properties:['email'=>'partial','firstname'=>'partial','lastname'=>'partial','anonymized'=>'exact', 'status'=>'exact'] ),
+ApiFilter(SearchFilter::class, properties:['email'=>'partial','firstname'=>'partial','lastname'=>'partial','anonymized'=>'exact', 'status'=>'exact','role.name'=>'exact'] ),
 ApiFilter(OrderFilter::class, properties: ['email','firstname','lastname'], arguments: ['orderParameterName' => 'order']),
 ApiFilter(usercustomsearch::class)]
+
 #[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
+   
+
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:user_collection'])]
+    #[Groups(['read:opp_collection', 'write:opp_collection','read:user_collection', 'read:opp_collection', 'write:opp_collection'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, nullable:true)]
-    #[Groups(['read:user_collection'])]
+    #[Groups(['read:opp_collection','read:user_collection', 'read:opp_collection', 'write:opp_collection'])]
     private $username;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(['write:user_collection','read:user_collection'])]
-    private $email;
+    public $email;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: 'json', nullable:true)]
     private $roles = [];
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
@@ -83,11 +91,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     #[Groups(['write:user_collection','read:user_collection'])]
-    private $status;
+    public $status;
 
     #[Groups(['write:user_collection','read:user_collection'])]
     #[ORM\Column(type: 'date', nullable: true)]
-    private $lastconnectiondate;
+    public $lastconnectiondate;
 
     #[Groups(['write:user_collection','read:user_collection'])]
     #[ORM\Column(type: 'date', nullable: true)]
@@ -95,11 +103,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     #[Groups(['write:user_collection','read:user_collection'])]
-    private $anonymized;
+    public $anonymized=false;
 
     #[ORM\Column(type: 'integer', nullable: true)]
     #[Groups(['read:user_collection'])]
     private static $anonymizednumber=0;
+
+    #[ORM\OneToMany(mappedBy: 'salesManager', targetEntity: Opportunity::class)]
+    private $opportunities;
 
     public function __construct()
     {
@@ -111,7 +122,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->status=true;
         $this->setCreationdate(new \DateTime('now'));
         $this->setLastconnectiondate(new \DateTime('now'));
+        $this->opportunities = new ArrayCollection();
     }
+
+    private const DAYS_BEFORE_check = 7;
+
+    public function anonymize(): void
+    {
+        // $time = strtotime(date("Y-m-d") );
+        // $dd=date_create($time);
+        // $interval = date_diff($dd, $this->lastconnectiondate);
+        // if($interval->format('%i ')>2){
+        //     $this->anonymized =true;
+        //     $this->status=false;
+        // }
+        // return $this;
+    }
+
 
     public function getplainPassword(): ?string
     {
@@ -424,5 +451,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         //  $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Opportunity>
+     */
+    public function getOpportunities(): Collection
+    {
+        return $this->opportunities;
+    }
+
+    public function addOpportunity(Opportunity $opportunity): self
+    {
+        if (!$this->opportunities->contains($opportunity)) {
+            $this->opportunities[] = $opportunity;
+            $opportunity->setSalesManager($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOpportunity(Opportunity $opportunity): self
+    {
+        if ($this->opportunities->removeElement($opportunity)) {
+            // set the owning side to null (unless already changed)
+            if ($opportunity->getSalesManager() === $this) {
+                $opportunity->setSalesManager(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -5,6 +5,11 @@ namespace App\Repository;
 use App\Entity\Department;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Customer;
+use App\Entity\Presales;
+use App\Entity\Productline;
+use App\Entity\Opportunity;
+use App\Entity\User;
 
 /**
  * @method Department|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +24,69 @@ class DepartmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Department::class);
     }
 
-    // /**
-    //  * @return Department[] Returns an array of Department objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Boolean Returns if a specific department is used 
+     */
+    public function departmentIsUsed($value)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
+        $qcust = $this->createQueryBuilder('l')
+            ->select('count(distinct c.id)')
+            ->from(Customer::class, 'c')
+            ->leftJoin ('c.department','d')
+            ->where(':val MEMBER OF c.department')
             ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
+            ->getSingleScalarResult()
         ;
+        $qpresales = $this->createQueryBuilder('l')
+            ->select('count(distinct p.id)')
+            ->from(Presales::class, 'p')
+            ->leftJoin ('p.department','d')
+            ->where(':val MEMBER OF p.department')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        $qpl = $this->createQueryBuilder('l')
+            ->select('count(distinct p.id)')
+            ->from(Productline::class, 'p')
+            ->leftJoin ('p.department','d')
+            ->where(':val MEMBER OF p.department')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        $quser = $this->createQueryBuilder('l')
+            ->select('count(distinct u.id)')
+            ->from(User::class, 'u')
+            ->leftJoin ('u.department','d')
+            ->where(':val MEMBER OF u.department')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        $qopp = $this->createQueryBuilder("l")
+            ->select('count(o.id)')
+            ->from(Opportunity::class,'o')
+            ->where('o.department = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        if($qcust == 0 and $qpresales == 0 and $qpl == 0 and $quser == 0 and $qopp == 0)
+            return false;
+        return true;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Department
+    /**
+     * @return Department[] Returns an array of Area objects
+     */
+    public function getActiveDepartments()
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+           ->where('d.status = true')
+           ->getQuery()
+           ->getArrayResult()
         ;
     }
-    */
 }

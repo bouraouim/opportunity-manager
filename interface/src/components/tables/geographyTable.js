@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import '../../index';
 import Tablehook from '../../hooks/table-hook';
-import Geographyitem from './items/geographyitel';
+import Geographyitem from '../items/geographyitel';
 import Paginations from './pagination';
 import Modalinput from './modalInputs';
-
-
+import { ArrowDownUp, Funnel } from 'react-bootstrap-icons';
 
 
 const GeographyTable=(props)=> {
 
     const [searchh,setsearchh]=useState('')
     const [searchterm,setSearchterm]=useState('')
+    const [showSearchInput, setShowSearchInput] = useState(false);
+
     const{data,
         loading,
         paginations,
@@ -24,6 +25,17 @@ const GeographyTable=(props)=> {
 
 const searchclick=(n)=>{
     setSearchterm(n)}
+
+    const handleSearchInputs = () => {
+        if(showSearchInput === true){
+            setShowSearchInput(false);
+            setsearchh('');
+        }
+        else{
+            setShowSearchInput(true);
+        }
+    }
+
 
 
 const  searchchange=(e)=>{
@@ -43,12 +55,36 @@ const   statusHandler=()=>{
                 <table className="table align-items-center mb-2">
                     <thead className="table-dark">
                         <tr>
-                            <th className="text-center  text-xs font-weight-bold" scope="col" data-sort="name">Country <span onClick={()=>sortHandler("country")}>&#8645;</span> <i onClick={()=>{searchclick("country")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i>  </th>
-                            <th className="text-center text-xs  font-weight-bold" data-sort="name" >Area <span onClick={()=>sortHandler("area.name")}>&#8645;</span> <i onClick={()=>{searchclick("area.name")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i> </th>
-                            <th className="text-center text-xs  font-weight-bold" data-sort="name" >Continent <span onClick={()=>sortHandler("continent")}>&#8645;</span> <i onClick={()=>{searchclick("continent")}} data-toggle="modal" data-target="#exampleModal" type="button"  class="fas fa-filter" > </i> </th>
+                            <th className="text-center  text-xs font-weight-bold" scope="col" data-sort="name">Country <span onClick={()=>sortHandler("country")}><ArrowDownUp size={15}/></span> <i onClick={()=>{searchclick("country")
+                        handleSearchInputs();}} type="button"><Funnel size={15}/></i>  </th>
+                            <th className="text-center text-xs font-weight-bold" data-sort="name" >Area <span onClick={()=>sortHandler("area.name")}><ArrowDownUp size={15}/></span> <i onClick={()=>{searchclick("area.name")
+                        handleSearchInputs();}} type="button"><Funnel size={15}/></i> </th>
+                            <th className="text-center text-xs font-weight-bold" data-sort="name" >Continent <span onClick={()=>sortHandler("continent")}><ArrowDownUp size={15}/></span> <i onClick={()=>{searchclick("continent")
+                        handleSearchInputs();}} type="button"><Funnel size={15}/></i> </th>
                             <th className="text-center text-xs font-weight-bold">Status</th>
                             <th className="text-center text-xs font-weight-bold">Actions</th>
                         </tr>
+                        {showSearchInput && <tr>
+                            {searchterm === "country" && <>
+                                <th className="text-center text-xs font-weight-bold"><input onChange={searchchange} placeholder="Search keywords"/></th>
+                                <th colspan="3" className="text-center text-xs font-weight-bold"></th>
+                              
+                            </>}
+                            {searchterm === "area.name" && <>
+                                <th className="text-center text-xs font-weight-bold"></th>
+                                <th className="text-center text-xs font-weight-bold"><input onChange={searchchange} placeholder="Search keywords" type="text"/></th>
+                                <th className="text-center text-xs font-weight-bold"></th>
+                                <th className="text-center text-xs font-weight-bold"></th>
+                            </>}
+                            {searchterm === "continent" && <>
+                                <th className="text-center text-xs font-weight-bold"></th>
+                                <th className="text-center text-xs font-weight-bold"></th>
+                                <th className="text-center text-xs font-weight-bold"><input onChange={searchchange} placeholder="Search keywords" type="text"/></th>
+                                <th className="text-center text-xs font-weight-bold"></th>
+                                
+                            </>}
+                            <th className="text-center text-xs font-weight-bold"></th>
+                        </tr>}
                     </thead>
                     <tbody>
                     {!loading && data.map((d) => (

@@ -14,5 +14,6 @@ api_platform:
     collection:
         pagination:
             items_per_page_parameter_name: itemsPerPage
+            enabled_parameter_name: pagination # optional
     
          

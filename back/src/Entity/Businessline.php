@@ -7,12 +7,16 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\BusinesslineRepository;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\ApiPlatform\blcustomfilter;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BusinesslineRepository::class)]
 #[ApiResource(
+    attributes: ["pagination_client_enabled" => true],
     normalizationContext:['groups'=>[ 'read:collection']],
     denormalizationContext:['groups'=>[ 'write:collection']],
     itemOperations:[
@@ -27,36 +31,46 @@ ApiFilter( SearchFilter::class, properties:['name'=>'partial','businessunit.name
 ApiFilter(OrderFilter::class, properties: ['name','businessunit.name'], arguments: ['orderParameterName' => 'order']),
 ApiFilter(blcustomfilter::class)
 ]
+
 class Businessline
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:collection','write:user_collection','read:user_collection'])]
+    #[Groups(['read:opp_collection', 'write:opp_collection','read:customer_collection','write:customer_collection','read:collection','write:user_collection','read:user_collection','write:presale_collection','read:presale_collection','read:department_collection','write:department_collection'])]
     private $id;
 
+    /**
+     * @Assert\Type(
+     *    "string"
+     * )
+     */
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:collection', 'write:collection','read:user_collection'])]
+    #[Groups(['read:opp_collection','read:customer_collection','read:collection', 'write:collection','read:user_collection','read:presale_collection','read:productline_collection','read:department_collection'])]
     private $name;
 
-    #[ORM\ManyToOne(targetEntity: Businessunit::class, inversedBy: 'businessline')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:collection', 'write:collection'])]
-    private $businessunit;
-
-
+    
     #[ORM\Column(type: 'boolean', nullable: true)]
-    #[Groups(['read:collection'])]
+    #[Groups(['read:collection','write:collection'])]
     private $status;
 
-   
+    #[ORM\ManyToMany(targetEntity: Customer::class, mappedBy: 'businessline')]
+    private $customers;
 
-    
+    #[ORM\OneToMany(mappedBy: 'businessline', targetEntity: Opportunity::class)]
+    private $opportunities;
+
+    #[ORM\ManyToMany(targetEntity: Businessunit::class, inversedBy: 'businesslines')]
+    #[Groups(['read:collection','write:collection'])]
+    private $businessunit;
+
     public function __construct()
     {
         $this->status=true;
+        $this->customers = new ArrayCollection();
+        $this->opportunities = new ArrayCollection();
+        $this->businessunit = new ArrayCollection();
     }
-    
 
     public function getId(): ?int
     {
@@ -71,47 +85,96 @@ class Businessline
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+    
+    public function toArray(){
+        return ['id'=>$this->id,'name'=>$this->name, 'businessunit'=>$this->businessunit->getName()];
+    }
 
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?bool $status): self
+    {
+        $this->status = $status;
         return $this;
     }
 
-    
+    /**
+     * @return Collection<int, Customer>
+    */
+    public function getCustomers(): Collection
+    {
+        return $this->customers;
+    }
 
-    
-     public function toArray(){
-         return ['id'=>$this->id,'name'=>$this->name, 'businessunit'=>$this->businessunit->getName()];
-     }
+    public function addCustomer(Customer $customer): self
+    {
+        if (!$this->customers->contains($customer)) {
+            $this->customers[] = $customer;
+            $customer->addBusinessline($this);
+        }
+        return $this;
+    }
 
-     public function getBusinessunit(): ?Businessunit
-     {
-         return $this->businessunit;
-     }
+    public function removeCustomer(Customer $customer): self
+    {
+        if ($this->customers->removeElement($customer)) {
+            $customer->removeBusinessline($this);
+        }
+        return $this;
+    }
 
-     public function setBusinessunit(?Businessunit $businessunit): self
-     {
-         $this->businessunit = $businessunit;
+    /**
+     * @return Collection<int, Opportunity>
+    */
+    public function getOpportunities(): Collection
+    {
+        return $this->opportunities;
+    }
 
-         return $this;
-     }
+    public function addOpportunity(Opportunity $opportunity): self
+    {
+        if (!$this->opportunities->contains($opportunity)) {
+            $this->opportunities[] = $opportunity;
+            $opportunity->setBusinessline($this);
+        }
+        return $this;
+    }
 
-     public function getStatus(): ?bool
-     {
-         return $this->status;
-     }
+    public function removeOpportunity(Opportunity $opportunity): self
+    {
+        if ($this->opportunities->removeElement($opportunity)) {
+            // set the owning side to null (unless already changed)
+            if ($opportunity->getBusinessline() === $this) {
+                $opportunity->setBusinessline(null);
+            }
+        }
+        return $this;
+    }
 
-     public function setStatus(?bool $status): self
-     {
-         $this->status = $status;
+    /**
+     * @return Collection<int, Businessunit>
+     */
+    public function getBusinessunit(): Collection
+    {
+        return $this->businessunit;
+    }
 
-         return $this;
-     }
+    public function addBusinessunit(Businessunit $businessunit): self
+    {
+        if (!$this->businessunit->contains($businessunit)) {
+            $this->businessunit[] = $businessunit;
+        }
+        return $this;
+    }
 
-    
-
-     
-    //  public function __toString() {
-    //     return $this->name;
-    // }
-
-     
+    public function removeBusinessunit(Businessunit $businessunit): self
+    {
+        $this->businessunit->removeElement($businessunit);
+        return $this;
+    }
 }

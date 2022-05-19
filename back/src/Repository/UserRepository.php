@@ -8,6 +8,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\ORM\Query;
+use App\Entity\Opportunity;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -36,32 +38,50 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function findSalesManagers($email)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        return $this->createQueryBuilder('user')
+           ->leftJoin ('user.role','r')
+           ->where('r.name LIKE :name AND user.anonymized = false')
+           ->orWhere('user.email = :val')
+           ->setParameter('name', '%Sales Manager%')
+           ->setParameter('val', $email)
+           ->getQuery()
+           ->getArrayResult()
         ;
     }
-    */
+    
+    /**
+     * @return Boolean Returns if a specific user is used 
+     */
+    public function userIsUsed($value)
+    {
+        $qopp = $this->createQueryBuilder("l")
+            ->select('count(o.id)')
+            ->from(Opportunity::class,'o')
+            ->where('o.salesManager = :val')
+            ->andWhere('l.anonymized = false')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+        if($qopp == 0)
+            return false;
+        return true;
+    }
 
-    /*
-    public function findOneBySomeField($value): ?User
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function getActiveUser()
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+           ->where('u.status = true AND u.anonymized = false')
+           ->getQuery()
+           ->getArrayResult()
         ;
     }
-    */
 }
