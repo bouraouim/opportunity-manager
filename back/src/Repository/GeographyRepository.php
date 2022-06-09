@@ -23,7 +23,7 @@ class GeographyRepository extends ServiceEntityRepository
 
     /**
      * @return Boolean Returns if a specific geographie is used 
-     */
+    */
     public function geographyIsUsed($value)
     {
         $qcust = $this->createQueryBuilder('l')
@@ -38,7 +38,7 @@ class GeographyRepository extends ServiceEntityRepository
         $qopp = $this->createQueryBuilder("l")
             ->select('count(o.id)')
             ->from(Opportunity::class,'o')
-            ->where('o.country = :val')
+            ->where('o.countries = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getSingleScalarResult()
@@ -50,7 +50,7 @@ class GeographyRepository extends ServiceEntityRepository
 
     /**
      * @return Geography[] Returns an array of Geography objects
-     */
+    */
     public function getActiveGeographies()
     {
         return $this->createQueryBuilder('g')

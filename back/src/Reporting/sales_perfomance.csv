@@ -1,0 +1,2 @@
+reference,creationDate,description,customer,countries,salesManager.firstname,,salesManager.lastname,businessunit.name,businessline.name,department.name,successRate,reason,bidReviewDateAchieved,submissionDatePlanned,revenueStartPlanned,contractDuration,totalValue,stage
+u0957bdxas,2022-05-31T00:00:00+02:00,tdst,test,test1,"test7 test7",test3,test3,test4,,0,undefined,undefined,undefined,2022-05-20T00:00:00+02:00,14,undefined,

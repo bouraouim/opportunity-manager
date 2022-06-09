@@ -73,12 +73,16 @@ class Area
     #[ORM\ManyToMany(targetEntity: Customer::class, mappedBy: 'areas')]
     private $customers;
 
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'areas')]
+    private $users;
+
     public function __construct()
     {
         $this->geography = new ArrayCollection();
         $this->businessunit = new ArrayCollection();
         $this->presales = new ArrayCollection();
         $this->customers = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -204,6 +208,31 @@ class Area
     {
         if ($this->customers->removeElement($customer)) {
             $customer->removeArea($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addArea($this);
+        }
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeArea($this);
         }
         return $this;
     }

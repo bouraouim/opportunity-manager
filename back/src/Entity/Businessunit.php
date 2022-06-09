@@ -52,9 +52,6 @@ class Businessunit
     #[Groups(['read:opp_collection','read:customer_collection','write:bu_collection','read:bu_collection','read:productline_collection','read:presale_collection','read:department_collection','read:collection', 'write:collection', 'read:user_collection', 'write:user_collection', 'read:area_collection'])]
     private $name;
 
-    #[ORM\OneToMany(mappedBy: 'businessunit', targetEntity: Businessline::class, orphanRemoval: true)]
-    private $businessline;
-
     #[ORM\Column(type: 'boolean')]
     #[Groups(['write:bu_collection','read:bu_collection','read:collection', 'write:collection'])]
     private $status = true;
@@ -86,11 +83,11 @@ class Businessunit
     private $opportunities;
 
     #[ORM\ManyToMany(targetEntity: Businessline::class, mappedBy: 'businessunit')]
+    #[Groups(['read:bu_collection', 'write:bu_collection'])]
     private $businesslines;
 
     public function __construct()
     {
-        $this->businessline = new ArrayCollection();
         $this->user = new ArrayCollection();
         $this->areas = new ArrayCollection();
         $this->departments = new ArrayCollection();
@@ -114,34 +111,6 @@ class Businessunit
     public function setName(string $name): self
     {
         $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Businessline>
-     */
-    public function getBusinessline(): Collection
-    {
-        return $this->businessline;
-    }
-
-    public function addBusinessline(Businessline $businessline): self
-    {
-        if (!$this->businessline->contains($businessline)) {
-            $this->businessline[] = $businessline;
-            $businessline->setBusinessunit($this);
-        }
-        return $this;
-    }
-
-    public function removeBusinessline(Businessline $businessline): self
-    {
-        if ($this->businessline->removeElement($businessline)) {
-            // set the owning side to null (unless already changed)
-            if ($businessline->getBusinessunit() === $this) {
-                $businessline->setBusinessunit(null);
-            }
-        }
         return $this;
     }
 
@@ -295,7 +264,6 @@ class Businessunit
             $this->opportunities[] = $opportunity;
             $opportunity->setBusinessunit($this);
         }
-
         return $this;
     }
 
@@ -307,7 +275,6 @@ class Businessunit
                 $opportunity->setBusinessunit(null);
             }
         }
-
         return $this;
     }
 
@@ -317,5 +284,22 @@ class Businessunit
     public function getBusinesslines(): Collection
     {
         return $this->businesslines;
+    }
+
+    public function addBusinessline(Businessline $businessline): self
+    {
+        if (!$this->businesslines->contains($businessline)) {
+            $this->businesslines[] = $businessline;
+            $businessline->addBusinessunit($this);
+        }
+        return $this;
+    }
+
+    public function removeBusinessline(Businessline $businessline): self
+    {
+        if ($this->businesslines->removeElement($businessline)) {
+            $businessline->removeBusinessunit($this);
+        }
+        return $this;
     }
 }

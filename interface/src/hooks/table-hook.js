@@ -7,8 +7,10 @@ const Tablehook = (
   searchterm,
   parameters,
   searchby,
-  globalsearch
+  globalsearch,
+  opplink=""
 ) => {
+  let a=opplink
   const [data, setData] = useState([]);
   const [order, setOrder] = useState("");
   const [loading, setLoading] = useState(true);
@@ -18,17 +20,14 @@ const Tablehook = (
   const [reset, setreset] = useState(false);
   const [sortby, setsortby] = useState("");
   const [itemperpage, setitemperpage] = useState(5);
-
   let searchlink = searchterm == "" ? "" : "&" + searchby + "=";
   const global = globalsearch == "" ? "" : "&search=" + globalsearch;
   const sortlink = sortby == "" ? "" : "&order%5B" + sortby + "%5D=" + order;
   const leaf = (obj, path) =>
     path.split(".").reduce((value, el) => value[el], obj);
-
   const itemperpageHandler = (e) => {
     setitemperpage(e.target.value);
   };
-
   const sortHandler = (v) => {
     setsortby(v);
     console.log(v);
@@ -39,10 +38,13 @@ const Tablehook = (
       setOrder("asc");
     }
   };
-
   const authctx = useContext(AuthContext);
   useEffect(() => {
-    const link =
+    console.log(tablename,a.length==0,"aaa")
+    if(tablename=="opportunity" && a.length==0){
+      return{data:[]};
+    }
+    const link = opplink.length==0?
       "http://localhost:8000/api/" +
       tablename +
       "?page=" +
@@ -53,15 +55,19 @@ const Tablehook = (
       global +
       searchlink +
       searchterm +
-      sortlink;
+      sortlink:opplink
+      console.log(link)
     axios
       .get(link, { headers: { Authorization: "Bearer " + authctx.token } })
       .then((response) => {
-        console.log(link)
+        console.log("zzzzzzzzz")
         console.log(response.data["hydra:member"]);
         const table = response.data["hydra:member"].map((d) => {
           var a = parameters.map((p) => {
-            if (
+            if(p==="revenueLocalPart" || p==="revenueHQPart"){
+              return { [p]: leaf(d, p) };
+            }
+            else if (
               Object.prototype.toString.call(leaf(d, p.split(".")[0])) ===
               "[object Array]"
             ) {
@@ -93,6 +99,9 @@ const Tablehook = (
           setShow(true);
         } else if (response.data["hydra:totalItems"] === 0) {
           setShow(false);
+          if(opplink.length>0){setPagination({
+            number: 0,
+          })}
         } else {
           setPagination({
             number: response.data["hydra:totalItems"],
@@ -107,7 +116,6 @@ const Tablehook = (
           setreset(true);
         } else if (searchterm.trim() == "" && reset) {
           setreset(false);
-          console.log("bbb");
         }
 
         setData(table);
@@ -124,6 +132,7 @@ const Tablehook = (
     itemperpage,
     global,
     authctx.token,
+    opplink,
   ]);
 
   const loadingchange = () => {

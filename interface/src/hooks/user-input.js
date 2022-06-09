@@ -14,15 +14,7 @@ const useInput = (validateValue) => {
   }
   const inputBlurHandler = () => {
     setIsTouched(true);
-    console.log("touchedddd")
   }
-
-  useEffect(()=>{
-    console.log(isTouched)
-    // console.log(validateValue(entredValue))
-    console.log("ttttt")
-
-  },[isTouched])
 
   return{
     value:entredValue,
@@ -32,6 +24,5 @@ const useInput = (validateValue) => {
     inputBlurHandler,
     submissionHandler,
   }
-
 }
 export default useInput;

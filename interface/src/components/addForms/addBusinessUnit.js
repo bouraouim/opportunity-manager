@@ -9,9 +9,11 @@ import { NotificationManager } from 'react-notifications';
 const AddBusinessUnit = () => {
   const {isValid:nameIsValid, hasError:nameHasError, valueChangeHandler:nameChangeHandler, inputBlurHandler:nameBlurHandler} = useInput(value=>value.trim() !== '');
   const namevalid = nameHasError?"form-control is-invalid":"form-control";
+  const nameIconValid = nameHasError?"input-group-text invalide":"input-group-text";
   const nameRef = useRef();
   const navigate = useNavigate();
 
+  //Add Function
   const submithandler = (event) => {
     event.preventDefault(); 
     const name = nameRef.current.value;
@@ -39,10 +41,10 @@ const AddBusinessUnit = () => {
               <label className="form-control-label">Business Unit<span className="text-danger">*</span></label>
               <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                  <span className="input-group-text"><Inboxes size={17}/></span>
+                  <span className={nameIconValid}><Inboxes size={17}/></span>
                 </div>
                 <input type="text" ref={nameRef} onChange={nameChangeHandler} onBlur={nameBlurHandler} className={namevalid} placeholder="Name of Business Unit"/>
-                {!nameIsValid && <div className="invalid-feedback">Should not be empty</div>}
+                {!nameIsValid && <div className="invalid-feedback">Name of Business Unit should not be empty</div>}
               </div>
             </div>
           </div>

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useState,useEffect,useRef, useContext} from 'react';
 import { useNavigate,useParams } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
-import { Inbox, Inboxes } from "react-bootstrap-icons";
+import { Inbox } from "react-bootstrap-icons";
 import { NotificationManager } from 'react-notifications';
 
 const EditBusinessLine = () => {
@@ -16,6 +16,7 @@ const EditBusinessLine = () => {
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
 
+  //Get data from BD
   useEffect(()=>{
     axios.get('http://localhost:8000/api/businesslines/'+id,{headers: {Authorization: "Bearer "+authctx.token}})
     .then(response=>{
@@ -35,6 +36,7 @@ const EditBusinessLine = () => {
       console.error(error);
     }) 
   },[])
+  //Edit Function
   const submithandler=(event)=>{
     event.preventDefault(); 
     const inputname = nameRef.current.value;
@@ -71,25 +73,17 @@ const EditBusinessLine = () => {
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label className="form-control-label" htmlFor="example3cols1Input">Business line </label>
+              <label className="form-control-label">Business line </label>
               <div className="input-group mb-3">
                 <div className="input-group-prepend">
                   <span className="input-group-text"><Inbox size={17}/></span>
                 </div>
-                <input type="text" ref={nameRef}  className="form-control" id="example3cols1Input"  placeholder={bldata.name}/>
+                <input type="text" ref={nameRef} className="form-control" placeholder={bldata.name}/>
               </div>
             </div>
           </div>
           <div className="col-md-6">
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="example3cols3Input">Business Unit</label>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text"><Inboxes size={17}/></span>
-                </div>
-                <Selec multi={true} full={false} ref={buRef} placeholder={bldata.businessunit} data={budata} />
-              </div>
-            </div>
+            <Selec multi={true} full={false} ref={buRef} placeholder={bldata.businessunit} data={budata} selecType={"Business Unit"}/>
           </div>
         </div>
         <EditFormButtons valid={true} cancel={"/administration/businessLines"}/>

@@ -4,6 +4,7 @@ import { DashLg, CheckLg } from 'react-bootstrap-icons';
 import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../../store/auth-context';
 import "../../index.css";
+import { NotificationManager } from 'react-notifications';
 
 const BusinessUnitItem = (props) => {   
     const statusclass = props.status?"badge badge-lg badge-success":"badge badge-lg badge-danger";
@@ -16,6 +17,7 @@ const BusinessUnitItem = (props) => {
     var link = 'http://localhost:8000/api/businessunits/'+props.id+'/'+fct;
     const [disabledValue, setDisabledValue] = useState(false);
 
+    //Verify if BU is used
     useEffect (() => {
         axios.get('http://localhost:8000/businessunit/isUsed', {params: {value: props.id}},{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
@@ -40,7 +42,8 @@ const BusinessUnitItem = (props) => {
             'Content-Type': 'application/merge-patch+json',
             Authorization: "Bearer "+authctx.token
         }})
-       .then(props.loading)
+        .then(props.loading)
+        props.status? NotificationManager.success('The Business Unit has been successfully disabled !'): NotificationManager.success('The Business Unit has been successfully enabled !');
     }
 
     return(

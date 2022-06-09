@@ -115,4 +115,35 @@ class BusinesslineRepository extends ServiceEntityRepository
             ->getArrayResult()
         ;
     }
+
+    /**
+     * @return Businessline[] Returns an array of Businessline objects
+    */
+    public function getActiveBusinessLinesHavingDepartments()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT distinct(bl.id), bl.name, bl.status
+            FROM department_businessline bldept, businessline bl
+            WHERE bldept.businessline_id = bl.id
+            AND bl.status = true'
+        ;
+        return $conn->prepare($sql)->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @return Productline[] Returns an array of ProductLine objects
+    */
+    public function getActiveProductLineByBusinessLine($id)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('distinct pl')
+            ->from(Productline::class, 'pl')
+            ->leftJoin ('pl.businessline','bl')
+            ->where(':id MEMBER OF pl.businessline')
+            ->andWhere()
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
 }

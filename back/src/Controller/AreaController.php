@@ -25,4 +25,17 @@ class AreaController extends AbstractController
         $value = $request->query->get('value');
         return $this->json($areaRepository->areaIsUsed($value));
     }
+
+    #[Route('/areaHavingGeo', name: 'areaHavingGeo', methods: ['GET'])]
+    public function getAreaHavingCountries(AreaRepository $areaRepository) : Response
+    {
+        return $this->json($areaRepository->getActiveAreasHavingCountries());
+    }
+
+    #[Route('/getGeoByArea', name: 'getGeoByArea', methods: ['GET'])]
+    public function getGeoByArea(AreaRepository $areaRepository, Request $request) : Response
+    {
+        $id = $request->query->get('id');
+        return $this->json($areaRepository->getActiveCountriesByArea($id));
+    }
 }

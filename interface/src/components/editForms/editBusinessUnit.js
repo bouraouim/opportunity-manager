@@ -13,12 +13,14 @@ const EditBusinessUnit = () => {
     var { id } = useParams();
     const authctx = useContext(AuthContext);
     const [businessunit, setBusinessunit] = useState([]);
+    //Get data from DB
     useEffect(() => {
         axios.get('http://localhost:8000/api/businessunits/'+id,{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
             setBusinessunit(response.data);
         })
     },[])
+    //Update Function
     const submithandler = (event) => {
         event.preventDefault(); 
         const name = nameRef.current.value;

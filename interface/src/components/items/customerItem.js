@@ -2,8 +2,8 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 import { DashLg, CheckLg } from 'react-bootstrap-icons';
 import AuthContext from '../../store/auth-context';
-import { useContext, useState, useEffect } from 'react';
 import "../../index.css";
+import { useContext, useState, useEffect } from 'react';
 
 const CustomerItem = (props) => {   
     const statusclass = props.status?"badge badge-lg badge-success":"badge badge-lg badge-danger";

@@ -37,15 +37,7 @@ function Useritem(props) {
     }
 
    const authctx=useContext(AuthContext)
-   const anonymizeHandler=()=>{
-      const body= {
-        "anonymized":true
-       }
-       axios.patch(link,body,{headers: {
-        'Content-Type': 'application/merge-patch+json' 
-      }})
-      props.userHandler(props.email)
-   }
+  
 
    const statusclass=props.status?"badge badge-lg badge-success":"badge badge-lg badge-danger"
    const statusbtnclass=props.status?"btn btn-danger btn-circle btn-sm opacity-5":"btn btn-success btn-circle btn-sm opacity-5"

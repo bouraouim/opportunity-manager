@@ -5,78 +5,49 @@ import { useNavigate, useParams } from "react-router-dom";
 import EditFormButtons from "./editButtonsForm";
 import AuthContext from "../../store/auth-context";
 import "../../index.css";
-import { Person, Inboxes, Inbox, Flag, Map } from "react-bootstrap-icons";
+import { Person } from "react-bootstrap-icons";
 import { NotificationManager } from 'react-notifications';
+import Selecthook from "../../hooks/selec-input";
 
 const EditPresales = () => {
+    const {buChoiceHandler, areaChoiceHandler, blChoiceHandler, changeAreaInit, changeBlInit, changeBuInit, choiceBu, choiceBl, choiceArea,
+            bldata, departmentdata, areadata, geographyData, budata, initBu, initBl, initArea, initDep} = Selecthook();
     var nameRef = useRef();
     var buRef = useRef();
     var blRef = useRef();
     var areaRef = useRef();
     var deptRef = useRef();  
-    const [budata, setBudata] = useState([]);
-    const [bldata, setBldata] = useState([]);
-    const [areadata, setareadata] = useState([]);
-    const [departmentdata, setdepartmentdata] = useState([]);
+    const [blByDeptData, setBlByDepatData] = useState([]);
+    const [presales, setPresales] = useState([]);
+    const [choiceBuArea, setChoiceBuArea] = useState(true);
+    const [blValid, setBlValid] = useState(true);
+    const [areaValid, setAreaValid] = useState(true);
+    const [deptValid, setDeptValid] = useState(true);
+    const [req, setreq] = useState(false);
     const navigate = useNavigate();
     var { id } = useParams();
     const authctx = useContext(AuthContext);
-    const [presales, setPresales] = useState([]);
     
+    const operation = (list1, list2, isUnion = false) =>
+    list1.filter(a => isUnion === list2.some(b => a.id === b.id));
+    const inBoth = (list1, list2) => operation(list1, list2, true);
     useEffect(() => {
-        axios.get('http://localhost:8000/businessunit/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
-        .then(response=>{
-            const table = (response.data.map(d=>{
-                return{
-                    id: d.id,
-                    name:d.name,
-                } 
-            }))
-            setBudata(table);
-        }).catch(error=>{
-            console.error(error);
-        }) 
-        axios.get('http://localhost:8000/businessline/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
-        .then(response=>{
-            const table = (response.data.map(d=>{
-                return{
-                    id: d.id,
-                    name:d.name,
-                } 
-            }))
-            setBldata(table);
-        }).catch(error=>{
-            console.error(error);
-        }) 
-        axios.get('http://localhost:8000/department/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
-        .then(response=>{
-            const table = (response.data.map(d=>{
-                return{
-                    id: d.id,
-                    name:d.name,
-                } 
-            }))
-            setdepartmentdata(table);
-        }).catch(error=>{
-            console.error(error);
-        }) 
-        axios.get('http://localhost:8000/area/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
-        .then(response=>{
-            const table = (response.data.map(d=>{
-                return{
-                    id: d.id,
-                    name:d.name,
-                } 
-            }))
-            setareadata(table);
-        }).catch(error=>{
-            console.error(error);
-        })
         axios.get('http://localhost:8000/api/presales/'+id,{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
             setPresales(response.data);
         })
     },[])
+    const buchangehandler=()=>{
+        setreq(true)
+       }
+   
+    const deptChoiceHandler = (event, s) => {
+        if((event.target.value).length > 0)
+          setDeptValid(true);
+        else
+          setDeptValid(false);
+    }
+    //Edit Function
     const submithandler = (event) => {
         event.preventDefault(); 
         const blInput = blRef.current.value;
@@ -94,22 +65,22 @@ const EditPresales = () => {
             })
             body["businessunit"] = bu;
         }
-        if(deptInput.length !== 0){
+        if(req){if(deptInput.length !== 0){
             var dept = deptInput.map(v=>{
                 return "/api/departments/"+v 
-            })
+            })}else{var dept=[]}
             body["department"] = dept;
         }
-        if(blInput.length !== 0){
+        if(req){if(blInput.length !== 0){
             var bl = blInput.map(v=>{
                 return "/api/businesslines/"+v 
-            })
+            })}else{var bl=[]}
             body["businessline"] = bl;
         }
-        if(areaInput.length !== 0){
+        if(req){if(areaInput.length !== 0){
             var area = areaInput.map(v=>{
                 return "/api/areas/"+v 
-            })
+            })}else{var bl=[]}
             body["areas"] = area;
         }
         axios.patch('http://localhost:8000/api/presales/'+id,body,{headers: {
@@ -143,50 +114,18 @@ const EditPresales = () => {
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <div className="form-group">
-                            <label className="form-control-label">Business Unit</label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Inboxes size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={buRef} full={false} data={budata} placeholder={presales.businessunit}></Selec>
-                            </div>
-                        </div>
-                    </div>
+                        <Selec multi={true} ref={buRef} onchange={buchangehandler} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={false} data={budata} placeholder={presales.businessunit}selecType={"Business Unit"} required={false}></Selec>
+                        {req &&<div >other parametes that depend on business unit will be empty if you don't change them</div>}                    </div>
                     <div className="col-md-4">
-                        <div className="form-group">
-                            <label className="form-control-label">Business line</label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Inbox size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={blRef} full={false} data={bldata} placeholder={presales.businessline}></Selec>
-                            </div>
-                        </div>
+                        <Selec multi={true} ref={blRef} full={false} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={presales.businessline} selecType={"Business Line"} required={false}></Selec>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-4">
-                        <div className="form-group">
-                            <label className="form-control-label">Pole / Department</label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Flag size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={deptRef} full={false} data={departmentdata} placeholder={presales.department}></Selec>
-                            </div>
-                        </div>
+                        <Selec multi={true} ref={deptRef} name={"depppp"} init={initBl} full={false} choice={choiceBl} data={departmentdata} placeholder={presales.department} selecType={"Pole / Department"} required={false}></Selec>
                     </div>
                     <div className="col-md-4">
-                        <div className="form-group">
-                            <label className="form-control-label">Area</label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Map size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={areaRef} full={false} data={areadata} placeholder={presales.areas}></Selec>
-                            </div>
-                        </div>
+                        <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit} init={initBu} choice={choiceBu} data={areadata} placeholder={presales.areas}  selecType={"Area"} required={false}></Selec>
                     </div>
                 </div>
                 <EditFormButtons valid={true} cancel={"/administration/presales"}/>

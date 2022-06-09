@@ -5,6 +5,8 @@ import EditFormButtons from "./editButtonsForm";
 import AuthContext from "../../store/auth-context";
 import { CurrencyExchange, CurrencyEuro } from "react-bootstrap-icons";
 import "../../index.css";
+import Selec from "../addForms/select";
+import currencies from "../addForms/currency";
 
 const EditCurrency = () => {   
     const nameRef = useRef();
@@ -56,7 +58,7 @@ const EditCurrency = () => {
             <form className="needs-validation" onSubmit={submithandler}>
                 <div className="row">
                     <div className="col-md-4">
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <label className="form-control-label">Currency code</label>
                             <div className="input-group mb-3">
                                 <div className="input-group-prepend">
@@ -64,7 +66,8 @@ const EditCurrency = () => {
                                 </div>
                                 <input type="text" ref={nameRef} className="form-control edit" placeholder={currency.code}/>
                             </div>
-                        </div>
+                        </div> */}
+                        <Selec multi={false} ref={nameRef} full={false} data={currencies} placeholder={currency.code} selecType={"Currency code"}/>
                     </div>
                     <div className="col-md-4">
                         <div className="form-group">

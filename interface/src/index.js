@@ -6,7 +6,9 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from './store/auth-context';
 
+
 ReactDOM.render(
+
   <AuthContextProvider>
   <BrowserRouter>
     <App />

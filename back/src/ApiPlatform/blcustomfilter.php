@@ -18,7 +18,7 @@ class blcustomfilter extends AbstractFilter
             return;
         }
         $alias = $queryBuilder->getRootAliases()[0];
-        $queryBuilder->andWhere(sprintf('%s.name LIKE :search OR %s.name LIKE :search', $alias, $alias))->setParameter('search', '%'.$value.'%');
+        $queryBuilder->andWhere(sprintf('%s.name LIKE :search OR %s.businessunit.name LIKE :search', $alias, $alias))->setParameter('search', '%'.$value.'%');
 
     }
     public function getDescription(string $resourceClass): array

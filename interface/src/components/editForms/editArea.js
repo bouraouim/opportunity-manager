@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import EditFormButtons from "./editButtonsForm";
 import AuthContext from "../../store/auth-context";
 import "../../index.css";
-import { Map, Inboxes } from "react-bootstrap-icons";
+import { Map } from "react-bootstrap-icons";
 import { NotificationManager } from 'react-notifications';
 
 const EditArea = () => {
@@ -80,15 +80,7 @@ const EditArea = () => {
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <div className="form-group">
-                            <label className="form-control-label">Business Unit</label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Inboxes size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={buRef} data={budata} full={false} placeholder={area.businessunit}></Selec>
-                            </div>
-                        </div>
+                        <Selec multi={true} ref={buRef} data={budata} full={false} placeholder={area.businessunit} selecType={"Business Unit"}></Selec>
                     </div>
                 </div>
                 <EditFormButtons valid={true} cancel={"/administration/areas"}/>

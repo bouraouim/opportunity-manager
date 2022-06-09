@@ -26,10 +26,29 @@ class BusinessunitController extends AbstractController
         return $this->json($businessunitRepository->businessUnitIsUsed($value));
     }
 
-    #[Route('/blByBu', name: 'detBlByBu', methods: ['GET'])]
+    #[Route('/blByBu', name: 'getBlByBu', methods: ['GET'])]
     public function getBlByBu(BusinessunitRepository $businessunitRepository, Request $request) : Response
     {
         $id = $request->query->get('id');
         return $this->json($businessunitRepository->getActiveBusinessLinesByBusinessUnit($id));
-    }    
+    }
+
+    #[Route('/buHavingBl', name: 'buHavingBl', methods: ['GET'])]
+    public function getBuHavingBl(BusinessunitRepository $businessunitRepository) : Response
+    {
+        return $this->json($businessunitRepository->getActiveBusinessUnitsHavingBusinessLines());
+    }
+
+    #[Route('/buHavingBlAndArea', name: 'buHavingBlAndArea', methods: ['GET'])]
+    public function getBuHavingBlAndArea(BusinessunitRepository $businessunitRepository) : Response
+    {
+        return $this->json($businessunitRepository->getActiveBusinessUnitsHavingBusinessLinesAndAreas());
+    }
+
+    #[Route('/areaByBu', name: 'getAreaByBu', methods: ['GET'])]
+    public function getAreaByBu(BusinessunitRepository $businessunitRepository, Request $request) : Response
+    {
+        $id = $request->query->get('id');
+        return $this->json($businessunitRepository->getActiveAreasByBusinessUnit($id));
+    }
 }

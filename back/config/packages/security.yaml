@@ -65,4 +65,5 @@ security:
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
         # - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST,DELETE] }
         - { path: ^/api, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: PUBLIC_ACCESS }
         - { path: ^/docs, roles: PUBLIC_ACCESS }

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CurrencyRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\ActivateCurrencyController;
 use App\Controller\InactivateCurrencyController;
@@ -42,11 +44,11 @@ class Currency
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:curr_collection', 'write:curr_collection'])]
+    #[Groups(['read:curr_collection', 'write:curr_collection', 'read:opp_collection', 'write:opp_collection'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:curr_collection', 'write:curr_collection'])]
+    #[Groups(['read:curr_collection', 'write:curr_collection', 'read:opp_collection'])]
     private $code;
 
     #[ORM\Column(type: 'date')]
@@ -60,6 +62,18 @@ class Currency
     #[ORM\Column(type: 'boolean')]
     #[Groups(['read:curr_collection', 'write:curr_collection'])]
     private $status = true;
+
+    #[ORM\OneToMany(mappedBy: 'currLocalPart', targetEntity: Opportunity::class)]
+    private $opportunities;
+
+    #[ORM\OneToMany(mappedBy: 'currHQPart', targetEntity: Opportunity::class)]
+    private $opportunities_HQ;
+
+    public function __construct()
+    {
+        $this->opportunities = new ArrayCollection();
+        $this->opportunities_HQ = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -107,6 +121,66 @@ class Currency
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Opportunity>
+     */
+    public function getOpportunities(): Collection
+    {
+        return $this->opportunities;
+    }
+
+    public function addOpportunity(Opportunity $opportunity): self
+    {
+        if (!$this->opportunities->contains($opportunity)) {
+            $this->opportunities[] = $opportunity;
+            $opportunity->setCurrLocalPart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOpportunity(Opportunity $opportunity): self
+    {
+        if ($this->opportunities->removeElement($opportunity)) {
+            // set the owning side to null (unless already changed)
+            if ($opportunity->getCurrLocalPart() === $this) {
+                $opportunity->setCurrLocalPart(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Opportunity>
+     */
+    public function getOpportunitiesHQ(): Collection
+    {
+        return $this->opportunities_HQ;
+    }
+
+    public function addOpportunitiesHQ(Opportunity $opportunitiesHQ): self
+    {
+        if (!$this->opportunities_HQ->contains($opportunitiesHQ)) {
+            $this->opportunities_HQ[] = $opportunitiesHQ;
+            $opportunitiesHQ->setCurrHQPart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOpportunitiesHQ(Opportunity $opportunitiesHQ): self
+    {
+        if ($this->opportunities_HQ->removeElement($opportunitiesHQ)) {
+            // set the owning side to null (unless already changed)
+            if ($opportunitiesHQ->getCurrHQPart() === $this) {
+                $opportunitiesHQ->setCurrHQPart(null);
+            }
+        }
+
         return $this;
     }
 }

@@ -25,48 +25,48 @@ const OpportunityItem = (props) => {
     return(
         <tr>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm"> 
-                {authctx.updateOpportunities && <h4 className="title"><Link to={`/administration/opportunities/edit/${props.id}`}>{props.refe}</Link></h4>}
+                {authctx.updateOpportunities && <h4 className="title"><Link to={`/opportunities/edit/${props.id}`}>{props.refe}</Link></h4>}
                 {!authctx.updateOpportunities && <h4>{props.refe}</h4>}
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.creationDate}</h4>
             </td>
-            <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
+            {/* <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.deptname}</h4>
-            </td>
+            </td> */}
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.salesManagerName}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.country}</h4>
             </td>
-            <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
+            {/* <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.custname}</h4>
-            </td>
+            </td> */}
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.descrip}</h4>
             </td>
-            <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
+            {/* <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.totalValue}</h4>
-            </td>
+            </td> */}
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.successRate}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.stage}</h4>
             </td>
-            <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
+            {/* <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.presalesname}</h4>
-            </td>
+            </td> */}
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.awardDatePlanned}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.awardDateAchieved}</h4>
             </td>
-            <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
+            {/* <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.blname}</h4>
-            </td>
+            </td> */}
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <h4>{props.buname}</h4>
             </td>

@@ -22,7 +22,7 @@ class CustomerRepository extends ServiceEntityRepository
 
     /**
      * @return Boolean Returns if a specific customer is used 
-     */
+    */
     public function customerIsUsed($value)
     {
         $qopp = $this->createQueryBuilder("l")
@@ -40,7 +40,7 @@ class CustomerRepository extends ServiceEntityRepository
 
     /**
      * @return Customer[] Returns an array of Customer objects
-     */
+    */
     public function getActiveCustomers()
     {
         return $this->createQueryBuilder('c')

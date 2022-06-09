@@ -29,7 +29,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 ),
 ApiFilter( SearchFilter::class, properties:['name'=>'partial','businessunit.name'=>'partial','businessunit.id'=>'exact','status'=>'exact'] ),
 ApiFilter(OrderFilter::class, properties: ['name','businessunit.name'], arguments: ['orderParameterName' => 'order']),
-ApiFilter(blcustomfilter::class)
+ApiFilter(blcustomfilter::class),
+
 ]
 
 class Businessline
@@ -37,7 +38,7 @@ class Businessline
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:opp_collection', 'write:opp_collection','read:customer_collection','write:customer_collection','read:collection','write:user_collection','read:user_collection','write:presale_collection','read:presale_collection','read:department_collection','write:department_collection'])]
+    #[Groups(['read:opp_collection','read:customer_collection','write:customer_collection','read:collection','write:user_collection','read:user_collection','write:presale_collection','read:presale_collection','read:department_collection','write:department_collection'])]
     private $id;
 
     /**

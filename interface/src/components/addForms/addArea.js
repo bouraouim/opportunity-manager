@@ -5,13 +5,15 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import AddFormButtons from "./addFormButtons";
 import AuthContext from "../../store/auth-context";
-import { Map, Inboxes } from "react-bootstrap-icons";
+import { Map } from "react-bootstrap-icons";
 import { NotificationManager } from 'react-notifications';
 
 const AddArea = () => {
     const {isValid:nameIsValid, hasError:nameHasError, valueChangeHandler:nameChangeHandler, inputBlurHandler:nameBlurHandler} = useInput(value=>value.trim() !== '');
     const namevalid = nameHasError?"form-control is-invalid":"form-control";
-    const [budata, setBudata] = useState([]);  
+    const nameIconValid = nameHasError?"input-group-text invalide":"input-group-text";
+    const [budata, setBudata] = useState([]);
+    const [buValid, setBuValid] = useState(false);
     const nameRef = useRef();
     const buRef = useRef();
     const navigate = useNavigate();
@@ -31,6 +33,12 @@ const AddArea = () => {
             console.error(error);
         }) 
     },[])
+    const buhandler = (event, s) => {
+        if((event.target.value).length > 0)
+          setBuValid(true);
+        else
+          setBuValid(false);
+    }
     const submithandler = (event) => {
         event.preventDefault(); 
         const name = nameRef.current.value;
@@ -63,26 +71,18 @@ const AddArea = () => {
                             <label className="form-control-label">Area<span className="text-danger">*</span></label>
                             <div className="input-group mb-3">
                                 <div className="input-group-prepend">
-                                    <span className="input-group-text"><Map size={17}/></span>
+                                    <span className={nameIconValid}><Map size={17}/></span>
                                 </div>
                                 <input type="text" ref={nameRef} onChange={nameChangeHandler} onBlur={nameBlurHandler} className={namevalid} placeholder="Name of Area"/>
-                                {!nameIsValid && <div className="invalid-feedback">Should not be empty</div>}
+                                {!nameIsValid && <div className="invalid-feedback">Name of Area should not be empty</div>}
                             </div>
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <div className="form-group">
-                            <label className="form-control-label">Business Unit<span className="text-danger">*</span></label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Inboxes size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={buRef} data={budata} full={true} placeholder={{name: "Select Business Unit(s)"}}/>
-                            </div>
-                        </div>
+                        <Selec multi={true} ref={buRef} choiceHandler={buhandler} data={budata} full={true} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={true}/>
                     </div>
                 </div>
-                <AddFormButtons valid={nameIsValid} cancel={"/administration/areas"}/>
+                <AddFormButtons valid={nameIsValid && buValid} cancel={"/administration/areas"}/>
             </form>
         </div>
     )

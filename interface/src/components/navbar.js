@@ -7,7 +7,7 @@ const NavBar=()=>{
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
   const email = authctx.email;
-  const logout=()=>{
+  const logout =()=>{
     authctx.logout() 
     navigate('/login') 
   }

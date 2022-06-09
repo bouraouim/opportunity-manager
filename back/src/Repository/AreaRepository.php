@@ -58,7 +58,7 @@ class AreaRepository extends ServiceEntityRepository
             ->select('count(distinct u.id)')
             ->from(User::class, 'u')
             ->leftJoin ('u.area','a')
-            ->where(':val MEMBER OF u.area')
+            ->where(':val MEMBER OF u.areas')
             ->setParameter('val', $value)
             ->getQuery()
             ->getSingleScalarResult()
@@ -70,13 +70,43 @@ class AreaRepository extends ServiceEntityRepository
 
     /**
      * @return Area[] Returns an array of Area objects
-     */
+    */
     public function getActiveAreas()
     {
         return $this->createQueryBuilder('a')
            ->where('a.status = true')
            ->getQuery()
            ->getArrayResult()
+        ;
+    }
+
+    /**
+     * @return Area[] Returns an array of Area objects
+    */
+    public function getActiveAreasHavingCountries()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT distinct(ar.id), ar.name, ar.status
+        FROM geography g, area ar
+        WHERE ar.id = g.area_id
+        AND ar.status = true;'
+        ;
+        return $conn->prepare($sql)->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @return Geography[] Returns an array of Geography objects
+    */
+    public function getActiveCountriesByArea($id)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('distinct g')
+            ->from(Geography::class,'g')
+            ->where('g.area = :val')
+            ->andWhere('g.status = true')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getArrayResult()
         ;
     }
 }

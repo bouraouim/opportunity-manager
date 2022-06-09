@@ -6,8 +6,8 @@ import { DashLg, CheckLg } from 'react-bootstrap-icons';
 import "../../index.css";
 
 const Geographyitem = (props) => {
-    const statusclass=props.status?"badge badge-lg badge-success":"badge badge-lg badge-danger"
-    const statusbtnclass=props.status?"btn btn-danger btn-circle btn-sm opacity-5":"btn btn-success btn-circle btn-sm opacity-5"
+    const statusclass=props.status?"badge badge-lg badge-success":"badge badge-lg badge-danger";
+    const statusbtnclass=props.status?"btn btn-danger btn-circle btn-sm opacity-5":"btn btn-success btn-circle btn-sm opacity-5";
     var statusIcon = props.status?<DashLg size={18}/>:<CheckLg size={18}/>;
     const status=props.status?"ACTIVE":"PASSIVE";
     const authctx=useContext(AuthContext)

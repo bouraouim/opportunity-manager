@@ -157,15 +157,7 @@ const AnonymizedTable=(props)=> {
               }
             }
           };
-        
 
-
-            const undefinedHandler=(v)=>{
-                if (v==undefined){
-                    return("")
-                }
-                else return(v)
-            }
 
 
           const anonymizeHandler=()=>{

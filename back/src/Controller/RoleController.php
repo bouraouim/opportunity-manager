@@ -17,6 +17,6 @@ class RoleController extends AbstractController
     #[Route('/read', name: 'role_index', methods: ['GET'])]
     public function index(RoleRepository $roleRepository): Response
     {
-        return $this->json($roleRepository->findAll());
+        return $this->json($roleRepository->getRoles());
     }
 }

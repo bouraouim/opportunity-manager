@@ -17,7 +17,7 @@ const BusinessLineTable = (props) => {
         pagenumber,itemperpage,
         loadingchange,
         sortHandler,
-        handleChange,itemperpageHandler}= Tablehook("businesslines",searchh,["id","name",'businessunit.name',"status"],searchterm,props.search);
+        handleChange,itemperpageHandler} = Tablehook("businesslines",searchh,["id","name",'businessunit.name',"status"],searchterm,props.search,);
 
     const searchclick=(n)=>{
         setSearchterm(n)
@@ -52,7 +52,7 @@ const BusinessLineTable = (props) => {
                 <table className="table align-items-center mb-2">
                     <thead className="table-dark">
                         <tr>
-                            <th className="text-center  text-xs font-weight-bold" scope="col" data-sort="name" >Business Line <span onClick={()=>sortHandler("name")}><ArrowDownUp size={15}/></span> <i onClick={()=>{searchclick("name")
+                            <th className="text-center text-xs font-weight-bold" scope="col" data-sort="name" >Business Line <span onClick={()=>sortHandler("name")}><ArrowDownUp size={15}/></span> <i onClick={()=>{searchclick("name")
                             handleSearchInputs();}} type="button"><Funnel size={15}/></i> <span> <i className="bi bi-arrow-down-up"></i></span> </th>
                             <th className="text-center text-xs  font-weight-bold" data-sort="name" >Business Unit <span onClick={()=>sortHandler("businessunit.name")}><ArrowDownUp size={15}/></span> <i onClick={()=>{searchclick("businessunit.name")
                             handleSearchInputs();}} type="button"><Funnel size={15}/></i></th>

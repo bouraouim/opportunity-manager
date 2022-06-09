@@ -32,10 +32,6 @@ ApiFilter(usercustomsearch::class)]
 #[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-
-   
-
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -62,11 +58,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $plainPassword;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['write:user_collection','read:user_collection'])]
+    #[Groups(['write:user_collection','read:user_collection','read:opp_collection'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['write:user_collection','read:user_collection'])]
+    #[Groups(['write:user_collection','read:user_collection','read:opp_collection'])]
     private $lastname;
 
     #[ORM\ManyToMany(targetEntity: Businessline::class)]
@@ -84,10 +80,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Department::class)]
     #[Groups(['write:user_collection','read:user_collection'])]
     private $department;
-
-    #[ORM\ManyToMany(targetEntity: Area::class)]
-    #[Groups(['write:user_collection','read:user_collection'])]
-    private $area;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     #[Groups(['write:user_collection','read:user_collection'])]
@@ -110,7 +102,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private static $anonymizednumber=0;
 
     #[ORM\OneToMany(mappedBy: 'salesManager', targetEntity: Opportunity::class)]
+    #[Groups(['write:user_collection','read:user_collection'])]
     private $opportunities;
+
+    #[ORM\ManyToMany(targetEntity: Area::class, inversedBy: 'users')]
+    #[Groups(['write:user_collection','read:user_collection'])]
+    private $areas;
 
     public function __construct()
     {
@@ -118,11 +115,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->businessunit = new ArrayCollection();
         $this->role = new ArrayCollection();
         $this->department = new ArrayCollection();
-        $this->area = new ArrayCollection();
         $this->status=true;
         $this->setCreationdate(new \DateTime('now'));
         $this->setLastconnectiondate(new \DateTime('now'));
         $this->opportunities = new ArrayCollection();
+        $this->areas = new ArrayCollection();
     }
 
     private const DAYS_BEFORE_check = 7;
@@ -148,7 +145,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setplainPassword(string $email): self
     {
         $this->plainPassword = $email;
-
         return $this;
     }
 
@@ -165,7 +161,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -187,14 +182,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
         return $this;
     }
 
@@ -209,7 +202,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -223,8 +215,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     //     return $this->login;
     // }
 
-
-
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -233,7 +223,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
-
         return $this;
     }
 
@@ -245,7 +234,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
-
         return $this;
     }
 
@@ -262,14 +250,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->businessline->contains($businessline)) {
             $this->businessline[] = $businessline;
         }
-
         return $this;
     }
 
     public function removeBusinessline(Businessline $businessline): self
     {
         $this->businessline->removeElement($businessline);
-
         return $this;
     }
 
@@ -286,14 +272,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->role->contains($role)) {
             $this->role[] = $role;
         }
-
         return $this;
     }
 
     public function removeRole(Role $role): self
     {
         $this->role->removeElement($role);
-
         return $this;
     }
 
@@ -310,14 +294,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->businessunit->contains($businessunit)) {
             $this->businessunit[] = $businessunit;
         }
-
         return $this;
     }
 
     public function removeBusinessunit(Businessunit $businessunit): self
     {
         $this->businessunit->removeElement($businessunit);
-
         return $this;
     }
 
@@ -334,38 +316,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->department->contains($department)) {
             $this->department[] = $department;
         }
-
         return $this;
     }
 
     public function removeDepartment(Department $department): self
     {
         $this->department->removeElement($department);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Area>
-     */
-    public function getArea(): Collection
-    {
-        return $this->area;
-    }
-
-    public function addArea(Area $area): self
-    {
-        if (!$this->area->contains($area)) {
-            $this->area[] = $area;
-        }
-
-        return $this;
-    }
-
-    public function removeArea(Area $area): self
-    {
-        $this->area->removeElement($area);
-
         return $this;
     }
 
@@ -377,7 +333,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatus(?bool $status): self
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -389,7 +344,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastconnectiondate(?\DateTimeInterface $lastconnectiondate): self
     {
         $this->lastconnectiondate = $lastconnectiondate;
-
         return $this;
     }
 
@@ -401,7 +355,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreationdate(?\DateTimeInterface $creationdate): self
     {
         $this->creationdate = $creationdate;
-
         return $this;
     }
 
@@ -413,7 +366,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAnonymized(?bool $anonymized): self
     {
         $this->anonymized = $anonymized;
-
         return $this;
     }
     static public function setAnonymizednumber(): void
@@ -440,7 +392,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
-
         return $this;
     }
 
@@ -467,7 +418,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->opportunities[] = $opportunity;
             $opportunity->setSalesManager($this);
         }
-
         return $this;
     }
 
@@ -479,7 +429,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $opportunity->setSalesManager(null);
             }
         }
+        return $this;
+    }
 
+    /**
+     * @return Collection<int, Area>
+     */
+    public function getAreas(): Collection
+    {
+        return $this->areas;
+    }
+
+    public function addArea(Area $area): self
+    {
+        if (!$this->areas->contains($area)) {
+            $this->areas[] = $area;
+        }
+        return $this;
+    }
+
+    public function removeArea(Area $area): self
+    {
+        $this->areas->removeElement($area);
         return $this;
     }
 }

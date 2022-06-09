@@ -22,13 +22,13 @@ class PresalesRepository extends ServiceEntityRepository
 
     /**
      * @return Boolean Returns if a specific Presales Engineer is used 
-     */
+    */
     public function presalesIsUsed($value)
     {
         $qopp = $this->createQueryBuilder("l")
             ->select('count(o.id)')
             ->from(Opportunity::class,'o')
-            ->where('o.presalesEngineer = :val')
+            ->where('o.presales = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getSingleScalarResult()
@@ -40,7 +40,7 @@ class PresalesRepository extends ServiceEntityRepository
 
     /**
      * @return Presales[] Returns an array of Presales objects
-     */
+    */
     public function getActivePresales()
     {
         return $this->createQueryBuilder('p')

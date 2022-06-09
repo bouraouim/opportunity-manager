@@ -5,71 +5,83 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import AddFormButtons from "./addFormButtons";
 import AuthContext from "../../store/auth-context";
-import { Flag, Inboxes, Inbox } from "react-bootstrap-icons";
+import { Flag } from "react-bootstrap-icons";
 import { NotificationManager } from 'react-notifications';
+import Selecthook from "../../hooks/selec-input";
 
 const AddDeprtment = () => {    
     const {isValid:nameIsValid, hasError:nameHasError, valueChangeHandler:nameChangeHandler, inputBlurHandler:nameBlurHandler} = useInput(value=>value.trim() !== '');
+    const {buChoiceHandler, areaChoiceHandler, blChoiceHandler, changeAreaInit, changeBlInit, changeBuInit, choiceBu, choiceBl, choiceArea,
+            bldata, departmentdata, areadata, geographyData, budata, initBu, initBl, initArea, initDep} = Selecthook();
     const namevalid = nameHasError?"form-control is-invalid":"form-control";
-    const [budata, setBudata] = useState([]);  
-    const [bldata, setBldata] = useState([]);  
+    const nameIconValid = nameHasError?"input-group-text invalide":"input-group-text";
+    const [choice, setchoice] = useState(true);
+    const [buValid, setBuValid] = useState(false);
+    const [blValid, setBlValid] = useState(false);
     const nameRef = useRef();
     const buRef = useRef();
     const blRef = useRef();
     const navigate = useNavigate();
     const authctx = useContext(AuthContext);
-
-    useEffect(async () => {
-        await axios.get('http://localhost:8000/businessunit/read',{headers: {Authorization: "Bearer "+authctx.token}})
-        .then(response=>{
-            const table = (response.data.map(d=>{
-                return{
-                    id: d.id,
-                    name:d.name,
-                } 
-            }))
-            setBudata(table);
-        }).catch(error=>{
-            console.error(error);
-        })
-        // axios.get('http://localhost:8000/businessunit/blByBu',{params: {id: buRef.current.value}},{headers: {Authorization: "Bearer "+authctx.token}})
-        // .then(response=>{
-        //     const table = (response.data.map(d=>{
-        //         return{
-        //             id: d.id,
-        //             name:d.name,
-        //         } 
-        //     }))
-        //     setBldata(table);
-        // }).catch(error=>{
-        //     console.error(error);
-        // }) 
-    },[buRef])
-    // console.log(buRef.current.value)
-    useEffect(async() => {
-        // axios.get('http://localhost:8000/businessunit/read',{headers: {Authorization: "Bearer "+authctx.token}})
-        // .then(response=>{
-        //     const table = (response.data.map(d=>{
-        //         return{
-        //             id: d.id,
-        //             name:d.name,
-        // })
-        await buRef.current.value.map(v => {
-            axios.get('http://localhost:8000/businessunit/blByBu',{params: {id: v}},{headers: {Authorization: "Bearer "+authctx.token}})
-            .then(response=>{
-                const table = (response.data.map(d=>{
-                    return{
-                        id: d.id,
-                        name:d.name,
-                    } 
-                }))
-                setBldata(table);
-            }).catch(error=>{
-                console.error(error);
-            }) 
-
-        })
-    },[bldata])
+    // useEffect(() => {
+    //     axios.get('http://localhost:8000/businessunit/buHavingBl',{headers: {Authorization: "Bearer "+authctx.token}})
+    //     .then(response=>{
+    //         const table = (response.data.map(d=>{
+    //             return{
+    //                 id: d.id,
+    //                 name:d.name,
+    //             } 
+    //         }))
+    //         setBudata(table);
+    //     }).catch(error=>{
+    //         console.error(error);
+    //     })
+    // },[])
+    // const choiceHandler = (event, s) => {
+    //     if((event.target.value).length > 0){
+    //         setchoice(false);
+    //         setBuValid(true);
+    //         event.target.value.map((v)=>{
+    //             axios.get('http://localhost:8000/businessunit/blByBu',{params: {id: v}},{headers: {Authorization: "Bearer "+authctx.token}}) 
+    //             .then(response=>{
+    //                 const table=(response.data.map(d=>{
+    //                     return{
+    //                         id: d.id,
+    //                         name:d.name,
+    //                     } 
+    //                 }))
+    //                 if(event.target.value.length === 1){
+    //                     setBldata(table);
+    //                 }
+    //                 else{
+    //                     setBldata(Array.from(new Set((bldata.concat(table)).map(a => a.id)))
+    //                     .map(id => {
+    //                         return (bldata.concat(table)).find(a => a.id === id)
+    //                     }));
+    //                 }
+    //             }).catch(error=>{
+    //               console.error(error);
+    //             })
+    //         })
+    //     }
+    //     else {
+    //         setchoice(true);
+    //         setBuValid(false);
+    //     }
+    // }
+    // const blChoiceHandler = (event, s) => {
+    //     if((event.target.value).length > 0)
+    //       setBlValid(true);
+    //     else
+    //       setBlValid(false);
+    // }
+    const blhandler = (v) => {
+        setBlValid(v)
+    }
+    const buhandler = (v) => {
+        setBuValid(v)
+    }
+    //Add Function
     const submithandler = (event) => {
         event.preventDefault(); 
         const name = nameRef.current.value;
@@ -108,37 +120,21 @@ const AddDeprtment = () => {
                             <label className="form-control-label">Department - Pole<span className="text-danger">*</span></label>
                             <div className="input-group mb-3">
                                 <div className="input-group-prepend">
-                                    <span className="input-group-text"><Flag size={17}/></span>
+                                    <span className={nameIconValid}><Flag size={17}/></span>
                                 </div>
                                 <input type="text" ref={nameRef} onChange={nameChangeHandler} onBlur={nameBlurHandler} className={namevalid} placeholder="Name of department - pole"/>
-                                {!nameIsValid && <div className="invalid-feedback">Should not be empty</div>}
+                                {!nameIsValid && <div className="invalid-feedback">Name of Department should not be empty</div>}
                             </div>
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <div className="form-group">
-                            <label className="form-control-label">Business Unit<span className="text-danger">*</span></label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Inboxes size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={buRef} data={budata} full={true} placeholder={{name: "Select Business Unit(s)"}}/>
-                            </div>
-                        </div>
+                    <Selec multi={true} ref={buRef} onchange={buhandler} choiceHandler={buChoiceHandler} name={"buuuuu"}  changeInit={changeBuInit}  full={true} data={budata} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={true}></Selec>
                     </div>
                     <div className="col-md-4">
-                        <div className="form-group">
-                            <label className="form-control-label">Business Line<span className="text-danger">*</span></label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Inbox size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={blRef} data={bldata} full={true} placeholder={{name: "Select Business Line(s)"}}/>
-                            </div>
-                        </div>
+                    <Selec multi={true} ref={blRef} onchange={blhandler} full={true} choiceHandler={blChoiceHandler}  name={"blll"} changeInit={changeBlInit} init={initBu}   choice={choiceBu} data={bldata} placeholder={{name: "Select Business Line(s)"}} selecType={"Business Line"} required={true}></Selec>
                     </div>
                 </div>
-                <AddFormButtons valid={nameIsValid} cancel={"/administration/departments"}/>
+                <AddFormButtons valid={nameIsValid && buValid && blValid} cancel={"/administration/departments"}/>
             </form>
         </div>
     )

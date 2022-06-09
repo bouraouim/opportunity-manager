@@ -21,7 +21,7 @@ const GeographyTable=(props)=> {
         itemperpage,
         loadingchange,
         sortHandler,
-        handleChange}=Tablehook("geographies",searchh,["id","country",'area.name',"continent","status"],searchterm,props.search)
+        handleChange,itemperpageHandler}=Tablehook("geographies",searchh,["id","country",'area.name',"continent","status"],searchterm,props.search)
 
 const searchclick=(n)=>{
     setSearchterm(n)}
@@ -101,7 +101,7 @@ const   statusHandler=()=>{
                 </table>
                     {loading && <h5 className="h3 my-2 text-center">Loading...</h5>}
             </div>
-            {!loading && show && <Paginations itemperpage={itemperpage} onchange={handleChange} page={pagenumber} search={props.search}  pagination={paginations}/>}
+            {!loading && show && <Paginations itemperpageHandler={itemperpageHandler} itemperpage={itemperpage} onchange={handleChange} page={pagenumber} search={props.search}  pagination={paginations}/>}
             {!show && <h5 className="h3 my-2 text-center">no corresponding data</h5>}
             <Modalinput onchange={searchchange}/>
           </>

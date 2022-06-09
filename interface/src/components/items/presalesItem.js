@@ -4,6 +4,7 @@ import { DashLg, CheckLg } from 'react-bootstrap-icons';
 import AuthContext from '../../store/auth-context';
 import { useContext, useState, useEffect } from 'react';
 import "../../index.css";
+import { NotificationManager } from 'react-notifications';
 
 const PresalesItem = (props) => {   
     const statusclass = props.status?"badge badge-lg badge-success":"badge badge-lg badge-danger";
@@ -41,6 +42,7 @@ const PresalesItem = (props) => {
             Authorization: "Bearer "+authctx.token
         }})
        .then(props.loading)
+       props.status? NotificationManager.success('The Business Line has been successfully disabled !'): NotificationManager.success('The Business Line has been successfully enabled !');
     }
     const delvergule = (v) => {
         if(v.length>0 && v[v.length - 1].slice(-1)===","){

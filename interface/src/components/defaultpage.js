@@ -16,12 +16,10 @@ import UserTable from './tables/userTable';
 import AnonymizedTable from "./tables/anonymizedTable";
 
 const Default = () => {
-
-    const [search,setSearch]=useState("")
-  const searchHandler=(event)=>{
+  const [search, setSearch] = useState("");
+  const searchHandler = (event) => {
     setSearch(event.target.value)
   }
-
   const resetsearch=()=>{
     setSearch("")
   }

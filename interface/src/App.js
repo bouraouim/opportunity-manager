@@ -1,8 +1,8 @@
+import 'devextreme/dist/css/dx.common.css';
+import 'devextreme/dist/css/dx.light.css';
 import { Routes, Route, Navigate, } from "react-router-dom";
 import { useState, useContext } from 'react';
 import NavBar from './components/navbar';
-import OrderBook from './components/orderBook';
-import Reporting from "./components/reporting";
 import AddForm from './components/addForms/addForm';
 import EditForm from './components/editForms/editForm';
 import TableLayout from './components/tables/tableLayout';
@@ -43,6 +43,7 @@ import AuthContext from "./store/auth-context";
 import OpportunitiesTable from "./components/tables/opportunitiesTable";
 import AddOpportunity from "./components/addForms/addOpportunity";
 import Reportlist from "./components/report/list";
+import Salesperfomance from "./components/report/Salesperfomance";
 
 function App() {
   const [loginpage, setloginpage] = useState(true);
@@ -59,13 +60,12 @@ function App() {
     <>      
       {authctx.loggedin && <NavBar/>}   
       <Routes> 
-        <Route path="/login" element={<Login/>}/>      
-        {authctx.loggedin && <Route path="/orderbook" element={<OrderBook/>}/>}
-        {authctx.loggedin && <Route path="/reporting" element={<Reporting/>}/>}
+        <Route path="/login" element={<Login/>}/>
         {authctx.loggedin && <Route path="/opportunities/manage" element={<OpportunitiesTable search={search}/>}/>}
         {authctx.loggedin && <Route path="/opportunities/new" element={<AddOpportunity/>}/>}
+        {authctx.loggedin && <Route path="/opportunities/edit/:id" element={<AddOpportunity/>}/>}
         {authctx.loggedin && <Route path="/report/list" element={<Reportlist/>}/>}
-        {authctx.loggedin && <Route path="/report/sales-perfomance" element={<AddOpportunity/>}/>}
+        {authctx.loggedin && <Route path="/report/sales-perfomance" element={<Salesperfomance/>}/>}
         {authctx.loggedin && <Route path="/administration/areas" element={<TableLayout link="/administration/areas/new" table={<AreaTable search={search}/>} name="Area" search={searchHandler} resetsearch={resetsearch} searchvalue={search}/>}/>}
         {authctx.loggedin && <Route path="/administration/areas/new" element={<AddForm formname={<AddArea/>} name="Add New Area"/>}/>}
         {authctx.loggedin && <Route path="/administration/areas/edit/:id" element={<EditForm formname={<EditArea/>} name="Edit Area"/>}/>}
@@ -98,8 +98,7 @@ function App() {
         {authctx.loggedin && <Route path="/administration/users/new" element={<AddForm formname={<AddUser/>} name="Add New User"/>}/>}
         {authctx.loggedin && <Route path="/administration/users/edit/:id" element={<EditForm formname={<EditUser/>} name="Edit User"/>}/>}
         {authctx.loggedin && <Route path="/anonymization" element={<AnonymizedTable searchhandler={searchHandler} search={search}/>}/>}
-        {/* {authctx.loggedin && <Route path='*' element={<Navigate to="/administration/businessLines/new"/>}/>          } */}
-        {authctx.loggedin && <Route path='*' element={<Navigate to="/report/list"/>}/>          }
+        {authctx.loggedin && <Route path='*' element={<Navigate to="/administration/users"/>}/>}
         {!authctx.loggedin&& <Route path='*' element={<Navigate to="login"/>}/>}
       </Routes>
     </>

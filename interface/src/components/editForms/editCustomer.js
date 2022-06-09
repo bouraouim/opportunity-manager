@@ -4,17 +4,27 @@ import { useNavigate, useParams } from "react-router-dom";
 import useInput from "../../hooks/user-input";
 import AuthContext from "../../store/auth-context";
 import Selec from "../addForms/select";
-import { Person, People, Globe2, Inboxes, Inbox, Flag, Map } from "react-bootstrap-icons";
+import { Person, People } from "react-bootstrap-icons";
 import EditFormButtons from "./editButtonsForm";
 import { NotificationManager } from 'react-notifications';
+import Selecthook from "../../hooks/selec-input";
 
 const EditCustomer = (props) => {
-  const [budata, setBudata] = useState([]);
-  const [bldata, setBldata] = useState([]);
-  const [areadata, setareadata] = useState([]);
-  const [departmentdata, setdepartmentdata] = useState([]);
+  // const [budata, setBudata] = useState([]);
+  // const [bldata, setBldata] = useState([]);
+  // const [areadata, setareadata] = useState([]);
+  // const [departmentdata, setdepartmentdata] = useState([]);
   const [countrydata, setcountrydata] = useState([]);
+  const [blByDeptData, setBlByDepatData] = useState([]);
+  const [areaByCountData, setAreaByCountData] = useState([]);
   const [customer, setCustomer] = useState([]);
+  const [req, setreq] = useState(false);
+  // const [choiceBl, setChoiceBl] = useState(true);
+  // const [choiceArea, setChoiceArea] = useState(true);
+  const [blValid, setBlValid] = useState(true);
+  const [deptValid, setDeptValid] = useState(true);
+  const [areaValid, setAreaValid] = useState(true);
+  const [countValid, setCountValid] = useState(true);
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
   var { id } = useParams();
@@ -26,73 +36,150 @@ const EditCustomer = (props) => {
   var departmentRef = useRef();
   var blRef = useRef();
   var areaRef = useRef();
-  
+  const operation = (list1, list2, isUnion = false) =>
+  list1.filter(a => isUnion === list2.some(b => a.id === b.id));
+  const inBoth = (list1, list2) => operation(list1, list2, true);
   useEffect(() => {
-    axios.get('http://localhost:8000/businessunit/read', {headers: {Authorization: "Bearer "+authctx.token}}) 
-    .then(response=>{
-      const table = (response.data.map(d=>{
-        return{
-          id: d.id,
-          name:d.name,
-        } 
-      }))
-      setBudata(table)
-    }).catch(error=>{
-      console.error(error);
-    })
-    axios.get('http://localhost:8000/businessline/read', {headers: {Authorization: "Bearer "+authctx.token}}) 
-    .then(response=>{
-      const table = (response.data.map(d=>{
-        return{
-          id: d.id,
-          name:d.name,
-        } 
-      }))
-      setBldata(table)
-    }).catch(error=>{
-      console.error(error);
-    })
-    axios.get('http://localhost:8000/department/read', {headers: {Authorization: "Bearer "+authctx.token}}) 
-    .then(response=>{
-      const table = (response.data.map(d=>{
-        return{
-          id: d.id,
-          name:d.name,
-        } 
-      }))
-      setdepartmentdata(table)
-    }).catch(error=>{
-      console.error(error);
-    })
-    axios.get('http://localhost:8000/area/read', {headers: {Authorization: "Bearer "+authctx.token}}) 
-    .then(response=>{
-      const table = (response.data.map(d=>{
-        return{
-          id: d.id,
-          name:d.name,
-        } 
-      }))
-      setareadata(table)
-    }).catch(error=>{
-      console.error(error);
-    }) 
-    axios.get('http://localhost:8000/geography/read', {headers: {Authorization: "Bearer "+authctx.token}}) 
-    .then(response=>{
-      const table = (response.data.map(d=>{
-        return{
-          id: d.id,
-          name: d.country,
-        } 
-      }))
-      setcountrydata(table)
-    }).catch(error=>{
-      console.error(error);
-    }) 
     axios.get('http://localhost:8000/api/customers/'+id,{headers: {Authorization: "Bearer "+authctx.token}}) 
     .then(response=>{
       setCustomer(response.data);
     })
   },[])
+  // const buChoiceHandler = (event, s) => {
+  //   if((event.target.value).length > 0){
+  //     setChoiceBuArea(false);
+  //     setBlValid(false);
+  //     setDeptValid(false);
+  //     setAreaValid(false);
+  //     setCountValid(false);
+  //     event.target.value.map((v)=>{
+  //       axios.get('http://localhost:8000/businessunit/blByBu',{params: {id: v}},{headers: {Authorization: "Bearer "+authctx.token}}) 
+  //       .then(response=>{
+  //         const table=(response.data.map(d=>{
+  //           return{
+  //             id: d.id,
+  //             name: d.name,
+  //           }
+  //         }))
+  //         if(event.target.value.length === 1){
+  //           setBldata(inBoth(table, blByDeptData));
+  //         }
+  //         else{
+  //           setBldata(inBoth(blByDeptData, Array.from(new Set((bldata.concat(table)).map(a => a.id)))
+  //           .map(id => {
+  //             return (bldata.concat(table)).find(a => a.id === id)
+  //           })));
+  //         }
+  //       }).catch(error=>{
+  //         console.error(error);
+  //       })
+  //       axios.get('http://localhost:8000/businessunit/areaByBu',{params: {id: v}},{headers: {Authorization: "Bearer "+authctx.token}}) 
+  //       .then(response=>{
+  //         const table = (response.data.map(d=>{
+  //           return{
+  //             id: d.id,
+  //             name: d.name,
+  //           } 
+  //         }))
+  //         if(event.target.value.length === 1){
+  //           setareadata(table);
+  //         }
+  //         else{
+  //           setareadata(inBoth(areaByCountData, Array.from(new Set((areadata.concat(table)).map(a => a.id)))
+  //           .map(id => {
+  //             return (areadata.concat(table)).find(a => a.id === id)
+  //           })));
+  //         }
+  //       }).catch(error=>{
+  //         console.error(error);
+  //       })
+  //     })
+  //   }
+  //   else {
+  //     setChoiceBuArea(true);
+  //     setBlValid(true);
+  //     setDeptValid(true);
+  //     setAreaValid(true);
+  //     setCountValid(true);
+  //     setChoiceBl(true);
+  //   }
+  // }
+  // const blChoiceHandler = (event, s) => {
+  //   if((event.target.value).length > 0){
+  //     setChoiceBl(false);
+  //     setBlValid(true);
+  //     event.target.value.map((v)=>{
+  //       axios.get('http://localhost:8000/businessline/deptByBl',{params: {id: v}},{headers: {Authorization: "Bearer "+authctx.token}}) 
+  //       .then(response=>{
+  //         const table=(response.data.map(d=>{
+  //           return{
+  //             id: d.id,
+  //             name: d.name,
+  //           }
+  //         }))
+  //         if(event.target.value.length === 1){
+  //           setdepartmentdata(table);
+  //         }
+  //         else{
+  //           setdepartmentdata(Array.from(new Set((departmentdata.concat(table)).map(a => a.id)))
+  //           .map(id => {
+  //             return (departmentdata.concat(table)).find(a => a.id === id)
+  //           }));
+  //         }
+  //       }).catch(error=>{
+  //         console.error(error);
+  //       })
+  //     })
+  //   }
+  //   else {
+  //     setChoiceBl(true);
+  //     setBlValid(false);
+  //   }
+  // }
+  // const areaChoiceHandler = (event, s) => {
+  //   if((event.target.value).length > 0){
+  //     setChoiceArea(false);
+  //     setAreaValid(true);
+  //     event.target.value.map((v)=>{
+  //       axios.get('http://localhost:8000/area/getGeoByArea',{params: {id: v}},{headers: {Authorization: "Bearer "+authctx.token}}) 
+  //       .then(response=>{
+  //         const table=(response.data.map(d=>{
+  //           return{
+  //             id: d.id,
+  //             name: d.country,
+  //           }
+  //         }))
+  //         if(event.target.value.length === 1){
+  //           setcountrydata(table);
+  //         }
+  //         else{
+  //           setcountrydata(Array.from(new Set((countrydata.concat(table)).map(a => a.id)))
+  //           .map(id => {
+  //             return (countrydata.concat(table)).find(a => a.id === id)
+  //           }));
+  //         }
+  //       }).catch(error=>{
+  //         console.error(error);
+  //       })
+  //     })
+  //   }
+  //   else {
+  //     setChoiceArea(true);
+  //     setAreaValid(false);
+  //   }
+  // }
+  // const deptChoiceHandler = (event, s) => {
+  //   if((event.target.value).length > 0)
+  //     setDeptValid(true);
+  //   else
+  //     setDeptValid(false);
+  // }
+  // const countChoiceHandler = (event, s) => {
+  //   if((event.target.value).length > 0)
+  //     setCountValid(true);
+  //   else
+  //     setCountValid(false);
+  // }
   const submithandler = (event) => {
     event.preventDefault();
     const inputname = nameRef.current.value;
@@ -119,28 +206,31 @@ const EditCustomer = (props) => {
       })
       body["businessunit"] = bu;
     }
-    if(inputdepartment.length !== 0){
+    if(req){if(inputdepartment.length !== 0){
       var bu = inputdepartment.map(v=>{
         return "/api/departments/"+v 
       })
-      body["department"] = bu;
-    }
-    if(inputbl.length !== 0){
+      
+    }else{var bu=[]}
+    body["department"] = bu;}
+
+    if(req){if(inputbl.length !== 0){
       var bu = inputbl.map(v=>{
         return "/api/businesslines/"+v 
-      })
+      })}else{var bu=[]}
       body["businessline"] = bu;
     }
-    if(areainput.length !== 0){
+
+    if(req){if(areainput.length !== 0){
       var bu = areainput.map(v=>{
         return "/api/areas/"+v 
-      })
+      })}else{var bu=[]}
       body["areas"] = bu;
     }
-    if(inputcountry.length !== 0){
+    if(req){if(inputcountry.length !== 0){
       var bu = inputcountry.map(v=>{
         return "/api/geographies/"+v 
-      })
+      })}else{var bu=[]}
       body["count"] = bu;
     }
     console.log(body)
@@ -158,6 +248,24 @@ const EditCustomer = (props) => {
     });        
     navigate('/administration/customers')
   }
+   const buchangehandler=()=>{
+    setreq(true)
+   }
+   const blhandler = (v) => {
+    setBlValid(v)
+  }
+   const areahandler = (v) => {
+    setAreaValid(v)
+  }
+   const countryhandler = (v) => {
+    setCountValid(v)
+  }
+  const dephandler = (v) => {
+    setDeptValid(v)
+  }
+
+const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBlInit,changeBuInit,choiceBu,choiceBl,choiceArea,
+  bldata,departmentdata,areadata,geographyData,budata,initBu,initBl,initArea,initDep}=Selecthook()
   
   return(
     <div className="card-body">
@@ -186,39 +294,15 @@ const EditCustomer = (props) => {
             </div>
           </div>
           <div className="col-md-4">
-            <div className="form-group">
-              <label className="form-control-label">Business Unit</label>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text"><Inboxes size={17}/></span>
-                </div>
-                <Selec multi={true} ref={buRef} full={false} data={budata} placeholder={customer.businessunit}></Selec>
-              </div>
-            </div>
-          </div>
+          <Selec multi={true} ref={buRef} onchange={buchangehandler} choiceHandler={buChoiceHandler} name={"buuuuu"}  changeInit={changeBuInit}  full={false} data={budata} placeholder={customer.businessunit} selecType={"Business Unit"} required={false}></Selec>
+          {req &&<div >other parametes that depend on business unit will be empty if you don't change them</div>}          </div>
         </div>
         <div className="row">
           <div className="col-md-4">
-            <div className="form-group">
-              <label className="form-control-label">Business Line</label>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text"><Inbox size={17}/></span>
-                </div>
-                <Selec multi={true} ref={blRef} full={false} data={bldata} placeholder={customer.businessline}></Selec>
-              </div>
-            </div>
+          <Selec multi={true} ref={blRef} full={false} choiceHandler={blChoiceHandler}  name={"blll"} changeInit={changeBlInit} init={initBu}   choice={choiceBu} data={bldata} onchange={blhandler} placeholder={customer.businessline} selecType={"Business Line"} required={false} ></Selec>
           </div>
           <div className="col-md-4">
-            <div className="form-group">
-              <label className="form-control-label">Pole/Department</label>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text"><Flag size={17}/></span>
-                </div>
-                <Selec multi={true} ref={departmentRef} full={false} data={departmentdata} placeholder={customer.department}></Selec>
-              </div>
-            </div>
+          <Selec multi={true} ref={departmentRef}  name={"depppp"} init={initBl} full={false} choice={choiceBl} data={departmentdata} placeholder={customer.department} onchange={dephandler} selecType={"Pole / Department"} required={false}></Selec>
           </div>
           <div className="col-md-4">
             <div className="form-group">
@@ -234,29 +318,13 @@ const EditCustomer = (props) => {
         </div>
         <div className="row">
           <div className="col-md-4">
-            <div className="form-group">
-              <label className="form-control-label">Country</label>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text"><Globe2 size={17}/></span>
-                </div>
-                <Selec multi={true} ref={countryRef} data={countrydata} full={false} placeholder={customer.count}></Selec>
-              </div>
-            </div>
+          <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit}   init={initBu} choice={choiceBu} data={areadata} onchange={areahandler} placeholder={customer.areas} selecType={"Area"} required={false}></Selec>
           </div>
           <div className="col-md-4">
-            <div className="form-group">
-              <label className="form-control-label">Area</label>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text"><Map size={17}/></span>
-                </div>
-                <Selec multi={true} ref={areaRef} full={false} data={areadata} placeholder={customer.areas}></Selec>
-              </div>
-            </div>
+          <Selec multi={true} choice={choiceArea} onchange={countryhandler} ref={countryRef} full={false} init={initArea}  data={geographyData} placeholder={customer.count}  selecType={"Country"} required={false}></Selec>
           </div>
         </div>
-        <EditFormButtons valid={true} cancel={"/administration/customers"}/>
+        <EditFormButtons valid={blValid && deptValid && areaValid && countValid} cancel={"/administration/customers"}/>
       </form>
     </div>
   )

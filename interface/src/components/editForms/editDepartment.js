@@ -5,50 +5,67 @@ import { useNavigate, useParams } from "react-router-dom";
 import EditFormButtons from "./editButtonsForm";
 import AuthContext from "../../store/auth-context";
 import "../../index.css";
-import { Flag, Inboxes, Inbox } from "react-bootstrap-icons";
+import { Flag } from "react-bootstrap-icons";
 import { NotificationManager } from 'react-notifications';
+import Selecthook from "../../hooks/selec-input";
 
 const EditDepartment = () => {
-    const [budata, setBudata] = useState([]);  
-    const [bldata, setBldata] = useState([]);  
+    const {buChoiceHandler, areaChoiceHandler, blChoiceHandler, changeAreaInit, changeBlInit, changeBuInit, choiceBu, choiceBl, choiceArea,
+            bldata, departmentdata, areadata, geographyData, budata, initBu, initBl, initArea, initDep} = Selecthook();
+    const [choice, setchoice] = useState(true);
+    const [buValid, setBuValid] = useState(true);
+    const [blValid, setBlValid] = useState(true);
+    const [department, setDepartment] = useState([]);
+    const [req, setreq] = useState(false);
     const nameRef = useRef();
     const buRef = useRef();
     const blRef = useRef();
     const navigate = useNavigate();
     var { id } = useParams();
     const authctx = useContext(AuthContext);
-    const [department, setDepartment] = useState([]);
-    
+
     useEffect(() => {
-        axios.get('http://localhost:8000/businessunit/read',{headers: {Authorization: "Bearer "+authctx.token}})
-        .then(response=>{
-            const table = (response.data.map(d=>{
-                return{
-                    id: d.id,
-                    name:d.name,
-                } 
-            }))
-            setBudata(table);
-        }).catch(error=>{
-            console.error(error);
-        })
-        axios.get('http://localhost:8000/businessline/read',{headers: {Authorization: "Bearer "+authctx.token}})
-        .then(response=>{
-            const table = (response.data.map(d=>{
-                return{
-                    id: d.id,
-                    name:d.name,
-                } 
-            }))
-            setBldata(table);
-        }).catch(error=>{
-            console.error(error);
-        })
         axios.get('http://localhost:8000/api/departments/'+id,{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
             setDepartment(response.data);
         })
     },[])
+    // const choiceHandler = (event, s) => {
+    //     if((event.target.value).length > 0){
+    //         setchoice(false);
+    //         setBlValid(false);
+    //         event.target.value.map((v)=>{
+    //             axios.get('http://localhost:8000/businessunit/blByBu',{params: {id: v}},{headers: {Authorization: "Bearer "+authctx.token}}) 
+    //             .then(response=>{
+    //                 const table=(response.data.map(d=>{
+    //                     return{
+    //                         id: d.id,
+    //                         name:d.name,
+    //                     } 
+    //                 }))
+    //                 if(event.target.value.length === 1){
+    //                     setBldata(table);
+    //                 }
+    //                 else{
+    //                     setBldata(Array.from(new Set((bldata.concat(table)).map(a => a.id)))
+    //                     .map(id => {
+    //                         return (bldata.concat(table)).find(a => a.id === id)
+    //                     }));
+    //                 }
+    //             }).catch(error=>{
+    //               console.error(error);
+    //             })
+    //         })
+    //     }
+    //     else {
+    //         setchoice(true);
+    //         setBlValid(true);
+    //     }
+    // }
+    const blhandler = (v) => {
+        setBlValid(v)
+    }
+    //Edit Function
     const submithandler = (event) => {
         event.preventDefault(); 
         const name = nameRef.current.value;
@@ -64,10 +81,10 @@ const EditDepartment = () => {
             })
             body["businessunit"] = businessunit;
         }
-        if(bl.length !== 0){
+        if(req){if(bl.length !== 0){
             var businessline = bl.map(v=>{
                 return "/api/businesslines/"+v 
-            })
+            })}else{var businessline=[]}
             body["businessline"] = businessline;
         }
         axios.patch('http://localhost:8000/api/departments/'+id,body,{headers: {
@@ -85,6 +102,9 @@ const EditDepartment = () => {
         navigate('/administration/departments');
     }
 
+    const buchangehandler=()=>{
+        setreq(true)
+       }
     return(
         <div className="card-body">
             <form className="needs-validation" onSubmit={submithandler}>
@@ -101,26 +121,11 @@ const EditDepartment = () => {
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <div className="form-group">
-                            <label className="form-control-label">Business Unit</label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Inboxes size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={buRef} data={budata} full={false} placeholder={department.businessunit}/>
-                            </div>
-                        </div>
+                        <Selec multi={true} ref={buRef} onchange={buchangehandler} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={false} data={budata} placeholder={department.businessunit} selecType={"Business Unit"} required={false}></Selec>
+                        {req &&<div >other parametes that depend on business unit will be empty if you don't change them</div>}
                     </div>
-                    <div className="col-md-4">
-                        <div className="form-group">
-                            <label className="form-control-label">Business Line</label>
-                            <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text"><Inbox size={17}/></span>
-                                </div>
-                                <Selec multi={true} ref={blRef} data={bldata} full={false} placeholder={department.businessline}/>
-                            </div>
-                        </div>
+                    <div className="col-md-4">                        
+                        <Selec multi={true} ref={blRef} onchange={blhandler} full={false} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={department.businessline} selecType={"Business Line"} required={false}></Selec>
                     </div>
                 </div>
                 <EditFormButtons valid={true} cancel={"/administration/departments"}/>

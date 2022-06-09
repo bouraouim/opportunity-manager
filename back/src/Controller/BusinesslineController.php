@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\BusinessunitRepository;
 
 #[Route('/businessline')]
 class BusinesslineController extends AbstractController
@@ -31,5 +32,18 @@ class BusinesslineController extends AbstractController
     {
         $id = $request->query->get('id');
         return $this->json($businesslineRepository->getDepartmentsByBusinessLine($id));
+    }
+
+    #[Route('/blHavingDept', name: 'blHavingDept', methods: ['GET'])]
+    public function getBuHavingBlAndArea(BusinesslineRepository $businesslineRepository) : Response
+    {
+        return $this->json($businesslineRepository->getActiveBusinessLinesHavingDepartments());
+    }
+
+    #[Route('/plByBl', name: 'getplByBl', methods: ['GET'])]
+    public function getPlByBl(BusinesslineRepository $businesslineRepository, Request $request) : Response
+    {
+        $id = $request->query->get('id');
+        return $this->json($businesslineRepository->getActiveProductLineByBusinessLine($id));
     }
 }

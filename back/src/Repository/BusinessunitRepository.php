@@ -130,6 +130,53 @@ class BusinessunitRepository extends ServiceEntityRepository
             ->from(Businessline::class, 'bl')
             ->leftJoin ('bl.businessunit','bu')
             ->where(':id MEMBER OF bl.businessunit')
+            ->andWhere('bl.status = true')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
+    /**
+     * @return Businessunit[] Returns an array of Businessunit objects
+    */
+    public function getActiveBusinessUnitsHavingBusinessLines()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT distinct(bu.id), bu.name, bu.status
+            FROM businessline_businessunit bubl, businessunit bu
+            WHERE bubl.businessunit_id = bu.id
+            AND bu.status = true'
+        ;
+        return $conn->prepare($sql)->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @return Businessunit[] Returns an array of Businessunit objects
+    */
+    public function getActiveBusinessUnitsHavingBusinessLinesAndAreas()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT distinct(bu.id), bu.name, bu.status
+            FROM businessline_businessunit bubl, businessunit bu, area_businessunit abu
+            WHERE bubl.businessunit_id = bu.id
+            AND abu.businessunit_id = bu.id
+            AND bu.status = true'
+        ;
+        return $conn->prepare($sql)->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @return Area[] Returns an array of Area objects
+    */
+    public function getActiveAreasByBusinessUnit($id)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('distinct a')
+            ->from(Area::class, 'a')
+            ->leftJoin ('a.businessunit','bu')
+            ->where(':id MEMBER OF a.businessunit')
+            ->andWhere('a.status = true')
             ->setParameter('id', $id)
             ->getQuery()
             ->getArrayResult()

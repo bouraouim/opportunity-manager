@@ -59,3 +59,33 @@ textarea{
   background-color: #007AC0;
   color: white;
 }
+.invalide{
+  border-color: red;
+}
+.form-placeholder{
+  color: gray !important;
+  font-size: 15px ! important;
+}
+.revenue{
+  width: 70px;
+}
+.totTable{
+  background-color: #007AC0;
+  color: white;
+  text-align: center !important;
+}
+.noBorder{
+  border: none !important;
+}
+.yearTable{
+  background-color: lightgray;
+  color: white;
+  text-align: center !important;
+}
+.table{
+  text-align: center !important;
+}
+/* .btn-primary-outline, .btn-primary-outline:disabled{
+  background-color: transparent !important;
+  border-color: none !important;
+} */

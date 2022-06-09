@@ -15,45 +15,27 @@ class OppProductline
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\OneToOne(targetEntity: Productline::class, cascade: ['persist', 'remove'])]
-    private $productline;
-
     #[ORM\OneToOne(targetEntity: Opportunity::class, cascade: ['persist', 'remove'])]
     private $opportunity;
+
+    #[ORM\OneToOne(targetEntity: Productline::class, cascade: ['persist', 'remove'])]
+    private $productline;
 
     #[ORM\Column(type: 'float', nullable: true)]
     private $localPart;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private $localPartEuro;
-
-    #[ORM\Column(type: 'float', nullable: true)]
     private $hqPart;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    private $hqPartEuro;
+    private $totAmount;
 
-    #[ORM\Column(type: 'float', nullable: true)]
-    private $total;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true, length: 255)]
     private $comment;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getProductline(): ?Productline
-    {
-        return $this->productline;
-    }
-
-    public function setProductline(?Productline $productline): self
-    {
-        $this->productline = $productline;
-
-        return $this;
     }
 
     public function getOpportunity(): ?Opportunity
@@ -64,7 +46,17 @@ class OppProductline
     public function setOpportunity(?Opportunity $opportunity): self
     {
         $this->opportunity = $opportunity;
+        return $this;
+    }
 
+    public function getProductline(): ?Productline
+    {
+        return $this->productline;
+    }
+
+    public function setProductline(?Productline $productline): self
+    {
+        $this->productline = $productline;
         return $this;
     }
 
@@ -76,19 +68,6 @@ class OppProductline
     public function setLocalPart(?float $localPart): self
     {
         $this->localPart = $localPart;
-
-        return $this;
-    }
-
-    public function getLocalPartEuro(): ?float
-    {
-        return $this->localPartEuro;
-    }
-
-    public function setLocalPartEuro(?float $localPartEuro): self
-    {
-        $this->localPartEuro = $localPartEuro;
-
         return $this;
     }
 
@@ -97,34 +76,20 @@ class OppProductline
         return $this->hqPart;
     }
 
-    public function setHqPart(?float $hqPart): self
+    public function setHqPart(float $hqPart): self
     {
         $this->hqPart = $hqPart;
-
         return $this;
     }
 
-    public function getHqPartEuro(): ?float
+    public function getTotAmount(): ?float
     {
-        return $this->hqPartEuro;
+        return $this->totAmount;
     }
 
-    public function setHqPartEuro(?float $hqPartEuro): self
+    public function setTotAmount(?float $totAmount): self
     {
-        $this->hqPartEuro = $hqPartEuro;
-
-        return $this;
-    }
-
-    public function getTotal(): ?float
-    {
-        return $this->total;
-    }
-
-    public function setTotal(?float $total): self
-    {
-        $this->total = $total;
-
+        $this->totAmount = $totAmount;
         return $this;
     }
 
@@ -133,10 +98,9 @@ class OppProductline
         return $this->comment;
     }
 
-    public function setComment(?string $comment): self
+    public function setComment(string $comment): self
     {
         $this->comment = $comment;
-
         return $this;
     }
 }

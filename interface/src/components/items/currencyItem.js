@@ -21,8 +21,9 @@ const CurrencyItem = (props) => {
     .then(props.loading);
   };
   var applicationDate = new Date(props.appDate);
-  var month = applicationDate.getMonth() + 1;
-  var date = applicationDate.getDate() + "/" + month + "/" + applicationDate.getFullYear();
+  var date = (applicationDate.getDate() <= 9 ? '0': '') + (applicationDate.getDate());
+  var month = (applicationDate.getMonth() <= 9 ? '0': '') + (applicationDate.getMonth()+1);
+  var date = date + "/" + month + "/" + applicationDate.getFullYear();
 
   return (
     <tr>

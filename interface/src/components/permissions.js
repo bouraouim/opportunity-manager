@@ -218,24 +218,6 @@ const nodes = [
         label: "Update Product Lines"
       }
     ]
-  },
-  {
-    value: "Users",
-    label: "Users",
-    children: [
-      {
-        value: "List Users",
-        label: "List Users"
-      },
-      {
-        value: "Create Users",
-        label: "Create Users"
-      },
-      {
-        value: "Update Users",
-        label: "Update Users"
-      }
-    ]
   }
 ];  
 

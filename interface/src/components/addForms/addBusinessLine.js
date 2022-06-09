@@ -5,14 +5,15 @@ import { useState, useEffect, useRef, useContext} from 'react';
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 import AddFormButtons from "./addFormButtons";
-import { Inbox, Inboxes } from "react-bootstrap-icons";
+import { Inbox } from "react-bootstrap-icons";
 import { NotificationManager } from 'react-notifications';
 
 const AddBusinessLine=()=>{
   const {isValid:nameIsValid, hasError:nameHasError, valueChangeHandler:nameChangeHandler, inputBlurHandler:nameBlurHandler} = useInput(value=>value.trim() !== '');
   const namevalid = nameHasError?"form-control is-invalid":"form-control";
+  const nameIconValid = nameHasError?"input-group-text invalide":"input-group-text";
   const [budata, setBudata] = useState([]);
-  const[buvalid, setbuvalid] = useState(false);
+  const [buvalid, setbuvalid] = useState(false);
   const authctx = useContext(AuthContext);
   const nameRef = useRef();
   const buRef = useRef();
@@ -20,12 +21,18 @@ const AddBusinessLine=()=>{
 
   const buhandler = (v) => {
     setbuvalid(v)
-    console.log(buvalid )
+    console.log(buvalid)
   }
+  // const buhandler = (event, s) => {
+  //   if((event.target.value).length > 0)
+  //     setbuvalid(true);
+  //   else
+  //     setbuvalid(false);
   useEffect(() => {    
     console.log("zzzz")
     console.log(buvalid)
-},[buvalid])
+  },[buvalid])
+  //Get Bu List
   useEffect(()=>{
     axios.get('http://localhost:8000/businessunit/read') 
     .then(response=>{
@@ -40,7 +47,8 @@ const AddBusinessLine=()=>{
     }).catch(error=>{
       console.error(error);
     }) 
-},[])
+  },[])
+  //Add Function
   const submithandler = (event) => {
     event.preventDefault(); 
     const inputname = nameRef.current.value;
@@ -70,26 +78,18 @@ const AddBusinessLine=()=>{
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label className="form-control-label" htmlFor="example3cols1Input">Business line<span className="text-danger "  >*</span></label>
+              <label className="form-control-label">Business line<span className="text-danger">*</span></label>
               <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                  <span className="input-group-text"><Inbox size={17}/></span>
+                  <span className={nameIconValid}><Inbox size={17}/></span>
                 </div>
-                <input type="text" ref={nameRef} onChange={nameChangeHandler} onBlur={nameBlurHandler} className={namevalid} id="example3cols1Input"  placeholder="Name of Business Line"/>
-                {!nameIsValid && <div className="invalid-feedback">Should not be empty</div>}
+                <input type="text" ref={nameRef} onChange={nameChangeHandler} onBlur={nameBlurHandler} className={namevalid} placeholder="Name of Business Line"/>
+                {!nameIsValid && <div className="invalid-feedback">Name of Business Line should not be empty</div>}
               </div>
             </div>
           </div>
           <div className="col-md-6">
-            <div className="form-group">
-              <label className="form-control-label" htmlFor="example3cols3Input">Business Unit<span className="text-danger ">*</span></label>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text"><Inboxes size={17}/></span>
-                </div>
-                <Selec multi={true} ref={buRef} full={true} onchange={buhandler} data={budata} placeholder={{name: "Select a Business Unit"}} selectedValue=""/>
-              </div>
-            </div>
+            <Selec multi={true} ref={buRef} full={true} choiceHandler={buhandler} data={budata} placeholder={{name: "Select a Business Unit"}} selecType={"Business Unit"} required={true}/>
           </div>
         </div>
         <AddFormButtons valid={nameIsValid && buvalid} cancel={"/administration/businessLines"}/>

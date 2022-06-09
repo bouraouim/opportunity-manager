@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import AuthContext from '../../store/auth-context';
 import { DashLg, CheckLg } from 'react-bootstrap-icons';
 import "../../index.css";
+import { NotificationManager } from 'react-notifications';
 
 const BusinessLineItem = (props) => {
     const authctx = useContext(AuthContext);    
@@ -35,17 +36,18 @@ const BusinessLineItem = (props) => {
             message = "Activate";
     }
     const statusHandler=()=>{
-       axios.patch(link,{status:!props.status},{headers: {
-        'Content-Type': 'application/merge-patch+json' ,
-        Authorization: "Bearer "+authctx.token
-    }}) 
-       .then(props.loading) 
+        axios.patch(link,{status:!props.status},{headers: {
+            'Content-Type': 'application/merge-patch+json' ,
+            Authorization: "Bearer "+authctx.token
+        }}) 
+       .then(props.loading)
+       props.status? NotificationManager.success('The Business Line has been successfully disabled !'): NotificationManager.success('The Business Line has been successfully enabled !');
     }
     const delvergule = (v) => {
-        if(v.length>0 && v[v.length - 1].slice(-1)==",")
-     {
-     v[v.length - 1]=v[v.length - 1].slice(0, -1)}
-     return v
+        if(v.length>0 && v[v.length - 1].slice(-1)==","){
+            v[v.length - 1]=v[v.length - 1].slice(0, -1)
+        }
+        return v;
     }
 
     return(

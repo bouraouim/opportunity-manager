@@ -26,4 +26,11 @@ class DepartmentController extends AbstractController
         $value = $request->query->get('value');
         return $this->json($departmentRepository->departmentIsUsed($value));
     }
+
+    #[Route('/presByDept', name: 'presByDept', methods: ['GET'])]
+    public function getPresByDept(DepartmentRepository $departmentRepository, Request $request) : Response
+    {
+        $id = $request->query->get('id');
+        return $this->json($departmentRepository->getActivePresalesByDepartment($id));
+    }
 }

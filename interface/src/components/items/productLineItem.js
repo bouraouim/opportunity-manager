@@ -43,8 +43,10 @@ const ProductLineItem = (props) => {
        .then(props.loading)
     }
     const delvergule = (v) => {
-        v[v.length - 1] = v[v.length - 1].slice(0, -1);
-        return v;
+        if(v.length>0 && v[v.length - 1].slice(-1)==",")
+     {
+     v[v.length - 1]=v[v.length - 1].slice(0, -1)}
+     return v
     }
 
     return(

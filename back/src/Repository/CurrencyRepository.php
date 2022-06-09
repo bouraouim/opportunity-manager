@@ -21,13 +21,32 @@ class CurrencyRepository extends ServiceEntityRepository
 
     /**
      * @return Currency[] Returns an array of Currency objects
-     */
+    */
     public function getActiveCurrencies()
     {
         return $this->createQueryBuilder('c')
            ->where('c.status = true')
            ->getQuery()
            ->getArrayResult()
+        ;
+    }
+
+    /**
+     * @return Currency[] Returns a Currency objects
+    */
+    public function getClosestCurrency($code, $date)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('distinct(cur.id) as id, cur.code, cur.appDate, cur.euroCnvrRate, cur.status')
+            ->from(Currency::class, 'cur')
+            ->where('cur.status = true')
+            ->andWhere('cur.code = :code')
+            ->andWhere('cur.appDate <= :date')
+            ->setParameter('code', $code)
+            ->setParameter(':date', $date)
+            ->orderBy('cur.appDate', 'DESC')
+            ->getQuery()
+            ->getArrayResult()
         ;
     }
 }

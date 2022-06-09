@@ -32,7 +32,7 @@ class Geography
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:opp_collection', 'write:opp_collection','read:customer_collection','read:geography_collection','write:geography_collection'])]
+    #[Groups(['read:opp_collection', 'write:opp_collection','read:customer_collection','read:geography_collection','write:geography_collection','read:area_collection'])]
     private $country;
 
     #[ORM\ManyToOne(targetEntity: Area::class, inversedBy: 'geography')]

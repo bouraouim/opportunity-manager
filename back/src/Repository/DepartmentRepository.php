@@ -26,7 +26,7 @@ class DepartmentRepository extends ServiceEntityRepository
 
     /**
      * @return Boolean Returns if a specific department is used 
-     */
+    */
     public function departmentIsUsed($value)
     {
         $qcust = $this->createQueryBuilder('l')
@@ -79,14 +79,31 @@ class DepartmentRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Department[] Returns an array of Area objects
-     */
+     * @return Department[] Returns an array of Department objects
+    */
     public function getActiveDepartments()
     {
         return $this->createQueryBuilder('d')
            ->where('d.status = true')
            ->getQuery()
            ->getArrayResult()
+        ;
+    }
+
+    /**
+     * @return Presales[] Returns an array of Presales objects
+    */
+    public function getActivePresalesByDepartment($id)
+    {
+        return $this->createQueryBuilder('l')
+        ->select('distinct p')
+        ->from(Presales::class, 'p')
+        ->leftJoin ('p.department','d')
+        ->where(':id MEMBER OF p.department')
+        ->andWhere('p.status = true')
+        ->setParameter('id', $id)
+        ->getQuery()
+        ->getArrayResult()
         ;
     }
 }

@@ -35,7 +35,7 @@ import { ArrowDownUp, Funnel } from 'react-bootstrap-icons';
                 itemperpage,
                 loadingchange,
                 sortHandler,
-                handleChange}=Tablehook("users",searchh,["id","firstname","lastname","email",'businessunit.name','businessline.name','role.name','area.name','department.name',"status","lastconnectiondate"],searchterm,props.search)
+                handleChange,itemperpageHandler}=Tablehook("users",searchh,["id","firstname","lastname","email",'businessunit.name','businessline.name','role.name','areas.name','department.name',"status","lastconnectiondate"],searchterm,props.search)
 
                const searchclick=(n)=>{
                     setSearchterm(n)}
@@ -105,7 +105,7 @@ import { ArrowDownUp, Funnel } from 'react-bootstrap-icons';
                                 lname={d.lastname}
                                 fname={d.firstname}
                                 department={d["department.name"]}
-                                area={d["area.name"]}
+                                area={d["areas.name"]}
                                 id={d.id}
                                 lcd={d.lastconnectiondate}
                                 
@@ -115,7 +115,7 @@ import { ArrowDownUp, Funnel } from 'react-bootstrap-icons';
                         </table>
                         {loading && <h5 className="h3 my-2 text-center">Loading...</h5>}
                     </div>
-                    {!loading && show && <Paginations itemperpage={itemperpage} onchange={handleChange} page={pagenumber} search={props.search}  pagination={paginations}/>}
+                    {!loading && show && <Paginations itemperpage={itemperpage} itemperpageHandler={itemperpageHandler} onchange={handleChange} page={pagenumber} search={props.search}  pagination={paginations}/>}
                     {!show && <h5 className="h3 my-2 text-center">no corresponding data</h5>}
                                 <Modalinput onchange={searchchange} user={user}/>
                     </>
