@@ -223,7 +223,7 @@ const xlsxHandler=()=>{
   axios.get('http://localhost:8000/opportunity/xlsxsales', {params: {data: csvdata}},{headers: {Authorization: "Bearer "+authctx.token, "Access-Control-Allow-Origin": "*"}})
 }
 const chartData={
-    labels: ['no bid', 'bid'],
+    labels: ['No Bid', 'Won Not Booked'],
     datasets: [
         {
           label: '# of Votes',

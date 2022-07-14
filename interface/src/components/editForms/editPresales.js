@@ -115,7 +115,8 @@ const EditPresales = () => {
                     </div>
                     <div className="col-md-4">
                         <Selec multi={true} ref={buRef} onchange={buchangehandler} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={false} data={budata} placeholder={presales.businessunit}selecType={"Business Unit"} required={false}></Selec>
-                        {req &&<div >other parametes that depend on business unit will be empty if you don't change them</div>}                    </div>
+                        {req &&<div className="edit">Other parametes that depend on Business Unit will be empty if you don't change them</div>}
+                    </div>
                     <div className="col-md-4">
                         <Selec multi={true} ref={blRef} full={false} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={presales.businessline} selecType={"Business Line"} required={false}></Selec>
                     </div>
@@ -125,7 +126,7 @@ const EditPresales = () => {
                         <Selec multi={true} ref={deptRef} name={"depppp"} init={initBl} full={false} choice={choiceBl} data={departmentdata} placeholder={presales.department} selecType={"Pole / Department"} required={false}></Selec>
                     </div>
                     <div className="col-md-4">
-                        <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit} init={initBu} choice={choiceBu} data={areadata} placeholder={presales.areas}  selecType={"Area"} required={false}></Selec>
+                        <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit} init={initBu} choice={choiceBu} data={areadata} placeholder={presales.areas} selecType={"Area"} required={false}></Selec>
                     </div>
                 </div>
                 <EditFormButtons valid={true} cancel={"/administration/presales"}/>

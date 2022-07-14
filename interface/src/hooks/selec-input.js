@@ -1,5 +1,5 @@
-import { useSelect } from "@mui/base"
-import {useContext, useEffect, useState } from "react"
+import { useSelect } from "@mui/base";
+import {useContext, useEffect, useState } from "react";
 import axios from "axios";
 import AuthContext from "../store/auth-context";
 

@@ -4,6 +4,7 @@ import { DashLg, CheckLg } from "react-bootstrap-icons";
 import { useContext } from "react";
 import AuthContext from "../../store/auth-context";
 import "../../index.css";
+import { NotificationManager } from 'react-notifications';
 
 const CurrencyItem = (props) => {
   const statusclass = props.status?"badge badge-lg badge-success":"badge badge-lg badge-danger";
@@ -13,12 +14,15 @@ const CurrencyItem = (props) => {
   var fct = props.status ? "inactivate" : "activate";
   const authctx = useContext(AuthContext);
   var link = "http://localhost:8000/api/currencies/" + props.id + "/" + fct;
+  
+  //Change status
   const statusHandler = () => {
     axios.patch(link,{},{headers: {
       "Content-Type": "application/merge-patch+json",
       Authorization: "Bearer " + authctx.token,
     }})
     .then(props.loading);
+    props.status? NotificationManager.success('The Currency has been successfully disabled !'): NotificationManager.success('The Currency has been successfully enabled !');
   };
   var applicationDate = new Date(props.appDate);
   var date = (applicationDate.getDate() <= 9 ? '0': '') + (applicationDate.getDate());

@@ -4,6 +4,7 @@ import { DashLg, CheckLg } from 'react-bootstrap-icons';
 import AuthContext from '../../store/auth-context';
 import "../../index.css";
 import { useContext, useState, useEffect } from 'react';
+import { NotificationManager } from 'react-notifications';
 
 const CustomerItem = (props) => {   
     const statusclass = props.status?"badge badge-lg badge-success":"badge badge-lg badge-danger";
@@ -16,6 +17,7 @@ const CustomerItem = (props) => {
     var message = ""; 
     const [disabledValue, setDisabledValue] = useState(false);
     
+    //Verfiy if Customer is used
     useEffect (() => {
         axios.get('http://localhost:8000/customer/isUsed', {params: {value: props.id}},{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
@@ -35,12 +37,14 @@ const CustomerItem = (props) => {
         else     
             message = "Activate";
     }
+    //Change status
     const statusHandler = () => {
         axios.patch(link,{},{headers: {
             'Content-Type': 'application/merge-patch+json',
             Authorization: "Bearer "+authctx.token
         }})
        .then(props.loading)
+        props.status? NotificationManager.success('The Customer has been successfully disabled !'): NotificationManager.success('The Customer has been successfully enabled !');
     }
     const delvergule = (v) => {
         if(v.length>0 && v[v.length - 1].slice(-1)===","){

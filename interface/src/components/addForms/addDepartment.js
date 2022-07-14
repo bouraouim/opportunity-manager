@@ -11,8 +11,7 @@ import Selecthook from "../../hooks/selec-input";
 
 const AddDeprtment = () => {    
     const {isValid:nameIsValid, hasError:nameHasError, valueChangeHandler:nameChangeHandler, inputBlurHandler:nameBlurHandler} = useInput(value=>value.trim() !== '');
-    const {buChoiceHandler, areaChoiceHandler, blChoiceHandler, changeAreaInit, changeBlInit, changeBuInit, choiceBu, choiceBl, choiceArea,
-            bldata, departmentdata, areadata, geographyData, budata, initBu, initBl, initArea, initDep} = Selecthook();
+    const {buChoiceHandler, areaChoiceHandler, blChoiceHandler, changeAreaInit, changeBlInit, changeBuInit, choiceBu, choiceBl, choiceArea,bldata, departmentdata, areadata, geographyData, budata, initBu, initBl, initArea, initDep} = Selecthook();
     const namevalid = nameHasError?"form-control is-invalid":"form-control";
     const nameIconValid = nameHasError?"input-group-text invalide":"input-group-text";
     const [choice, setchoice] = useState(true);
@@ -75,6 +74,9 @@ const AddDeprtment = () => {
     //     else
     //       setBlValid(false);
     // }
+    useEffect(() => {
+        console.log(buValid)
+    }, [buValid]);
     const blhandler = (v) => {
         setBlValid(v)
     }
@@ -128,10 +130,10 @@ const AddDeprtment = () => {
                         </div>
                     </div>
                     <div className="col-md-4">
-                    <Selec multi={true} ref={buRef} onchange={buhandler} choiceHandler={buChoiceHandler} name={"buuuuu"}  changeInit={changeBuInit}  full={true} data={budata} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={true}></Selec>
+                        <Selec multi={true} ref={buRef} onchange={buhandler} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={true} data={budata} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={true}></Selec>
                     </div>
                     <div className="col-md-4">
-                    <Selec multi={true} ref={blRef} onchange={blhandler} full={true} choiceHandler={blChoiceHandler}  name={"blll"} changeInit={changeBlInit} init={initBu}   choice={choiceBu} data={bldata} placeholder={{name: "Select Business Line(s)"}} selecType={"Business Line"} required={true}></Selec>
+                        <Selec multi={true} ref={blRef} onchange={blhandler} full={true} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={{name: "Select Business Line(s)"}} selecType={"Business Line"} required={true}></Selec>
                     </div>
                 </div>
                 <AddFormButtons valid={nameIsValid && buValid && blValid} cancel={"/administration/departments"}/>

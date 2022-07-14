@@ -1,7 +1,7 @@
 import AuthContext from "../store/auth-context";
 import { useContext } from 'react';
 import { useNavigate, NavLink} from "react-router-dom";
-import { Briefcase, GraphUp, Person, ShieldLock, BarChart, Map, Inbox, Inboxes, CurrencyExchange, People, Flag, Bullseye, Lock, FileEarmarkPlus, PersonCircle, GearFill } from 'react-bootstrap-icons';
+import { Briefcase, GraphUp, Person, ShieldLock, BarChart, Map, Inbox, Inboxes, CurrencyExchange, People, Flag, Bullseye, Lock, FileEarmarkPlus, PersonCircle, GearFill, PieChart } from 'react-bootstrap-icons';
 
 const NavBar=()=>{
   const authctx = useContext(AuthContext);
@@ -19,20 +19,20 @@ const NavBar=()=>{
   return(
     <nav className="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-default sticky-top ">
       <div className="container">
-        <div className="navbar-brand mr-0 mr-md-2"aria-label="Bootstrap">
+        {/* <div className="navbar-brand mr-0 mr-md-2"aria-label="Bootstrap">
           <img src="../../assets-old/img/brand/white.png" className=" " alt="..."/>    
-        </div>
+        </div> */}
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-primary" aria-controls="navbar-primary" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbar-primary">
           <div className="navbar-collapse-header">
             <div className="row">
-              <div className="col-6 collapse-brand">
+              {/* <div className="col-6 collapse-brand">
                 <NavLink activeclassname="active" to="/">
                   <img src="../../assets-old/img/brand/blue.png" alt="Logo"/>
                 </NavLink>
-              </div>
+              </div> */}
               <div className="col-6 collapse-close">
                 <button type="button" className="navbar-toggler" data-toggle="collapse" data-target="#navbar-primary" aria-controls="navbar-primary" aria-expanded="false" aria-label="Toggle navigation">
                   <span></span>
@@ -54,10 +54,10 @@ const NavBar=()=>{
             <li className="nav-item dropdown">
               {(authctx.listOpportunities || authctx.createOpportunities)
               &&
-              <a className="nav-link" href="#" id="navbar-primary_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><Briefcase size={17}/>&nbsp;&nbsp;Reporting</a>}
+              <a className="nav-link" href="#" id="navbar-primary_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><BarChart size={17}/>&nbsp;&nbsp;Reporting</a>}
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-primary_dropdown_1">
-                {authctx.createOpportunities && <NavLink activeclassname="active" className="dropdown-item" to="/report/list"><FileEarmarkPlus size={17}/>List of opportunities</NavLink>}
-                {authctx.listOpportunities && <NavLink activeclassname="active" className="dropdown-item" to="/report/sales-perfomance"><Inboxes size={17}/>Sales perfomance</NavLink>}
+                {authctx.createOpportunities && <NavLink activeclassname="active" className="dropdown-item" to="/report/list"><BarChart size={17}/>List of opportunities</NavLink>}
+                {authctx.listOpportunities && <NavLink activeclassname="active" className="dropdown-item" to="/report/sales-perfomance"><PieChart size={17}/>Sales perfomance</NavLink>}
               </div>
             </li>
             <li className="nav-item dropdown">
@@ -81,9 +81,9 @@ const NavBar=()=>{
             <li className="nav-item">
               {authctx.listUsers && <NavLink activeclassname="active" className="nav-link" to="anonymization"><ShieldLock size={17}/>&nbsp;&nbsp;Anonymization</NavLink>}
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <NavLink activeclassname="active" className="nav-link" to="orderbook"><BarChart size={17}/>&nbsp;&nbsp;Order Book</NavLink>
-            </li>
+            </li> */}
           </ul>
           <ul className="navbar-nav align-items-center ml-auto ml-md-0">
             <li className="nav-item dropdown">

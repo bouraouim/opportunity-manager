@@ -17,6 +17,7 @@ const PresalesItem = (props) => {
     var message = ""; 
     const [disabledValue, setDisabledValue] = useState(false);
 
+    //Verfiy if Presales is used
     useEffect (() => {
         axios.get('http://localhost:8000/presales/isUsed', {params: {value: props.id}},{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
@@ -36,13 +37,14 @@ const PresalesItem = (props) => {
         else     
             message = "Activate";
     }
+    //Change status
     const statusHandler = () => {
         axios.patch(link,{},{headers: {
             'Content-Type': 'application/merge-patch+json',
             Authorization: "Bearer "+authctx.token
         }})
        .then(props.loading)
-       props.status? NotificationManager.success('The Business Line has been successfully disabled !'): NotificationManager.success('The Business Line has been successfully enabled !');
+       props.status? NotificationManager.success('The Presales Engineer has been successfully disabled !'): NotificationManager.success('The Presales Engineer has been successfully enabled !');
     }
     const delvergule = (v) => {
         if(v.length>0 && v[v.length - 1].slice(-1)===","){
@@ -73,7 +75,7 @@ const PresalesItem = (props) => {
                 <span className={statusclass}>{status}</span>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center">
-            <button type="button" onClick={statusHandler} className={statusStyle} data-toggle="tooltip" title={message} disabled={disabledValue}>{statusIcon}</button>
+                <button type="button" onClick={statusHandler} className={statusStyle} data-toggle="tooltip" title={message} disabled={disabledValue}>{statusIcon}</button>
             </td>
         </tr>
     )

@@ -37,6 +37,7 @@ const BusinessUnitItem = (props) => {
         else     
             message = "Activate";
     }
+    //Change status
     const statusHandler = () => {
         axios.patch(link,{},{headers: {
             'Content-Type': 'application/merge-patch+json',

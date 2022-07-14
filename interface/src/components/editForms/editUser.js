@@ -8,15 +8,15 @@ import { Envelope, Person, PersonCircle, Inboxes, Inbox, Flag, Map } from "react
 import { NotificationManager } from 'react-notifications';
 
 const EditUser = () => {
-  const emailRef=useRef();
-  const buRef=useRef();
-  const fnameRef=useRef();
-  const loginRef=useRef();
-  const lnameRef=useRef();
-  const roleRef=useRef();
-  const departmentRef=useRef();
-  const blRef=useRef();
-  const areaRef=useRef();
+  const emailRef = useRef();
+  const buRef = useRef();
+  const fnameRef = useRef();
+  const loginRef = useRef();
+  const lnameRef = useRef();
+  const roleRef = useRef();
+  const departmentRef = useRef();
+  const blRef = useRef();
+  const areaRef = useRef();
   const [roledata, setRoledata] = useState([]);
   const [userdata, setuserdata] = useState({});
   const [budata, setBudata] = useState([]);
@@ -182,66 +182,80 @@ const EditUser = () => {
   }
   const submithandler=(event)=>{
     event.preventDefault(); 
-      const inputemail=emailRef.current.value
-      const inputbl=blRef.current.value
-      const inputfname=fnameRef.current.value
-      const inputlname=lnameRef.current.value
-      const inputldepartment=departmentRef.current.value
-      const inputlrole=roleRef.current.value
-      const inputlogin=loginRef.current.value
-      const buinput=buRef.current.value
-      const areainput=areaRef.current.value
-     
-     var body={
+    const inputemail = emailRef.current.value;
+    const inputbl = blRef.current.value;
+    const inputfname = fnameRef.current.value;
+    const inputlname = lnameRef.current.value;
+    const inputldepartment = departmentRef.current.value;
+    const inputlrole = roleRef.current.value;
+    const inputlogin = loginRef.current.value;
+    const buinput = buRef.current.value;
+    const areainput = areaRef.current.value;
+    var body = {
     }
     if (inputemail.trim() !== ''){
-        body["email"]=inputemail
+      body["email"] = inputemail;
     }
     if (inputlogin.trim() !== ''){
-        body["login"]=inputlogin
+      body["login"] = inputlogin;
     }
     if (inputfname.trim() !== ''){
-        body["firstname"]=inputfname
+      body["firstname"] = inputfname;
     }
     if (inputlname.trim() !== ''){
-        body["lastname"]=inputlname
+      body["lastname"] = inputlname;
     }
     if(buinput.length !== 0){
-      var bu=buinput.map(v=>{
+      var bu = buinput.map(v=>{
         return("/api/businessunits/"+v)
       })
-      body["businessunit"]=bu
+      body["businessunit"] = bu;
       console.log(buinput)
     }
     if(inputlrole.length !== 0){
-      var bu=inputlrole.map(v=>{
+      var bu = inputlrole.map(v=>{
         return("/api/roles/"+v)
       })
-      body["role"]=bu
+      body["role"] = bu;
     }
-    if(req){if(inputldepartment.length !== 0){
-      var bu=inputldepartment.map(v=>{
-        return("/api/departments/"+v)
-      })}else{var bu=[]}
-      body["department"]=bu
+    if(req){
+      if(inputldepartment.length !== 0){
+        var bu = inputldepartment.map(v=>{
+          return("/api/departments/"+v)
+        })
+      }
+      else{
+        var bu = [];
+      }
+      body["department"] = bu;
     }
-    if(req){if(inputbl.length !== 0){
-      var bu=inputbl.map(v=>{
-        return("/api/businesslines/"+v)
-      })}else{var bu=[]}
-      body["businessline"]=bu
+    if(req){
+      if(inputbl.length !== 0){
+        var bu = inputbl.map(v=>{
+          return("/api/businesslines/"+v)
+        })
+      }
+      else{
+        var bu = [];
+      }
+      body["businessline"] = bu;
     }
-    if(req){if(areainput.length !== 0){
-      var area = areainput.map(v=>{
-        return "/api/areas/"+v 
-      })}else{var area=[]}
+    if(req){
+      if(areainput.length !== 0){
+        var area = areainput.map(v=>{
+          return "/api/areas/"+v 
+        })
+      }
+      else{
+        var area = [];
+      }
       body["areas"] = area;
     }
     console.log(body)
     axios.patch('http://localhost:8000/api/users/'+id,body,{headers: {
-        'Content-Type': 'application/merge-patch+json' ,
-        Authorization: "Bearer "+authctx.token
-      }})
+      'Content-Type': 'application/merge-patch+json' ,
+      Authorization: "Bearer "+authctx.token
+    }})
     .then(response=> {
       NotificationManager.success('The User has been successfully updated !');
       console.log(body);
@@ -250,140 +264,127 @@ const EditUser = () => {
       NotificationManager.error('The User has not been updated !');
       console.log(error);
     });
-    navigate('/administration/users')  
+    navigate('/administration/users');
   }
 
-  const [choiceBu,setchoiceBu]=useState(true)
-  const [choiceBl,setchoiceBl]=useState(true)
-  const [choiceArea,setchoiceArea]=useState(true)
+  const [choiceBu, setchoiceBu] = useState(true);
+  const [choiceBl, setchoiceBl] = useState(true);
+  const [choiceArea, setchoiceArea] = useState(true);
+  const [initBu, setInitBu] = useState(false); 
+  const [initBl, setInitBl] = useState(false); 
+  const [initArea, setInitArea] = useState(false); 
+  const [initDep, setInitDep] = useState(false); 
+  const [linkBl, setLinkBl] = useState('');
+  const [areaLink, setAreaLink] = useState('');
+  const [linkBu, setLinkBu] = useState('');
 
-  const [initBu,setInitBu]=useState(false) 
-  const [initBl,setInitBl]=useState(false) 
-  const [initArea,setInitArea]=useState(false) 
-  const [initDep,setInitDep]=useState(false) 
-
-  const [linkBl,setLinkBl]=useState('')
-  const [areaLink,setAreaLink]=useState('')
-
-  const [linkBu,setLinkBu]=useState('')
-
-
-  const buChoiceHandler=(event,s)=>{
-    blRef.current.value=[]
+  const buChoiceHandler = (event,s) => {
+    blRef.current.value = [];
     if((event.target.value).length>0){
-      
-      setchoiceBu(false)
-      let link=''
+      setchoiceBu(false);
+      let link = '';
       event.target.value.map((v)=>{
-        link=link+'&businessunit.id%5B%5D='+v
+        link = link+'&businessunit.id%5B%5D='+v;
         // console.log(link)
       })
-      
-            //businessline
-        axios.get('http://localhost:8000/api/businesslines?page=1&pagination=false'+link,{headers: {Authorization: "Bearer "+authctx.token}}) 
-        .then(response=>{
-            const table=(response.data["hydra:member"].map(d=>{
-                return{
-                    id: d.id,
-                    name:d.name,
-                } 
-            }))
-            setBldata(table)
-        }).catch(error=>{
-          console.error(error);
-        }) 
-       
-        //area
-        axios.get('http://localhost:8000/api/areas?page=1&itemsPerPage=1&pagination=false'+link,{headers: {Authorization: "Bearer "+authctx.token}}) 
-        .then(response=>{
-            const table=(response.data["hydra:member"].map(d=>{
-                return{
-                  id: d.id,
-                  name:d.name,
-                } 
-            }))
-            setareadata(table)
-        }).catch(error=>{
-          console.error(error);
-        })
-        
+      //businessline
+      axios.get('http://localhost:8000/api/businesslines?page=1&pagination=false'+link,{headers: {Authorization: "Bearer "+authctx.token}}) 
+      .then(response=>{
+        const table = (response.data["hydra:member"].map(d=>{
+          return{
+            id: d.id,
+            name:d.name,
+          } 
+        }))
+        setBldata(table);
+      }).catch(error=>{
+        console.error(error);
+      }) 
+      //area
+      axios.get('http://localhost:8000/api/areas?page=1&itemsPerPage=1&pagination=false'+link,{headers: {Authorization: "Bearer "+authctx.token}}) 
+      .then(response=>{
+        const table = (response.data["hydra:member"].map(d=>{
+          return{
+            id: d.id,
+            name:d.name,
+          } 
+        }))
+        setareadata(table)
+      }).catch(error=>{
+        console.error(error);
+      })
     }
-    else {setchoiceBu(true)
-      setBldata([])
+    else{
+      setchoiceBu(true);
+      setBldata([]);
     }
     console.log("aaaaaaaaaaaa")
-    
-    setchoiceBl(true)
+    setchoiceBl(true);
     // setareadata([])
     // setchoiceArea(true)
-    
   }
-
-  const changeBuInit=()=>{
-    setInitBu(!initBu)
-    setInitBl(!initBl)
-    setInitArea(!initArea)
+  const changeBuInit = () => {
+    setInitBu(!initBu);
+    setInitBl(!initBl);
+    setInitArea(!initArea);
   }
-  const changeBlInit=()=>{
-    setInitBl(!initBl)
+  const changeBlInit = () => {
+    setInitBl(!initBl);
   }
-  const changeAreaInit=()=>{
-    setInitArea(!initArea)
+  const changeAreaInit = () => {
+    setInitArea(!initArea);
   }
   const blChoiceHandler=(event,s)=>{
     if((event.target.value).length>0){
-        departmentRef.current.value=[]
-        setchoiceBl(false)
-        let link=''
-        event.target.value.map((v)=>{
-          link=link+'&businessline.id%5B%5D='+v
-        })
-        setLinkBl(link)
-        link=link+linkBu
-
-        console.log('http://localhost:8000/api/departments?page=1&itemsPerPage=1&pagination=false'+link)
-        //department
-        axios.get('http://localhost:8000/api/departments?page=1&itemsPerPage=1&pagination=false'+link,{headers: {Authorization: "Bearer "+authctx.token}}) 
-        .then(response=>{
-            const table=(response.data["hydra:member"].map(d=>{
-                return{
-                    id: d.id,
-                    name:d.name,
-                } 
-            }))
-            setdepartmentdata(table)
-        }).catch(error=>{
-          console.error(error);
-        }) 
+      departmentRef.current.value = [];
+      setchoiceBl(false);
+      let link = '';
+      event.target.value.map((v)=>{
+        link = link+'&businessline.id%5B%5D='+v;
+      })
+      setLinkBl(link);
+      link = link+linkBu;
+      console.log('http://localhost:8000/api/departments?page=1&itemsPerPage=1&pagination=false'+link);
+      //department
+      axios.get('http://localhost:8000/api/departments?page=1&itemsPerPage=1&pagination=false'+link,{headers: {Authorization: "Bearer "+authctx.token}}) 
+      .then(response=>{
+        const table=(response.data["hydra:member"].map(d=>{
+          return{
+            id: d.id,
+            name:d.name,
+          } 
+        }))
+        setdepartmentdata(table)
+      }).catch(error=>{
+        console.error(error);
+      }) 
     }
-    else {setchoiceBl(true)
-      setLinkBl("")
-
+    else{
+      setchoiceBl(true);
+      setLinkBl("");
     }
-    setdepartmentdata([])
-    
+    setdepartmentdata([]);
   }
-
-  const areaChoiceHandler=(event,s)=>{
-    if(((event.target.value).length>0) ){
-        setchoiceArea(false)
-        let link=''
-        event.target.value.map((v)=>{
-          link=link+'&area.id%5B%5D='+v
-        })
-        setAreaLink(link)
-        console.log(link)
-        // link=link+linkBu
-        //geo
-        
+  const areaChoiceHandler = (event,s) => {
+    if(((event.target.value).length>0)){
+      setchoiceArea(false);
+      let link = '';
+      event.target.value.map((v)=>{
+        link = link+'&area.id%5B%5D='+v;
+      })
+      setAreaLink(link);
+      console.log(link);
+      // link=link+linkBu
+      //geo
     }
-    else {setchoiceArea(true)
+    else{
+      setchoiceArea(true);
     }
   }
-  const buchangehandler=()=>{
-    setreq(true)
-   }
-   const [req, setreq] = useState(false);
+  const buchangehandler = () => {
+    setreq(true);
+  }
+  const [req, setreq] = useState(false);
 
   return ( 
     <div className="card-body">
@@ -440,17 +441,18 @@ const EditUser = () => {
           </div>
           <div className="col-md-4">
             <Selec multi={true} onchange={buchangehandler} ref={buRef} full={false} data={budata} choiceHandler={buChoiceHandler} placeholder={userdata.businessunit} selecType={"Business Unit"} required={false}></Selec>
-            {req &&<div >other parametes that depend on business unit will be empty if you don't change them</div>}          </div>
+            {req &&<div className="edit">Other parametes that depend on Business Unit will be empty if you don't change them</div>}
+          </div>
         </div>
         <div className="row">
           <div className="col-md-4">
-            <Selec multi={true} ref={blRef} full={!choiceBuArea} data={bldata} choice={choiceBuArea} choiceHandler={blChoiceHandler} placeholder={userdata.businessline} selecType={"Business Line"} required={!choiceBuArea}></Selec>
+            <Selec multi={true} ref={blRef} full={false} data={bldata} choice={choiceBu} choiceHandler={blChoiceHandler} placeholder={userdata.businessline} selecType={"Business Line"} required={false}></Selec>
           </div>
           <div className="col-md-4">
-            <Selec multi={true} ref={departmentRef} full={!choiceBuArea} data={departmentdata} choice={choiceBl} choiceHandler={deptChoiceHandler} placeholder={userdata.department} selecType={"Pole / Department"} required={!choiceBuArea}></Selec>
+            <Selec multi={true} ref={departmentRef} full={false} data={departmentdata} choice={choiceBl} choiceHandler={deptChoiceHandler} placeholder={userdata.department} selecType={"Pole / Department"} required={false}></Selec>
           </div>
           <div className="col-md-4">
-            <Selec multi={true} ref={areaRef} full={!choiceBuArea} data={areadata} choice={choiceBuArea} choiceHandler={areaChoiceHandler} placeholder={userdata.areas} selecType={"Area"} required={!choiceBuArea}></Selec>
+            <Selec multi={true} ref={areaRef} full={false} data={areadata} choice={choiceBu} choiceHandler={areaChoiceHandler} placeholder={userdata.areas} selecType={"Area"} required={false}></Selec>
           </div>
         </div>
         <EditFormButtons cancel={"/administration/users"} valid={blValid && deptValid && areaValid}/>

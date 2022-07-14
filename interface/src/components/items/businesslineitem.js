@@ -16,6 +16,7 @@ const BusinessLineItem = (props) => {
     var message = "";
     const [disabledValue, setDisabledValue] = useState(false);
 
+    //Verify if BL is used
     useEffect (() => {
         axios.get('http://localhost:8000/businessline/isUsed', {params: {value: props.id}},{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
@@ -35,6 +36,7 @@ const BusinessLineItem = (props) => {
         else     
             message = "Activate";
     }
+    //Change status
     const statusHandler=()=>{
         axios.patch(link,{status:!props.status},{headers: {
             'Content-Type': 'application/merge-patch+json' ,
@@ -57,7 +59,7 @@ const BusinessLineItem = (props) => {
                 {!authctx.updateBusinessLines && <h4>{props.name}</h4>}
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
-                <h4 >{delvergule(props.buname)}</h4>
+                <h4>{delvergule(props.buname)}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
                 <span className={statusclass}>{status}</span>

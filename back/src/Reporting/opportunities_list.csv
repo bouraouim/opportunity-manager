@@ -1,5 +1,3 @@
 "Opportunity Reference","Creation Date",Description,Country,"Sales Manager",Customer,"Business Line","Business Unit",Departement,"Success Rate",Stage,"Award Date (Planned)","Award Date (Achieved)",Total,"Total Year 2022","Total Year 2023","Total Year 2024","Total Year 2025 or Above"
-sxdwc93yq8,2022-05-30T00:00:00+02:00,test,test,test1,"test6 test6",test3,test3,test4,"O0-Opportunity Identified",8,undefined,undefined,500,1246,0,0,0
-sy5opvat0u,2022-05-30T00:00:00+02:00,test,test1,test4,"test6 test6",test2,test2,test2,"O0-Opportunity Identified",0,undefined,undefined,500,3787,3787,0,0
-u0fx5meu7d,2022-05-31T00:00:00+02:00,test,test1,test4,"test6 test6",test2,test2,test2,"O0-Opportunity Identified",45,undefined,undefined,0,10,10,0,0
-vwwfzyy5fy,2022-06-01T00:00:00+02:00,1,test1,test4,"test6 test6",test2,test2,test2,"OX1-No Bid",9,undefined,undefined,500,1,0,0,0
+k6cruo0f7t,2022-06-18T00:00:00+02:00,desc,customer1,usa,"firstname11 lastname11",bu2,bl6,dep2,"OX1-No Bid",0,undefined,undefined,500,1500,0,0,0
+l5lllrzss9,2022-06-19T00:00:00+02:00,description,customer1,usa,"firstname11 lastname11",bu2,bl6,dep2,"O5-Won Not Booked",100,2022-06-22T00:00:00+02:00,undefined,500,252,0,0,0

@@ -57,7 +57,7 @@ class AreaRepository extends ServiceEntityRepository
         $quser = $this->createQueryBuilder('l')
             ->select('count(distinct u.id)')
             ->from(User::class, 'u')
-            ->leftJoin ('u.area','a')
+            ->leftJoin ('u.areas','a')
             ->where(':val MEMBER OF u.areas')
             ->setParameter('val', $value)
             ->getQuery()

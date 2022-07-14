@@ -201,18 +201,18 @@ const AddPresales = () => {
                         </div>
                     </div>
                     <div className="col-md-4">
-                    <Selec multi={true} ref={buRef} choiceHandler={buChoiceHandler} name={"buuuuu"}  changeInit={changeBuInit}  full={false} data={budata} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={false}></Selec>
+                        <Selec multi={true} ref={buRef} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={false} data={budata} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={false}></Selec>
                     </div>
                     <div className="col-md-4">
-                    <Selec multi={true} ref={blRef} full={false} choiceHandler={blChoiceHandler}  name={"blll"} changeInit={changeBlInit} init={initBu}   choice={choiceBu} data={bldata} placeholder={{name: "Select Business Line(s)"}} selecType={"Business Line"} required={false}></Selec>
+                        <Selec multi={true} ref={blRef} full={false} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={{name: "Select Business Line(s)"}} selecType={"Business Line"} required={false}></Selec>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-4">
-                    <Selec multi={true} ref={deptRef}  name={"depppp"} init={initBl} full={false} choice={choiceBl} data={departmentdata} placeholder={{name: "Select Department(s)"}} selecType={"Pole / Department"} required={false}></Selec>
+                        <Selec multi={true} ref={deptRef} name={"depppp"} init={initBl} full={false} choice={choiceBl} data={departmentdata} placeholder={{name: "Select Department(s)"}} selecType={"Pole / Department"} required={false}></Selec>
                     </div>
                     <div className="col-md-4">
-                    <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit}   init={initBu} choice={choiceBu} data={areadata} placeholder={{name: "Select Area(s)"}} selecType={"Area"} required={false}></Selec>
+                        <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit} init={initBu} choice={choiceBu} data={areadata} placeholder={{name: "Select Area(s)"}} selecType={"Area"} required={false}></Selec>
                     </div>
                 </div>
                 <AddFormButtons valid={nameIsValid} cancel={"/administration/presales"}/>

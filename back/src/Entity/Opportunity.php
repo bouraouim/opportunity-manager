@@ -149,10 +149,6 @@ class Opportunity
     #[Groups(['read:opp_collection', 'write:opp_collection'])]
     private $businessline;
 
-    #[ORM\ManyToOne(targetEntity: Presales::class, inversedBy: 'opportunities')]
-    #[Groups(['read:opp_collection', 'write:opp_collection'])]
-    private $presales;
-
     #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'opportunities')]
     #[Groups(['read:opp_collection', 'write:opp_collection'])]
     private $customer;
@@ -179,6 +175,15 @@ class Opportunity
     #[ORM\Column(type: 'json', nullable: true)]
     #[Groups(['read:opp_collection', 'write:opp_collection'])]
     private $revenueHQPart = [];
+
+    #[ORM\ManyToOne(targetEntity: Presales::class, inversedBy: 'opportunities', cascade:["persist"])]
+    #[Groups(['read:opp_collection', 'write:opp_collection'])]
+    #[JoinColumn(nullable:true)]
+    private $presalesEng;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Groups(['read:opp_collection', 'write:opp_collection'])]
+    private $status = true;
 
     public function getId(): ?int
     {
@@ -515,17 +520,6 @@ class Opportunity
         return $this;
     }
 
-    public function getPresales(): ?Presales
-    {
-        return $this->presales;
-    }
-
-    public function setPresales(?Presales $presales): self
-    {
-        $this->presales = $presales;
-        return $this;
-    }
-
     public function getCustomer(): ?Customer
     {
         return $this->customer;
@@ -600,6 +594,30 @@ class Opportunity
     public function setRevenueHQPart(?array $revenueHQPart): self
     {
         $this->revenueHQPart = $revenueHQPart;
+        return $this;
+    }
+
+    public function getPresalesEng(): ?Presales
+    {
+        return $this->presalesEng;
+    }
+
+    public function setPresalesEng(?Presales $presalesEng): self
+    {
+        $this->presalesEng = $presalesEng;
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
         return $this;
     }
 }

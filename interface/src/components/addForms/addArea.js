@@ -19,6 +19,7 @@ const AddArea = () => {
     const navigate = useNavigate();
     const authctx = useContext(AuthContext);
     
+    //Get data from DB
     useEffect(() => {
         axios.get('http://localhost:8000/businessunit/read',{headers: {Authorization: "Bearer "+authctx.token}})
         .then(response=>{
@@ -39,6 +40,7 @@ const AddArea = () => {
         else
           setBuValid(false);
     }
+    //Add Function
     const submithandler = (event) => {
         event.preventDefault(); 
         const name = nameRef.current.value;

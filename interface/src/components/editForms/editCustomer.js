@@ -10,6 +10,8 @@ import { NotificationManager } from 'react-notifications';
 import Selecthook from "../../hooks/selec-input";
 
 const EditCustomer = (props) => {
+  const {buChoiceHandler, areaChoiceHandler, blChoiceHandler, changeAreaInit, changeBlInit, changeBuInit, choiceBu, choiceBl, choiceArea,
+    bldata ,departmentdata, areadata, geographyData, budata, initBu, initBl, initArea, initDep} = Selecthook();
   // const [budata, setBudata] = useState([]);
   // const [bldata, setBldata] = useState([]);
   // const [areadata, setareadata] = useState([]);
@@ -36,9 +38,10 @@ const EditCustomer = (props) => {
   var departmentRef = useRef();
   var blRef = useRef();
   var areaRef = useRef();
-  const operation = (list1, list2, isUnion = false) =>
-  list1.filter(a => isUnion === list2.some(b => a.id === b.id));
-  const inBoth = (list1, list2) => operation(list1, list2, true);
+  // const operation = (list1, list2, isUnion = false) =>
+  // list1.filter(a => isUnion === list2.some(b => a.id === b.id));
+  // const inBoth = (list1, list2) => operation(list1, list2, true);
+  //Get data from DB
   useEffect(() => {
     axios.get('http://localhost:8000/api/customers/'+id,{headers: {Authorization: "Bearer "+authctx.token}}) 
     .then(response=>{
@@ -180,6 +183,7 @@ const EditCustomer = (props) => {
   //   else
   //     setCountValid(false);
   // }
+  //Edit Function
   const submithandler = (event) => {
     event.preventDefault();
     const inputname = nameRef.current.value;
@@ -264,9 +268,6 @@ const EditCustomer = (props) => {
     setDeptValid(v)
   }
 
-const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBlInit,changeBuInit,choiceBu,choiceBl,choiceArea,
-  bldata,departmentdata,areadata,geographyData,budata,initBu,initBl,initArea,initDep}=Selecthook()
-  
   return(
     <div className="card-body">
       <form className="needs-validation" onSubmit={submithandler}>
@@ -294,15 +295,16 @@ const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBl
             </div>
           </div>
           <div className="col-md-4">
-          <Selec multi={true} ref={buRef} onchange={buchangehandler} choiceHandler={buChoiceHandler} name={"buuuuu"}  changeInit={changeBuInit}  full={false} data={budata} placeholder={customer.businessunit} selecType={"Business Unit"} required={false}></Selec>
-          {req &&<div >other parametes that depend on business unit will be empty if you don't change them</div>}          </div>
+            <Selec multi={true} ref={buRef} onchange={buchangehandler} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={false} data={budata} placeholder={customer.businessunit} selecType={"Business Unit"} required={false}></Selec>
+            {req &&<div className="edit">Other parametes that depend on Business Unit will be empty if you don't change them</div>}
+          </div>
         </div>
         <div className="row">
           <div className="col-md-4">
-          <Selec multi={true} ref={blRef} full={false} choiceHandler={blChoiceHandler}  name={"blll"} changeInit={changeBlInit} init={initBu}   choice={choiceBu} data={bldata} onchange={blhandler} placeholder={customer.businessline} selecType={"Business Line"} required={false} ></Selec>
+            <Selec multi={true} ref={blRef} full={false} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} onchange={blhandler} placeholder={customer.businessline} selecType={"Business Line"} required={false}></Selec>
           </div>
           <div className="col-md-4">
-          <Selec multi={true} ref={departmentRef}  name={"depppp"} init={initBl} full={false} choice={choiceBl} data={departmentdata} placeholder={customer.department} onchange={dephandler} selecType={"Pole / Department"} required={false}></Selec>
+            <Selec multi={true} ref={departmentRef} name={"depppp"} init={initBl} full={false} choice={choiceBl} data={departmentdata} placeholder={customer.department} onchange={dephandler} selecType={"Pole / Department"} required={false}></Selec>
           </div>
           <div className="col-md-4">
             <div className="form-group">
@@ -318,10 +320,10 @@ const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBl
         </div>
         <div className="row">
           <div className="col-md-4">
-          <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit}   init={initBu} choice={choiceBu} data={areadata} onchange={areahandler} placeholder={customer.areas} selecType={"Area"} required={false}></Selec>
+            <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit} init={initBu} choice={choiceBu} data={areadata} onchange={areahandler} placeholder={customer.areas} selecType={"Area"} required={false}></Selec>
           </div>
           <div className="col-md-4">
-          <Selec multi={true} choice={choiceArea} onchange={countryhandler} ref={countryRef} full={false} init={initArea}  data={geographyData} placeholder={customer.count}  selecType={"Country"} required={false}></Selec>
+            <Selec multi={true} choice={choiceArea} onchange={countryhandler} ref={countryRef} full={false} init={initArea} data={geographyData} placeholder={customer.count} selecType={"Country"} required={false}></Selec>
           </div>
         </div>
         <EditFormButtons valid={blValid && deptValid && areaValid && countValid} cancel={"/administration/customers"}/>

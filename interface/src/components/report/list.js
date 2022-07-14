@@ -362,7 +362,7 @@ const{data,
   itemperpage,
   loadingchange,
   sortHandler,
-  handleChange}=Tablehook("opportunity","",["id","creationDate","reference","description","customer",'salesManager.firstname','countries','salesManager.lastname','successRate','businessunit.name','businessline.name','department.name','stage','awardDatePlanned',"awardDateAchieved","totalValue","revenueLocalPart","revenueHQPart"],"","",globalLink)
+  handleChange}=Tablehook("opportunity","",["id","creationDate","reason","reference","description","customer",'salesManager.firstname','countries','salesManager.lastname','successRate','businessunit.name','businessline.name','department.name','stage','awardDatePlanned',"awardDateAchieved","totalValue","revenueLocalPart","revenueHQPart"],"","",globalLink)
 
   const [csvdata,setcsvdata] =useState([])
 

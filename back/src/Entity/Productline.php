@@ -35,7 +35,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
         ]
     ]
 ),
-ApiFilter(SearchFilter::class, properties: ['name'=>'partial','businessunit.name'=>'partial','businessline.name'=>'partial','department.name'=>'partial','status'=>'exact']),
+ApiFilter(SearchFilter::class, properties: ['name'=>'partial','id'=>'exact','businessunit.name'=>'partial','businessline.name'=>'partial','department.name'=>'partial','status'=>'exact']),
 ApiFilter(OrderFilter::class, properties: ['name','businessunit.name','businessline.name','department.name'], arguments: ['orderParameterName' => 'order'])
 ]
 

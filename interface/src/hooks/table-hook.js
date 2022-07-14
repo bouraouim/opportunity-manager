@@ -10,7 +10,7 @@ const Tablehook = (
   globalsearch,
   opplink=""
 ) => {
-  let a=opplink
+  let a = opplink;
   const [data, setData] = useState([]);
   const [order, setOrder] = useState("");
   const [loading, setLoading] = useState(true);
@@ -60,7 +60,6 @@ const Tablehook = (
     axios
       .get(link, { headers: { Authorization: "Bearer " + authctx.token } })
       .then((response) => {
-        console.log("zzzzzzzzz")
         console.log(response.data["hydra:member"]);
         const table = response.data["hydra:member"].map((d) => {
           var a = parameters.map((p) => {

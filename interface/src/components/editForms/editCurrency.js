@@ -16,12 +16,15 @@ const EditCurrency = () => {
     var { id } = useParams();
     const authctx = useContext(AuthContext);
     const [currency, setCurrency] = useState([]);
+    
+    //Get data from DB
     useEffect(() => {
         axios.get('http://localhost:8000/api/currencies/'+id,{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
             setCurrency(response.data);
         })
     },[])
+    //Update Function
     const submithandler = (event) => {
         event.preventDefault(); 
         const code = nameRef.current.value;
@@ -50,24 +53,25 @@ const EditCurrency = () => {
         navigate('/administration/currencies');  
     }
     var applicationDate = new Date(currency.appDate);
-    var month = applicationDate.getMonth() + 1;
-    var date = applicationDate.getDate() + "/" + month + "/" + applicationDate.getFullYear();
+    var date = (applicationDate.getDate() <= 9 ? '0': '') + (applicationDate.getDate());
+    var month = (applicationDate.getMonth() <= 9 ? '0': '') + (applicationDate.getMonth()+1);
+    var date = date + "/" + month + "/" + applicationDate.getFullYear();
     
     return(
         <div className="card-body">
             <form className="needs-validation" onSubmit={submithandler}>
                 <div className="row">
                     <div className="col-md-4">
-                        {/* <div className="form-group">
+                        <div className="form-group">
                             <label className="form-control-label">Currency code</label>
                             <div className="input-group mb-3">
                                 <div className="input-group-prepend">
                                     <span className="input-group-text"><CurrencyExchange size={17}/></span>
                                 </div>
                                 <input type="text" ref={nameRef} className="form-control edit" placeholder={currency.code}/>
-                            </div>
-                        </div> */}
-                        <Selec multi={false} ref={nameRef} full={false} data={currencies} placeholder={currency.code} selecType={"Currency code"}/>
+                            </div> 
+                        </div>
+                        {/* <Selec multi={false} ref={nameRef} placeholder={currency.code} full={false} data={currencies} selecType={"Currency code"}></Selec> */}
                     </div>
                     <div className="col-md-4">
                         <div className="form-group">

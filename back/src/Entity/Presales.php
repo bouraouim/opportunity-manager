@@ -48,7 +48,7 @@ class Presales
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:opp_collection', 'write:opp_collection','read:presale_collection', 'write:presale_collection'])]
+    #[Groups(['read:opp_collection','read:presale_collection', 'write:presale_collection'])]
     private $name;
 
     #[ORM\Column(type: 'boolean')]
@@ -71,8 +71,9 @@ class Presales
     #[Groups(['read:presale_collection', 'write:presale_collection'])]
     private $areas;
 
-    #[ORM\OneToMany(mappedBy: 'presales', targetEntity: Opportunity::class)]
+    #[ORM\OneToMany(mappedBy: 'presalesEng', targetEntity: Opportunity::class)]
     private $opportunities;
+
 
     public function __construct()
     {
@@ -210,7 +211,7 @@ class Presales
     {
         if (!$this->opportunities->contains($opportunity)) {
             $this->opportunities[] = $opportunity;
-            $opportunity->setPresales($this);
+            $opportunity->setPresalesEng($this);
         }
 
         return $this;
@@ -220,8 +221,8 @@ class Presales
     {
         if ($this->opportunities->removeElement($opportunity)) {
             // set the owning side to null (unless already changed)
-            if ($opportunity->getPresales() === $this) {
-                $opportunity->setPresales(null);
+            if ($opportunity->getPresalesEng() === $this) {
+                $opportunity->setPresalesEng(null);
             }
         }
 

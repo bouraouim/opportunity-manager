@@ -2,12 +2,18 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OppProductlineRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 
 #[ORM\Entity(repositoryClass: OppProductlineRepository::class)]
-#[ApiResource]
+#[ApiResource(),
+    ApiFilter(SearchFilter::class, properties:['opportunity.id'=>'exact'] ),
+
+]
 class OppProductline
 {
     #[ORM\Id]

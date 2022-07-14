@@ -25,6 +25,7 @@ const AddCurrency = () => {
   const namehandler = (v) => {
     setnameValid(v)
   }
+  //Add Function
   const submithandler = (event) => {
     event.preventDefault(); 
     const code = nameRef.current.value;

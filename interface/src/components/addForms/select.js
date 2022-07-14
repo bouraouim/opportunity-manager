@@ -30,24 +30,20 @@ const Selec = React.forwardRef((props, ref) => {
     setSelected([]);
   },[props.init])}catch(error){}    
   useEffect(() => { 
-    // console.log("selecHasError1") 
-    // console.log(selecIsValid)
-    // props.onchange(!selecHasError)
     if(initialRender.current){
       initialRender.current = false;
-      console.log("ref change")
     }
     else {
       // console.log("ref changedddddd")
-      console.log(selecHasError)
+      console.log(selecIsValid)
       try{
-        props.onchange(!selecHasError)
+        props.onchange(selecIsValid)
       }catch(error){console.log("errrrrrr")}
     }
   },[selecIsValid])
 
   const onChangeHandler = (event) => {
-    // console.log(selecIsValid)
+    console.log(props.name)
     setSelected(event.target.value);
     selecChangeHandler(event)
     try{

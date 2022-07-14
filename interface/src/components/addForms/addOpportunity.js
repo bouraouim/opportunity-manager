@@ -9,7 +9,7 @@ import Step from '@mui/material/Step';
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
-import { Pencil, FileEarmarkText, TicketDetailed, PersonBadge, Inboxes, Inbox, CreditCard2Front, People, Briefcase, Flag, Bullseye, ArrowDownUp, Funnel, Calendar, CurrencyEuro, ArrowRight, Save, Trash } from "react-bootstrap-icons";
+import { Pencil, FileEarmarkText, TicketDetailed, PersonBadge, Inboxes, Inbox, CreditCard2Front, People, Briefcase, Flag, Bullseye, ArrowDownUp, Funnel, Calendar, CurrencyEuro, ArrowRight, Save, Trash, PencilSquare, ArrowLeft } from "react-bootstrap-icons";
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
@@ -242,6 +242,7 @@ const AddOpportunity = () => {
     const [iconCurrHQPartStyle, setIconCurrHQPartStyle] = useState("input-group-text");
     const [currHQPartDetails, setCurrHQPartDetails] = useState("");
     const [currHQPartAppDate, setCurrHQPartAppDate] = useState("");
+    const [data, setData] = useState([]);
     const [addRow, setAddRow] = useState(false);
     const [key, setKey] = useState(1);
     const [pl, setPl] = useState('');
@@ -255,7 +256,14 @@ const AddOpportunity = () => {
     const [inputLocalPartPLStyle, setInputLocalPartPLStyle] = useState("form-control form-placeholder");
     const [HQPartPL, setHQPartPL] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
-    const [data, setData] = useState([]);
+    const [editRow, setEditRow] = useState(false);
+    const [selectedRow, setSelectedRow] = useState({});
+
+
+
+
+
+
 
     const [nbTables, setNbTables] = useState(0);
     const [revenueLocalPart, setrevenueLocalPart] = useState([]);
@@ -614,6 +622,9 @@ const AddOpportunity = () => {
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
     const onStageChangeHandler = (event) => {
         setStage(event.target.value);
@@ -987,7 +998,7 @@ const AddOpportunity = () => {
             comment: commentPl
         }
         var aux = [];
-        setTotalValue(totalValue + parseFloat(totalAmount))
+        setTotalValue(totalValue + parseFloat(totalAmount));
         aux = aux.concat(data);
         aux.push(body);
         setData(aux);
@@ -998,29 +1009,58 @@ const AddOpportunity = () => {
         setLocalPartPL(0);
         setHQPartPL(0);
         setTotalAmount(0);
+        if(editRow)
+            setEditRow(false);
     }
-
-
-    // if(activeStep === 0)
-    //     disabled = stageValid && businessUnitValid && businessLineValid && deptValid && countryValid && customerValid && descriptionValid && revenueStartPlannedValid && contractDurationValid && RFQDatePlannedValid && submissionDatePlannedValid && awardDatePlannedValid && signatureDatePlannedValid && presalesValid;
-    if(plValid && localPartPLValid)
-        disableAddRow = false;
-    // if(activeStep === 1)
-    //     disabled = currLocalPartValid && currHQPartValid && (data.length >= 1);
-
-
-
-
-    const updateRow = () => {
+    const showEditRow = (idR) => {
+        setSelectedRow(data.filter(element => element.id === idR));
+        setPl(selectedRow[0].plid);
+        setLocalPartPL(selectedRow[0].localPart);
+        setHQPartPL(selectedRow[0].hqPart);
+        setTotalAmount(selectedRow[0].totalAmount);
+        setEditRow(true);
+        deleteRow(idR);
+        if(addRow)
+            setAddRow(false);
+    }
+    const updateRow = (idR) => {
+        setSelectedRow(data.filter(element => element.id === idR));
+        setPl(selectedRow[0].plid);
         var body = {
-            id: key,
-            productLine: plDetails.name,
-            plid: pl,
-            localPart: localPartPL,
-            hqPart: HQPartPL,
-            totalAmount: totalAmount,
-            comment: commentPl
+            id: idR
+        };
+        if(pl !== selectedRow[0].plid){
+            body["productLine"] =  plDetails.name;
+            body["plid"] = pl;
         }
+        else{
+            body["productLine"] =  selectedRow[0].productLine;
+            body["plid"] = selectedRow[0].plid;
+        }
+        if(localPartPL !== selectedRow[0].localPart)
+            body["localPart"] = localPartPL;
+        else
+            body["localPart"] = selectedRow[0].localPart;
+        if(HQPartPL !== selectedRow[0].hqPart)
+            body["hqPart"] = HQPartPL;
+        else
+            body["hqPart"] = selectedRow[0].hqPart;
+        if(totalAmount !== selectedRow[0].totalAmount)
+            body["totalAmount"] = totalAmount;
+        else
+            body["totalAmount"] = selectedRow[0].totalAmount;
+        if(data.length > 0)
+            setTotalValue(totalValue - parseFloat(selectedRow[0].totalAmount));
+        else
+            setTotalValue(0);
+        if(totalAmount !== selectedRow[0].totalAmount)
+            body["totalAmount"] = totalAmount;
+        else
+            body["totalAmount"] = selectedRow[0].totalAmount;
+        if(commentPl !== selectedRow[0].comment)
+            body["comment"] = commentPl;
+        else
+            body["comment"] = selectedRow[0].comment;
         var aux = [];
         setTotalValue(totalValue + parseFloat(totalAmount))
         aux = aux.concat(data);
@@ -1033,20 +1073,27 @@ const AddOpportunity = () => {
         setLocalPartPL(0);
         setHQPartPL(0);
         setTotalAmount(0);
+        if(addRow)
+            setAddRow(false);
+        setEditRow(false);
+    }
+    const deleteRow = (idR, amount) => {
+        var newData = data.filter(element => element.id !== idR);
+        setData(newData);
+        if(data.length > 0)
+            setTotalValue(totalValue - parseFloat(amount));
+        else 
+            setTotalValue(0);
     }
 
-    const deleteRow = (idR) => {
-        console.log("test");
-        // var aux = [];
-        // data.map((v)=>{
-        //     if(idR !== v.id){
-        //         aux.push(v);
-        //     }
-        // })
-        // setData(aux);
-    }
-    // console.log(data)
 
+    if(activeStep === 0)
+        disabled = stageValid && businessUnitValid && businessLineValid && deptValid && countryValid && customerValid && descriptionValid && revenueStartPlannedValid && contractDurationValid && RFQDatePlannedValid && submissionDatePlannedValid && awardDatePlannedValid && signatureDatePlannedValid && presalesValid;
+    if(plValid && localPartPLValid)
+        disableAddRow = false;
+    if(activeStep === 1)
+        disabled = currLocalPartValid && currHQPartValid 
+        //&& (data.length >= 1);
 
 
 
@@ -1054,7 +1101,6 @@ const AddOpportunity = () => {
 
     const [IdMonthLocal, setIdMonthLocal] = useState("");
     const [IdYearLocal, setIdYearLocal] = useState("");
-
     const [revenueHQPart, setrevenueHQPart] = useState([]);
     const [valHQPart, setValHQPart] = useState(0);
     const [totalHQPart, setTotalHQPart] = useState(0);
@@ -1082,21 +1128,21 @@ const AddOpportunity = () => {
     },[revenueStartAchieved])
 
 
-    useEffect(async () => {
-        setTotalLocalPart(0);
-        if(IdMonthLocal !== ""){
-            var aux = revenueLocalPart;
-            aux[IdYearLocal].months[IdMonthLocal-1].value = parseInt(valLocalPart);
-            setrevenueLocalPart(aux);
-        }
-        var sum = 0;
-        revenueLocalPart.map((v)=>{
-            v.months.map((k)=>{
-                sum += k.value;
-            })
-        })
-        setTotalLocalPart(sum);
-    },[valLocalPart])
+    // useEffect(async () => {
+    //     setTotalLocalPart(0);
+    //     if(IdMonthLocal !== ""){
+    //         var aux = revenueLocalPart;
+    //         aux[IdYearLocal].months[IdMonthLocal-1].value = parseInt(valLocalPart);
+    //         setrevenueLocalPart(aux);
+    //     }
+    //     var sum = 0;
+    //     revenueLocalPart.map((v)=>{
+    //         v.months.map((k)=>{
+    //             sum += k.value;
+    //         })
+    //     })
+    //     setTotalLocalPart(sum);
+    // },[valLocalPart])
     
 
     useEffect(async () => {
@@ -1118,10 +1164,24 @@ const AddOpportunity = () => {
 
 
     const onTotLocalPartValue = (event) => {
-        if((event.target.value).length > 0)
-            setValLocalPart(event.target.value);
-        else
-            setValLocalPart(0);
+        if((event.target.value).length > 0){
+            setTotalLocalPart(0);
+            if(IdMonthLocal !== ""){
+                var aux = revenueLocalPart;
+                console.log(aux)
+                aux[IdYearLocal].months[IdMonthLocal-1].value = parseInt(event.target.value);
+                setrevenueLocalPart(aux);
+            }
+            var sum = 0;
+            revenueLocalPart.map((v)=>{
+                v.months.map((k)=>{
+                    sum += k.value;
+                })
+            })
+            setTotalLocalPart(sum);
+        }
+        // else
+        //     setValLocalPart(0);
     }
     const onTotHQPartValue = (event) => {
         if((event.target.value).length > 0)
@@ -1138,11 +1198,10 @@ const AddOpportunity = () => {
         setIdYearHQ(idYear);
     }
 
-console.log("local")
-console.log(revenueLocalPart)
-console.log("HQ")
-console.log(revenueHQPart)
-
+// console.log("local")
+// console.log(revenueLocalPart)
+// console.log("HQ")
+// console.log(revenueHQPart)
 
 
     const getStepContent = (step) => {
@@ -1417,7 +1476,7 @@ console.log(revenueHQPart)
                                                     <div className="input-group-prepend">
                                                         <span className="input-group-text"><CurrencyEuro size={17}/></span>
                                                     </div>
-                                                    <input type="number" placeholder="Contract Duration(months)" className="form-control" value={fullValue} onChange={onFullValueChangeHandler}/>
+                                                    <input type="number" className="form-control" value={fullValue} onChange={onFullValueChangeHandler}/>
                                                 </div>
                                             </div>
                                         </div>
@@ -1518,9 +1577,9 @@ console.log(revenueHQPart)
                                         </Collapse>
                                     </List>
                                 </div>
-                            </div>
+                            </div>   
                         </form>
-                    </div>
+                    </div>                    
                 </>;
             case 1 :
                 return <>
@@ -1640,7 +1699,7 @@ console.log(revenueHQPart)
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                { addRow && 
+                                                {addRow && 
                                                     <tr>
                                                         <td className="text-center text-xs font-weight-bold">
                                                             <Select onBlur={setPlStyle} displayEmpty renderValue={pl !== '' ? undefined : () => "Select a Product Line"} sx={{"& .MuiOutlinedInput-notchedOutline": {border: "none"}}} multiple={false} className={inputPlStyle} value={pl} onChange={onPlChangeHandler}>
@@ -1665,7 +1724,7 @@ console.log(revenueHQPart)
                                                         <td className="text-center text-xs font-weight-bold">
                                                             <input placeholder="Comment" onChange={onCommentPlChangeHandler} className="form-control"/>
                                                         </td>
-                                                        <td className="text-center text-xs font-weight-bold"><button className="btn bg-transparent" onClick={()=>{saveRow()}} disabled={disableAddRow}><Save size={15}/></button></td>
+                                                        <td className="text-center text-xs font-weight-bold"><span className="btn bg-transparent" onClick={()=>{saveRow()}} disabled={disableAddRow}><Save size={15}/></span></td>
                                                     </tr>
                                                 }
                                                 { data.map((v)=>
@@ -1676,9 +1735,36 @@ console.log(revenueHQPart)
                                                         <td className="text-center text-xs font-weight-bold">{v.hqPart}</td>
                                                         <td className="text-center text-xs font-weight-bold">{v.totalAmount}</td>
                                                         <td className="text-center text-xs font-weight-bold">{v.comment}</td>
-                                                        <td className="text-center text-xs font-weight-bold"><button className="btn bg-transparent" onClick={()=>{updateRow(v.key)}}><Pencil size={18} color="green"/></button>&nbsp;<button className="btn bg-transparent" onClick={()=>{deleteRow(v.key)}}><Trash size={18} color="red"/></button></td>
+                                                        <td className="text-center text-xs font-weight-bold"><span className="btn bg-transparent" onClick={()=>{showEditRow(v.id)}}><Pencil size={18} color="green"/></span>&nbsp;<span className="btn bg-transparent" onClick={()=>{deleteRow(v.id, v.localPart)}}><Trash size={18} color="red"/></span></td>
                                                     </tr>
                                                 )}
+                                                {editRow &&
+                                                    <tr>
+                                                        <td className="text-center text-xs font-weight-bold">
+                                                            <Select onBlur={setPlStyle} displayEmpty renderValue={pl !== '' ? undefined : () => "Select a Product Line"} sx={{"& .MuiOutlinedInput-notchedOutline": {border: "none"}}} multiple={false} className={inputPlStyle} value={pl} defaultValue={pl} onChange={onPlChangeHandler}>
+                                                                {plData.map((d) => (
+                                                                    <MenuItem value={d.id} key={d.id}>{d.name}</MenuItem>
+                                                                ))}
+                                                            </Select>
+                                                        </td>
+                                                        <td className="text-center text-xs font-weight-bold">
+                                                            <input type="number" placeholder={selectedRow[0].localPart} onChange={onLocalPartPLChangeHandler} className="form-control form-placeholder"/>
+                                                        </td>
+                                                        <td className="text-center text-xs font-weight-bold">
+                                                            <input className="form-control" disabled value={localPartPL}/>
+                                                        </td>
+                                                        <td className="text-center text-xs font-weight-bold">
+                                                            <input className="form-control" disabled value={HQPartPL}/>
+                                                        </td>
+                                                        <td className="text-center text-xs font-weight-bold">
+                                                            <input className="form-control" disabled value={totalAmount}/>
+                                                        </td>
+                                                        <td className="text-center text-xs font-weight-bold">
+                                                            <input placeholder={selectedRow[0].comment} onChange={onCommentPlChangeHandler} className="form-control"/>
+                                                        </td>
+                                                        <td className="text-center text-xs font-weight-bold"><span className="btn bg-transparent" onClick={()=>{updateRow(selectedRow[0].id)}} disabled={disableAddRow}><PencilSquare size={15}/></span></td>
+                                                    </tr>
+                                                }
                                                 <tr>
                                                     <td className="text-center text-xs font-weight-bold" colSpan="4">Total</td>
                                                     <td className="text-center text-xs font-weight-bold">{totalValue} EUR</td>
@@ -1799,15 +1885,15 @@ console.log(revenueHQPart)
                                                         <td>
                                                             {   
                                                                 nbTables === 1 ? 
-                                                                    v.id >= (parseInt(revenueStartPlanned.getMonth())+1) && v.id < (parseInt(revenueStartAchieved.getMonth())+1) ? <input onChange={(event)=>{onTotLocalPartValue(event); setLocalPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
+                                                                    v.id >= (parseInt(revenueStartPlanned.getMonth())+1) && v.id < (parseInt(revenueStartAchieved.getMonth())+1) ? <input id="local" onChange={(event)=>{onTotLocalPartValue(event); setLocalPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
                                                                 :
                                                                     i === 0 ? 
-                                                                        v.id >= (parseInt(revenueStartPlanned.getMonth())+1) ? <input onChange={(event)=>{onTotLocalPartValue(event); setLocalPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
+                                                                        v.id >= (parseInt(revenueStartPlanned.getMonth())+1) ? <input id="local" onChange={(event)=>{onTotLocalPartValue(event); setLocalPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
                                                                     :
                                                                         i === nbTables -1 ?
-                                                                            v.id < (parseInt(revenueStartAchieved.getMonth())+1) ? <input onChange={(event)=>{onTotLocalPartValue(event); setLocalPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
+                                                                            v.id < (parseInt(revenueStartAchieved.getMonth())+1) ? <input id="local" onChange={(event)=>{onTotLocalPartValue(event); setLocalPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
                                                                         :
-                                                                        <input onChange={(event)=>{onTotLocalPartValue(event); setLocalPartDates(v.id, i)}} className="revenue" type="number"/>
+                                                                        <input id="local" onChange={(event)=>{onTotLocalPartValue(event); setLocalPartDates(v.id, i)}} className="revenue" type="number"/>
                                                             }
                                                         </td>
                                                     )}
@@ -1818,15 +1904,15 @@ console.log(revenueHQPart)
                                                         <td>
                                                             {   
                                                                 nbTables === 1 ? 
-                                                                    v.id >= (parseInt(revenueStartPlanned.getMonth())+1) && v.id < (parseInt(revenueStartAchieved.getMonth())+1) ? <input onChange={(event)=>{onTotHQPartValue(event); setHQPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
+                                                                    v.id >= (parseInt(revenueStartPlanned.getMonth())+1) && v.id < (parseInt(revenueStartAchieved.getMonth())+1) ? <input id="hq" onChange={(event)=>{onTotHQPartValue(event); setHQPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
                                                                 :
                                                                     i === 0 ? 
-                                                                        v.id >= (parseInt(revenueStartPlanned.getMonth())+1) ? <input onChange={(event)=>{onTotHQPartValue(event); setHQPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
+                                                                        v.id >= (parseInt(revenueStartPlanned.getMonth())+1) ? <input id="hq" onChange={(event)=>{onTotHQPartValue(event); setHQPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
                                                                     :
                                                                         i === nbTables -1 ?
-                                                                            v.id < (parseInt(revenueStartAchieved.getMonth())+1) ? <input onChange={(event)=>{onTotHQPartValue(event); setHQPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
+                                                                            v.id < (parseInt(revenueStartAchieved.getMonth())+1) ? <input id="hq" onChange={(event)=>{onTotHQPartValue(event); setHQPartDates(v.id, i)}} className="revenue" type="number"/> : <p>--</p>
                                                                         :
-                                                                        <input onChange={(event)=>{onTotHQPartValue(event); setHQPartDates(v.id, i)}} className="revenue" type="number"/>
+                                                                        <input id="hq" onChange={(event)=>{onTotHQPartValue(event); setHQPartDates(v.id, i)}} className="revenue" type="number"/>
                                                             }
                                                         </td>
                                                     )}
@@ -1875,7 +1961,7 @@ console.log(revenueHQPart)
         if(customer !== "")
             body["customer"] = "/api/customers/"+customer;
         if(presales !== "")
-            body["presales"] = "/api/presales/"+presales;
+            body["presalesEng"] = "/api/presales/"+presales;
         if(reason !== "")
             body["reason"] = reason;
         if(comment !== "")
@@ -1916,11 +2002,11 @@ console.log(revenueHQPart)
                 console.log(plObj);
                 axios.post('http://localhost:8000/api/opp_productlines',plObj,{headers: {Authorization: "Bearer "+authctx.token}})
                 .then(response=> {
-                    // NotificationManager.success('The Opportunity has been successfully added !');
+                    NotificationManager.success('The Opportunity has been successfully added !');
                     console.log(plObj);
                 })
                 .catch(function (error) {
-                    // NotificationManager.error('The Opportunity has not been added !');
+                    NotificationManager.error('The Opportunity has not been added !');
                     console.log(error);
                 });
             })
@@ -1952,6 +2038,7 @@ console.log(revenueHQPart)
                         <Fragment>
                             {getStepContent(activeStep)}
                             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                                <button type="button" className="rounded-pill btn d-flex align-items-center backBtn" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}><ArrowLeft size={20}/>&nbsp;&nbsp;Back</button>
                                 <Box sx={{ flex: "1 1 auto" }}/>
                                 {activeStep === steps.length - 1 ?
                                     <button type="button" onClick={submithandler} className="rounded-pill btn d-flex align-items-center btn-success"><i className="ni fa-2x ni-fat-add"></i>&nbsp;&nbsp;Add</button>

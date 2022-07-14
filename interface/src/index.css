@@ -55,7 +55,7 @@ slider{
 textarea{
   height: calc(1.5em + 1.5rem + 5px) !important;
 }
-.nextBtn, .nextBtn:hover{
+.nextBtn, .nextBtn:hover, .backBtn, .backBtn:hover{
   background-color: #007AC0;
   color: white;
 }
@@ -89,3 +89,18 @@ textarea{
   background-color: transparent !important;
   border-color: none !important;
 } */
+.edit{
+  color: red;
+}
+.O2-RFQExpected{
+  background-color: lightblue;
+}
+.OX3-Cancelled{
+  background-color: indianred;
+}
+.O3-AnswerInProgress{
+  background-color: lightgreen;
+}
+.O4-OfferSubmitted{
+  background-color: lawngreen;
+}

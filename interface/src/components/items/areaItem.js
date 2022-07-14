@@ -4,6 +4,7 @@ import { DashLg, CheckLg } from 'react-bootstrap-icons';
 import AuthContext from '../../store/auth-context';
 import { useContext, useState, useEffect } from 'react';
 import "../../index.css";
+import { NotificationManager } from 'react-notifications';
 
 const AreaItem = (props) => {   
     const statusclass = props.status?"badge badge-lg badge-success":"badge badge-lg badge-danger";
@@ -16,6 +17,7 @@ const AreaItem = (props) => {
     const [disabledValue, setDisabledValue] = useState(false);
     var message = ""; 
     
+    //Verfiy if Area is used
     useEffect (() => {
         axios.get('http://localhost:8000/area/isUsed', {params: {value: props.id}},{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
@@ -35,12 +37,14 @@ const AreaItem = (props) => {
         else     
             message = "Activate";
     }
+    //Change status
     const statusHandler = () => {
         axios.patch(link,{},{headers: {
             'Content-Type': 'application/merge-patch+json',
             Authorization: "Bearer "+authctx.token
         }})
        .then(props.loading)
+        props.status? NotificationManager.success('The Area has been successfully disabled !'): NotificationManager.success('The Area has been successfully enabled !');
     }
     const delvergule = (v) => {
         v[v.length - 1] = v[v.length - 1].slice(0, -1);

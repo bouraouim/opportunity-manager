@@ -9,10 +9,19 @@ const Anonymizeitem = (props) => {
     const delvergule=(v)=>{
         if(v.length>0 && v[v.length - 1].slice(-1)==","){
             console.log("aaa");
-        v[v.length - 1]=v[v.length - 1].slice(0, -1);
+            v[v.length - 1]=v[v.length - 1].slice(0, -1);
         }
         return v;
     }
+
+    var date = new Date(props.lastconnectiondate);
+    var day = (date.getDate() <= 9 ? '0': '') + (date.getDate());
+    var month = (date.getMonth() <= 9 ? '0': '') + (date.getMonth()+1);
+    var LastConnectionDate = day + "/" + month + "/" + date.getFullYear();
+    date = new Date(props.creationdate);
+    day = (date.getDate() <= 9 ? '0': '') + (date.getDate());
+    month = (date.getMonth() <= 9 ? '0': '') + (date.getMonth()+1);
+    var creatiolDate = day + "/" + month + "/" + date.getFullYear();
     
     return ( 
         <tr>
@@ -21,27 +30,26 @@ const Anonymizeitem = (props) => {
                 {!authctx.updateUsers && <h4>{props.lname}</h4>}
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
-                <h4 >{props.fname}</h4>
+                <h4>{props.fname}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
-                <h4 >{props.login}</h4>
+                <h4>{props.login}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
-                <h4 >{props.email}</h4>
+                <h4>{props.email}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
-                <h4 >{delvergule(props.bline)}</h4>
+                <h4>{delvergule(props.bline)}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
-                <h4 >{props.lastconnectiondate}</h4>
+                <h4>{LastConnectionDate}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
-                <h4 >{props.creationdate}</h4>
+                <h4>{creatiolDate}</h4>
             </td>
             <td key={Math.random().toString(36).substr(2, 9)} className="align-middle text-center text-sm">
-                <input type="checkbox"key={props.id}  id={props.id} onChange={props.handleClick} checked={a}/>  
+                <input type="checkbox"key={props.id} id={props.id} onChange={props.handleClick} checked={a}/>  
             </td>
-           
         </tr>
     );
 }

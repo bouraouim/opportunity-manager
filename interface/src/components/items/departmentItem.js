@@ -17,6 +17,7 @@ const DepartmentItem = (props) => {
     const [disabledValue, setDisabledValue] = useState(false);
     var link = 'http://localhost:8000/api/departments/'+props.id+'/'+fct;
 
+    //Verfiy if Department is used
     useEffect (() => {
         axios.get('http://localhost:8000/department/isUsed', {params: {value: props.id}},{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
@@ -36,13 +37,14 @@ const DepartmentItem = (props) => {
         else     
             message = "Activate";
     }
+    //Change status
     const statusHandler = () => {
         axios.patch(link,{},{headers: {
             'Content-Type': 'application/merge-patch+json',
             Authorization: "Bearer "+authctx.token
         }})
        .then(props.loading)
-       props.status? NotificationManager.success('The Business Line has been successfully disabled !'): NotificationManager.success('The Business Line has been successfully enabled !');
+       props.status? NotificationManager.success('The Department has been successfully disabled !'): NotificationManager.success('The Department has been successfully enabled !');
     }
     const delvergule = (v) => {
         if(v.length>0 && v[v.length - 1].slice(-1)===","){

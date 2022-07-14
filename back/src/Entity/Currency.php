@@ -56,7 +56,7 @@ class Currency
     private $appDate;
 
     #[ORM\Column(type: 'float')]
-    #[Groups(['read:curr_collection', 'write:curr_collection'])]
+    #[Groups(['read:curr_collection', 'write:curr_collection','read:opp_collection'])]
     private $euroCnvrRate;
 
     #[ORM\Column(type: 'boolean')]

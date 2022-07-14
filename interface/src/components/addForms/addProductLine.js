@@ -18,15 +18,14 @@ const AddProductLine = () => {
     var buRef = useRef();
     var blRef = useRef();
     var deptRef = useRef();  
-   const [blByDeptData, setBlByDepatData] = useState([]);
+    const [blByDeptData, setBlByDepatData] = useState([]);
     const [deptValid, setDeptValid] = useState(false);
     const [buValid, setBuValid] = useState(false);
     const [blValid, setBlValid] = useState(false);
     const navigate = useNavigate();
     const authctx = useContext(AuthContext);
-
-    const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBlInit,changeBuInit,choiceBu,choiceBl,choiceArea,
-        bldata,departmentdata,areadata,geographyData,budata,initBu,initBl,initArea,initDep}=Selecthook()
+    const {buChoiceHandler, areaChoiceHandler, blChoiceHandler, changeAreaInit, changeBlInit, changeBuInit, choiceBu, choiceBl, choiceArea,
+        bldata, departmentdata, areadata, geographyData, budata, initBu, initBl, initArea, initDep} = Selecthook()
 
     const operation = (list1, list2, isUnion = false) =>
     list1.filter(a => isUnion === list2.some(b => a.id === b.id));
@@ -163,15 +162,21 @@ const AddProductLine = () => {
     }
     const blhandler = (v) => {
         setBlValid(v)
-      }
+    }
     const buhandler = (v) => {
+        console.log("zzzzz")
         setBuValid(v)
-      }
-    const dephandler = (v) => {
-       
-        setDeptValid(v)
-      }
+        setBlValid(false)
+        setDeptValid(false)
 
+    }
+    const dephandler = (v) => {   
+        setDeptValid(v)
+    }
+
+    useEffect(() => {
+        console.log("blValid",  blValid)
+    }, [blValid]);
     return (
         <div className="card-body">
             <form className="needs-validation" onSubmit={submithandler}>
@@ -189,15 +194,15 @@ const AddProductLine = () => {
                         </div>
                     </div>
                     <div className="col-md-4">
-                    <Selec multi={true} ref={buRef} onchange={buhandler} choiceHandler={buChoiceHandler} name={"buuuuu"}  changeInit={changeBuInit}  full={true} data={budata} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={true}></Selec>
+                        <Selec multi={true} ref={buRef} onchange={buhandler} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={true} data={budata} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={true}></Selec>
                     </div>
                     <div className="col-md-4">
-                    <Selec multi={true} ref={blRef} onchange={blhandler} full={true} choiceHandler={blChoiceHandler}  name={"blll"} changeInit={changeBlInit} init={initBu}   choice={choiceBu} data={bldata} placeholder={{name: "Select Business Line(s)"}} selecType={"Business Line"} required={true}></Selec>
+                        <Selec multi={true} ref={blRef} onchange={blhandler} full={true} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={{name: "Select Business Line(s)"}} selecType={"Business Line"} required={true}></Selec>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-4">
-                        <Selec multi={true} ref={deptRef}  onchange={dephandler} full={true} data={departmentdata} choiceHandler={deptChoiceHandler} choice={choiceBl} placeholder={{name: "Select Department(s)"}} selecType={"Pole / Department"} required={true}></Selec>
+                        <Selec multi={true} ref={deptRef} onchange={dephandler} init={initBl} full={true} data={departmentdata} choiceHandler={deptChoiceHandler} choice={choiceBl} placeholder={{name: "Select Department(s)"}} selecType={"Pole / Department"} required={true}></Selec>
                     </div>
                 </div>
                 <AddFormButtons valid={nameIsValid && buValid && blValid && deptValid} cancel={"/administration/productLines"}/>

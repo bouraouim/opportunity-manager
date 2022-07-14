@@ -28,7 +28,7 @@ class PresalesRepository extends ServiceEntityRepository
         $qopp = $this->createQueryBuilder("l")
             ->select('count(o.id)')
             ->from(Opportunity::class,'o')
-            ->where('o.presales = :val')
+            ->where('o.presalesEng = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getSingleScalarResult()

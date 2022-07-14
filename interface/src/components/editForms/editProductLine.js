@@ -55,16 +55,16 @@ const EditProductLine = () => {
             })
             body["businessunit"] = bu;
         }
-        if(req){if(deptInput.length !== 0){
+        if(deptInput.length !== 0){
             var dept = deptInput.map(v=>{
                 return "/api/departments/"+v 
-            })}else{var dept=[]}
+            })
             body["department"] = dept;
         }
-        if(req){if(blInput.length !== 0){
+        if(blInput.length !== 0){
             var bl = blInput.map(v=>{
                 return "/api/businesslines/"+v 
-            })}else{var bl=[]}
+            })
             body["businessline"] = bl;
         }
         console.log(body)
@@ -83,12 +83,45 @@ const EditProductLine = () => {
         navigate('/administration/productLines');
     }
 
-    const buchangehandler=()=>{
-        setreq(true)
-       }
+    // const buchangehandler=()=>{
+    //     setBlValid(false)
+    //     setDeptValid(false)
+    //     setreq(true)
+    //    }
+    const blhandler = (v) => {
+        setBlValid(v);
+    }
+    const depthandler = (v) => {
+        setDeptValid(v);
+    }
 
-    const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBlInit,changeBuInit,choiceBu,choiceBl,choiceArea,
-        bldata,departmentdata,areadata,geographyData,budata,initBu,initBl,initArea,initDep}=Selecthook()
+    const notfirstrender = useRef(true);
+    const [buvalue, setbuvalue] = useState([]);
+    const valueHandler = (v) => {
+        setbuvalue(v);
+    }
+    useEffect(() => {
+        console.log(buvalue)
+        if(notfirstrender.current){
+            notfirstrender.current = false;
+        } 
+        else{
+            if(buvalue.length == 0){
+                setreq(false);
+                setBlValid(true); 
+                setDeptValid(true); 
+            }
+            else{
+                setreq(true);
+                setBlValid(false);
+                setDeptValid(false);
+            }
+        }
+    console.log(req);
+    }, [buvalue]);
+    const {buChoiceHandler, areaChoiceHandler, blChoiceHandler, changeAreaInit, changeBlInit, changeBuInit, choiceBu , choiceBl, choiceArea,
+        bldata, departmentdata, areadata, geographyData, budata, initBu, initBl, initArea, initDep} = Selecthook();
+
     return (
         <div className="card-body">
             <form className="needs-validation" onSubmit={submithandler}>
@@ -105,20 +138,19 @@ const EditProductLine = () => {
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <Selec multi={true} ref={buRef} onchange={buchangehandler} choiceHandler={buChoiceHandler} name={"buuuuu"}  changeInit={changeBuInit}  full={false} data={budata} placeholder={productLine.businessunit} selecType={"Business Unit"} required={false}></Selec>
-                        {req &&<div >other parametes that depend on business unit will be empty if you don't change them</div>}
+                        <Selec multi={true} ref={buRef} valueHandler={valueHandler} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={false} data={budata} placeholder={productLine.businessunit} selecType={"Business Unit"} required={false}></Selec>
+                        {req &&<div className="edit">Other parametes that depend on Business Unit will be empty if you don't change them</div>}
                     </div>
-                    <div className="col-md-4">
-                        
-                        <Selec multi={true} ref={blRef}  full={false} choiceHandler={blChoiceHandler}  name={"blll"} changeInit={changeBlInit} init={initBu}   choice={choiceBu} data={bldata} placeholder={productLine.businessline} selecType={"Business Line"} required={false}></Selec>
+                    <div className="col-md-4">   
+                        <Selec multi={true} ref={blRef} full={req} onchange={blhandler} choiceHandler={blChoiceHandler}  name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={productLine.businessline} selecType={"Business Line"} required={req}></Selec>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-4">
-                        <Selec multi={true} ref={deptRef}  full={false} data={departmentdata} choiceHandler={deptChoiceHandler} choice={choiceBl} placeholder={productLine.department} selecType={"Pole / Department"} required={false}></Selec>
+                        <Selec multi={true} ref={deptRef} init={initBl} onchange={depthandler} full={req} data={departmentdata} choiceHandler={deptChoiceHandler} choice={choiceBl} placeholder={productLine.department} selecType={"Pole / Department"} required={req}></Selec>
                     </div>
                 </div>
-                <EditFormButtons valid={true} cancel={"/administration/productLines"}/>
+                <EditFormButtons valid={blValid && deptValid} cancel={"/administration/productLines"}/>
             </form>
         </div>
     )

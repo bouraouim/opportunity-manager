@@ -37,13 +37,13 @@ const AddBusinessLine=()=>{
     axios.get('http://localhost:8000/businessunit/read') 
     .then(response=>{
       console.log(response)
-        const table=(response.data.map(d=>{
-            return{
-              id: d.id,
-              name:d.name,
-            } 
-        }))
-        setBudata(table)
+      const table=(response.data.map(d=>{
+        return{
+          id: d.id,
+          name:d.name,
+        } 
+      }))
+      setBudata(table)
     }).catch(error=>{
       console.error(error);
     }) 
@@ -89,7 +89,7 @@ const AddBusinessLine=()=>{
             </div>
           </div>
           <div className="col-md-6">
-            <Selec multi={true} ref={buRef} full={true} choiceHandler={buhandler} data={budata} placeholder={{name: "Select a Business Unit"}} selecType={"Business Unit"} required={true}/>
+            <Selec multi={true} ref={buRef} full={true} onchange={buhandler} data={budata} placeholder={{name: "Select a Business Unit"}} selecType={"Business Unit"} required={true}/>
           </div>
         </div>
         <AddFormButtons valid={nameIsValid && buvalid} cancel={"/administration/businessLines"}/>

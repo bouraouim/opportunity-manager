@@ -10,6 +10,8 @@ import { NotificationManager } from 'react-notifications';
 import Selecthook from "../../hooks/selec-input";
 
 const AddCustomer = (props) => {
+  const {buChoiceHandler, areaChoiceHandler, blChoiceHandler, changeAreaInit, changeBlInit, changeBuInit, choiceBu, choiceBl, choiceArea,
+    bldata, departmentdata, areadata, geographyData, budata, initBu, initBl, initArea, initDep} = Selecthook();
   const {isValid:nameIsValid, hasError:nameHasError, valueChangeHandler:nameChangeHandler, inputBlurHandler:nameBlurHandler, submissionHandler:submissionHandler} = useInput(value=>value.trim() !== '');
   const namevalid = nameHasError?"form-control is-invalid":"form-control";
   const {isValid:groupIsValid, hasError:groupHasError, valueChangeHandler:groupChangeHandler, inputBlurHandler:groupBlurHandler} = useInput(value=>value.trim() !== '');
@@ -38,13 +40,10 @@ const AddCustomer = (props) => {
   var departmentRef = useRef();
   var blRef = useRef();
   var areaRef = useRef();
- 
-const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBlInit,changeBuInit,choiceBu,choiceBl,choiceArea,
-  bldata,departmentdata,areadata,geographyData,budata,initBu,initBl,initArea,initDep}=Selecthook()
 
-  const operation = (list1, list2, isUnion = false) =>
-  list1.filter(a => isUnion === list2.some(b => a.id === b.id));
-  const inBoth = (list1, list2) => operation(list1, list2, true);
+  // const operation = (list1, list2, isUnion = false) =>
+  // list1.filter(a => isUnion === list2.some(b => a.id === b.id));
+  // const inBoth = (list1, list2) => operation(list1, list2, true);
   // useEffect(() => {
   //   axios.get('http://localhost:8000/businessunit/buHavingBlAndArea',{headers: {Authorization: "Bearer "+authctx.token}}) 
   //   .then(response=>{
@@ -193,6 +192,7 @@ const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBl
   //     setChoiceArea(true);
   //   }
   // }
+  //Add Function
   const submithandler = (event) => {
     event.preventDefault();
     const inputname = nameRef.current.value;
@@ -291,17 +291,15 @@ const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBl
             </div>
           </div>
           <div className="col-md-4">
-          <Selec multi={true} ref={buRef} choiceHandler={buChoiceHandler} name={"buuuuu"}  changeInit={changeBuInit}  full={false} data={budata} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={false}></Selec>
-            
+            <Selec multi={true} ref={buRef} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={false} data={budata} placeholder={{name: "Select Business Unit(s)"}} selecType={"Business Unit"} required={false}></Selec>
           </div>
         </div>
         <div className="row">
           <div className="col-md-4">
-          <Selec multi={true} ref={blRef} full={false} choiceHandler={blChoiceHandler}  name={"blll"} changeInit={changeBlInit} init={initBu}   choice={choiceBu} data={bldata} placeholder={{name: "Select Business Line(s)"}} selecType={"Business Line"} required={false}></Selec>
-            
+            <Selec multi={true} ref={blRef} full={false} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={{name: "Select Business Line(s)"}} selecType={"Business Line"} required={false}></Selec>
           </div>
           <div className="col-md-4">
-          <Selec multi={true} ref={departmentRef}  name={"depppp"} init={initBl} full={false} choice={choiceBl} data={departmentdata} placeholder={{name: "Select Department(s)"}} selecType={"Pole / Department"} required={false}></Selec>
+            <Selec multi={true} ref={departmentRef} name={"depppp"} init={initBl} full={false} choice={choiceBl} data={departmentdata} placeholder={{name: "Select Department(s)"}} selecType={"Pole / Department"} required={false}></Selec>
           </div>
           <div className="col-md-4">
             <div className="form-group">
@@ -318,10 +316,10 @@ const {buChoiceHandler,areaChoiceHandler,blChoiceHandler,changeAreaInit,changeBl
         </div>
         <div className="row">
           <div className="col-md-4">
-          <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit}   init={initBu} choice={choiceBu} data={areadata} placeholder={{name: "Select Area(s)"}} selecType={"Area"} required={false}></Selec>
+            <Selec multi={true} ref={areaRef} full={false} choiceHandler={areaChoiceHandler} changeInit={changeAreaInit} init={initBu} choice={choiceBu} data={areadata} placeholder={{name: "Select Area(s)"}} selecType={"Area"} required={false}></Selec>
           </div>
           <div className="col-md-4">
-          <Selec multi={true} choice={choiceArea}  ref={countryRef} full={false} init={initArea}  data={geographyData} placeholder={{name: "select one or multiple countries"}}  selecType={"Country"} required={false}></Selec>       
+            <Selec multi={true} choice={choiceArea} ref={countryRef} full={false} init={initArea}  data={geographyData} placeholder={{name: "select one or multiple countries"}} selecType={"Country"} required={false}></Selec>       
           </div>
         </div>
         <AddFormButtons valid={nameIsValid && groupIsValid} cancel={"/administration/customers"}/>

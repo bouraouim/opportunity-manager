@@ -42,6 +42,7 @@ import Login from './components/login';
 import AuthContext from "./store/auth-context";
 import OpportunitiesTable from "./components/tables/opportunitiesTable";
 import AddOpportunity from "./components/addForms/addOpportunity";
+import EditOpportunity from "./components/editForms/editOpportunity";
 import Reportlist from "./components/report/list";
 import Salesperfomance from "./components/report/Salesperfomance";
 
@@ -63,7 +64,7 @@ function App() {
         <Route path="/login" element={<Login/>}/>
         {authctx.loggedin && <Route path="/opportunities/manage" element={<OpportunitiesTable search={search}/>}/>}
         {authctx.loggedin && <Route path="/opportunities/new" element={<AddOpportunity/>}/>}
-        {authctx.loggedin && <Route path="/opportunities/edit/:id" element={<AddOpportunity/>}/>}
+        {authctx.loggedin && <Route path="/opportunities/edit/:id" element={<EditOpportunity/>}/>}
         {authctx.loggedin && <Route path="/report/list" element={<Reportlist/>}/>}
         {authctx.loggedin && <Route path="/report/sales-perfomance" element={<Salesperfomance/>}/>}
         {authctx.loggedin && <Route path="/administration/areas" element={<TableLayout link="/administration/areas/new" table={<AreaTable search={search}/>} name="Area" search={searchHandler} resetsearch={resetsearch} searchvalue={search}/>}/>}

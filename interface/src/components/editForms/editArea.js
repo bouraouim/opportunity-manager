@@ -17,6 +17,7 @@ const EditArea = () => {
     const authctx = useContext(AuthContext);
     const navigate = useNavigate();
 
+    //Get data from DB
     useEffect(() => {
         axios.get('http://localhost:8000/businessunit/read',{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
@@ -35,6 +36,7 @@ const EditArea = () => {
             setArea(response.data);
         })
     },[])
+    //Update Function
     const submithandler = (event) => {
         event.preventDefault();
         const area = nameRef.current.value;

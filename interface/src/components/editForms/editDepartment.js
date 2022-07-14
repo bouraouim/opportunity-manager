@@ -24,6 +24,7 @@ const EditDepartment = () => {
     var { id } = useParams();
     const authctx = useContext(AuthContext);
 
+    //Get Data from DB
     useEffect(() => {
         axios.get('http://localhost:8000/api/departments/'+id,{headers: {Authorization: "Bearer "+authctx.token}}) 
         .then(response=>{
@@ -81,10 +82,10 @@ const EditDepartment = () => {
             })
             body["businessunit"] = businessunit;
         }
-        if(req){if(bl.length !== 0){
+        if(bl.length !== 0){
             var businessline = bl.map(v=>{
                 return "/api/businesslines/"+v 
-            })}else{var businessline=[]}
+            })
             body["businessline"] = businessline;
         }
         axios.patch('http://localhost:8000/api/departments/'+id,body,{headers: {
@@ -102,9 +103,41 @@ const EditDepartment = () => {
         navigate('/administration/departments');
     }
 
-    const buchangehandler=()=>{
-        setreq(true)
-       }
+    // const buchangehandler=()=>{
+    //     console.log(buRef.current.value.length !== 0)
+    //     if(buRef.current.value.length !== 0){
+    //         console.log(buRef.current.value.length !== 0)
+
+    //         setreq(false)
+    //         setBlValid(true) 
+    //     }else{
+    //     setreq(true)
+    //     setBlValid(false)
+    // }
+    //    }
+    const notfirstrender = useRef(true);
+    const [buvalue,setbuvalue]=useState([])
+    const valueHandler=(v)=>{
+        setbuvalue(v)
+    }
+    useEffect(() => {
+        console.log(buvalue)
+        if(notfirstrender.current){
+            notfirstrender.current = false;
+        } 
+        else{
+            if(buvalue.length == 0){
+                setreq(false);
+                setBlValid(true);
+            }
+            else{
+                setreq(true);
+                setBlValid(false);
+            }
+        }
+        console.log(req)
+    }, [buvalue]);
+
     return(
         <div className="card-body">
             <form className="needs-validation" onSubmit={submithandler}>
@@ -121,14 +154,14 @@ const EditDepartment = () => {
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <Selec multi={true} ref={buRef} onchange={buchangehandler} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={false} data={budata} placeholder={department.businessunit} selecType={"Business Unit"} required={false}></Selec>
-                        {req &&<div >other parametes that depend on business unit will be empty if you don't change them</div>}
+                        <Selec multi={true} ref={buRef} valueHandler={valueHandler} choiceHandler={buChoiceHandler} name={"buuuuu"} changeInit={changeBuInit} full={false} data={budata} placeholder={department.businessunit} selecType={"Business Unit"} required={false}></Selec>
+                        {req &&<div className="edit">Other parametes that depend on Buusiness Unit will be empty if you don't change them</div>}
                     </div>
                     <div className="col-md-4">                        
-                        <Selec multi={true} ref={blRef} onchange={blhandler} full={false} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={department.businessline} selecType={"Business Line"} required={false}></Selec>
+                        <Selec multi={true} ref={blRef} onchange={blhandler} full={req} choiceHandler={blChoiceHandler} name={"blll"} changeInit={changeBlInit} init={initBu} choice={choiceBu} data={bldata} placeholder={department.businessline} selecType={"Business Line"} required={req}></Selec>
                     </div>
                 </div>
-                <EditFormButtons valid={true} cancel={"/administration/departments"}/>
+                <EditFormButtons valid={blValid} cancel={"/administration/departments"}/>
             </form>
         </div>
     )

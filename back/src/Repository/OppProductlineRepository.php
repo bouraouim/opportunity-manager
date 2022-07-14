@@ -36,15 +36,15 @@ class OppProductlineRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?OppProductline
+    public function findPlByOpp($value)
     {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
+        return $this->createQueryBuilder('b')
+            ->select('distinct pl')
+            ->from(OppProductline::class, 'pl')
+            ->where('pl.opportunity = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getArrayResult()
         ;
     }
-    */
 }
